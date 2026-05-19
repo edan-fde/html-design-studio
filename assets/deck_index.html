@@ -214,6 +214,11 @@
   fit();
   show(current);
 
+  // Reclaim focus after clicking inside iframe so keyboard nav keeps working
+  window.addEventListener('blur', () => {
+    setTimeout(() => window.focus(), 100);
+  });
+
   // Print: build a stack of all iframes so browser prints every slide
   window.addEventListener('beforeprint', () => {
     printStack.innerHTML = '';
