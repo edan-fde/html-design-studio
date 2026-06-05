@@ -412,8 +412,9 @@ Screen 组件接 callback props（`onEnter`、`onClose`、`onTabChange`、`onOpe
    - 🛑 **检查点1：问题清单一次性发给用户，等用户批量答完再往下走**。不要边问边做。
    - 🛑 **幻灯片/PPT 任务：HTML 聚合演示版永远是默认基础产物**（不管用户最终要什么格式）：
      - **必做**：每页独立 HTML + `assets/deck_index.html` 聚合（重命名为 `index.html`，编辑 MANIFEST 列所有页），浏览器里键盘翻页、全屏演讲——这是幻灯片作品的"源"
-     - **可选导出**：额外询问是否需要 PDF（`export_deck_pdf.mjs`）或可编辑 PPTX（`export_deck_pptx.mjs`）作为衍生物
-     - **只有要可编辑 PPTX 时**，HTML 必须从第一行就按 4 条硬约束写（见 `references/editable-pptx.md`）；事后补救会 2-3 小时返工
+     - **交付流程铁律（不问格式，HTML deck 是强推的唯一基础路径）**：开工**绝不询问**用户要 PDF / PPTX——直接做 HTML deck（带 3D 概览墙 + 全屏演示，效果最好，这是我们想强推的方向）。
+     - **HTML deck 完成后**：① **自动**用 `scripts/export_deck_pdf.mjs` 生成 PDF 版交付（不问，直接给）；② 再**询问是否需要可编辑 PPTX**，要的话用 `scripts/export_deck_pptx.mjs` 尽量加工导出。
+     - 🔴 **绝不为了能转 PPTX 而牺牲 HTML 的设计质量**：PPTX 是事后 best-effort 衍生物，**不要**为了迁就 html2pptx 的 4 条硬约束就从第一行约束/降级 HTML 设计。HTML deck 的视觉自由度永远优先；PPTX 转不出某些效果就如实告诉用户「这版 PPTX 损失了 X，完整效果看 HTML / PDF」。
      - **≥ 5 页 deck 必须先做 2 页 showcase 定 grammar 再批量推**（见 `references/slide-decks.md` 的「批量制作前先做 showcase」章节）——跳过这步 = 方向错返工 N 次而非 2 次
      - 详见 `references/slide-decks.md` 开头「HTML 优先架构 + 交付格式决策树」
    - ⚡ **只要用户没给明确风格参考（没 design system、没截图/Figma、没指定某某具体风格）→ 走「设计方向顾问（Fallback 模式）」大节，完成 Phase 1-5（用户从三版里选定方向）后，再回到这里 Step 2**。门槛要低：「做个XX」只要不带风格词就触发——宁可多推 3 个方向让用户选，也不要模型自己闷头选一个极简就开做。
