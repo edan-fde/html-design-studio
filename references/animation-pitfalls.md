@@ -399,6 +399,12 @@ CSS `transition` 走的是墙钟，不是时间轴。逐帧 seek 渲染时每帧
 
 **修法**：暗色电影风产出用 `npx hyperframes check --no-contrast`，lint/runtime/layout/motion 四门仍必须 0 error。**亮底信息型产出不要跳 contrast**——那种场景下的报错通常是真的可读性问题（可读性硬底线见 SKILL.md Fallback 节）。
 
+## 21. 【HyperFrames/GSAP】fromTo 的 immediateRender 幻影 —— 元素提前数秒出现
+
+GSAP 的 `fromTo()` 默认 `immediateRender: true`：build timeline 时就把 from 态渲染到元素上。如果 from 态本身可见（`autoAlpha > 0`），元素会在它的 tween 开始前就出现在画面里——火花、点击圈、涟漪、扬尘这类「短促特效」最容易中招（B00 实测一次踩了 4 处：特效在归位时刻前几秒就挂在画面上）。
+
+**修法**：所有 from 态可见的 `fromTo()` 显式加 `immediateRender: false`；或改成「set 初始隐藏 + to」。自查方式：渲染后抽每幕开头帧，看有没有「不该在场的特效元素」。
+
 ## 快速自查清单（开工前 5 秒）
 
 - [ ] 每个 `position: absolute` 的父元素都有 `position: relative`？
