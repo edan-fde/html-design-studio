@@ -427,3 +427,4 @@ GSAP 的 `fromTo()` 默认 `immediateRender: true`：build timeline 时就把 fr
 - [ ] 【HyperFrames】渲染路径上没有 CSS `transition`？状态变化全是 tween 或 t 的纯函数？（坑 #18）
 - [ ] 【HyperFrames】代理 tween 场景注册后补了 `render(0)`？（坑 #19）
 - [ ] 【HyperFrames】check 过了？暗色电影风用 `--no-contrast`，其余四门 0 error？（坑 #20）
+- [ ] 【HyperFrames/GSAP】from 态可见的 `fromTo()` 全部加了 `immediateRender:false`？（坑 #21，B00 实测 4 处幻影）

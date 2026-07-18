@@ -17,14 +17,17 @@ INPUT=$(cat)
 CMD=$(printf '%s' "$INPUT" | python3 -c "import json,sys;print(json.load(sys.stdin).get('tool_input',{}).get('command',''))" 2>/dev/null)
 CWD=$(printf '%s' "$INPUT" | python3 -c "import json,sys;print(json.load(sys.stdin).get('cwd',''))" 2>/dev/null)
 
-# 只管渲染命令
-echo "$CMD" | grep -qE "hyperframes(@[0-9.]+)? +render|render-video(-seek)?\.js" || exit 0
+# 谈论命令的命令（echo/grep等）直接放行，防纯文本误伤（QA Bug1）
+FIRST=$(echo "$CMD" | sed -E 's/^[[:space:]]*//' | cut -d' ' -f1)
+case "$FIRST" in echo|printf|grep|cat|ls|head|tail|wc|sed|awk) exit 0;; esac
+# 只管渲染命令（含npm run render与解说长片渲染）
+echo "$CMD" | grep -qE "hyperframes(@[0-9.]+)? +render|render-video(-seek)?\.js|render-narration\.sh|npm +run +render\b" || exit 0
 # 显式跳过（可审计的逃生门）
 echo "$CMD" | grep -q "SKIP_DESIGN_GATE=1" && exit 0
 
 # 定位项目目录：命令中cd的目标 > hook cwd
 DIR="$CWD"
-CDDIR=$(echo "$CMD" | grep -oE 'cd +"[^"]+"|cd +[^ &;]+' | head -1 | sed 's/^cd +//; s/"//g')
+CDDIR=$(echo "$CMD" | grep -oE 'cd +"[^"]+"|cd +[^ &;]+' | head -1 | sed -E 's/^cd +//; s/"//g')
 [ -n "$CDDIR" ] && [ -d "$CDDIR" ] && DIR="$CDDIR"
 
 # 取合成时长：hyperframes项目读index.html的data-duration；render-video-seek读--duration参数
