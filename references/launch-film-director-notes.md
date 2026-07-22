@@ -10,7 +10,7 @@
 
 ## 1. Why write director's notes first
 
-Practical lessons (2026-05-11 huashu-md-html v2.0 project):
+Practical lessons (2026-05-11 markdown-publishing-pipeline v2.0 project):
 
 The first attempt went straight into HTML. The result was animation from a programmer's perspective: every capability received equal emphasis, the rhythm was uniform, the slogan was tacked on at the end, and there was no narrative arc. For the second attempt, the user said: “Stop. Write a long-form storyboard of roughly 10,000 Chinese characters from the perspective of an Apple director.” That produced `v5-director-notes.md`—about 11,500 Chinese characters and a 13-shot specification. Implementing from that document succeeded in one pass: every paused frame held attention, and the pacing built through rises, falls, and a clear climax.
 
@@ -30,7 +30,7 @@ Ask before starting the launch film workflow:
 
 If any one is "Yes", go through the process. If all three are "no", skip it and use the standard process of [animations.md](animations.md) directly.
 
-> 🔴 **Prerequisite gate**: The launch film must first pass the three-direction gate in `SKILL.md`: one direction board per route, each containing a real rendered hero keyframe, color board, one-sentence mood statement, and references. Write the director's notes only after the user selects a direction. A style phrase such as “Apple-level” does not waive this requirement (validated in production by HuaStudio on 2026-07-18).
+> 🔴 **Prerequisite gate**: The launch film must first pass the three-direction gate in `SKILL.md`: one direction board per route, each containing a real rendered hero keyframe, color board, one-sentence mood statement, and references. Write the director's notes only after the user selects a direction. A style phrase such as “Apple-level” does not waive this requirement (validated in production on 2026-07-18).
 
 ---
 
@@ -205,7 +205,7 @@ Each screenshot must be verified:
 
 For a complex project—when the launch-film direction is unresolved, several distinct aesthetics need comparison, or the client has no style preference—launch multiple subagents in parallel to create versions from different directorial perspectives.
 
-Production configuration from the 2026-05-11 `huashu-md-html` project (six parallel versions):
+Production configuration from the 2026-05-11 `markdown-publishing-pipeline` project (six parallel versions):
 
 ```
 v5  · baseline (Anthropic / Penguin Classics publisher grade)
@@ -289,4 +289,4 @@ Before starting a new project, read the sample to understand the workload and le
 ---
 
 *Last revision: 2026-05-11*
-*Real case: huashu-md-html v2.0 launch film (v5-director-notes.md)*
+*Real case: markdown-publishing-pipeline v2.0 launch film (v5-director-notes.md)*

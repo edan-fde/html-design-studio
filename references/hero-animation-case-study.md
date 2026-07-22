@@ -1,8 +1,8 @@
 # Gallery Ripple + Multi-Focus · Scene-Composition Philosophy
 
-> A reusable visual-composition pattern distilled from huashu-design hero animation v9 (25 seconds, 8 scenes).
+> A reusable visual-composition pattern distilled from html-design-studio hero animation v9 (25 seconds, 8 scenes).
 > This is not a step-by-step animation tutorial. It explains **when this composition is the right choice**.
-> The pattern was distilled from v9. Current runnable reference: [hero-animation-v10-en.html](../demos/hero-animation-v10-en.html) · [public hero page](https://www.huasheng.ai/huashu-design-hero/)
+> The pattern was distilled from v9. Current runnable reference: [hero-animation-v10-en.html](../demos/hero-animation-v10-en.html).
 
 ## In one sentence
 
@@ -202,7 +202,7 @@ The brand wordmark transitions from Thin → Bold over 0.9s, paired with a subtl
 
 ### 5. **A quiet persistent corner brand**
 
-A small `HUASHU · DESIGN` mark sits in the gallery's upper-left corner at 12px, 16% opacity, with wide tracking.
+A small `HTML DESIGN STUDIO` mark sits in the gallery's upper-left corner at 12px, 16% opacity, with wide tracking.
 
 **Why add this**:
 - After the Ripple burst, viewers can lose their point of reference. A faint mark in the upper-left corner provides an anchor.
@@ -247,4 +247,4 @@ If all three checks pass, fork the v6 HTML and replace the `SLIDE_FILES` array a
 - Animation export pipeline: [references/video-export.md](video-export.md)
 - Audio configuration (BGM + SFX dual-track): [references/audio-design-rules.md](audio-design-rules.md)
 - Apple Gallery-style horizontal reference: [references/apple-gallery-showcase.md](apple-gallery-showcase.md)
-- Source HTML (v6 with integrated audio): `www.huasheng.ai/huashu-design-hero/index.html`
+- Source HTML (v6 with integrated audio): the archived v6 project copy.

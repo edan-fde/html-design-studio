@@ -14,7 +14,7 @@
 
 ```bash
 cd project-directory && unset ALL_PROXY   # The script already bypasses proxies; unset is an extra safeguard
-uv run ~/.claude/skills/huashu-design/scripts/ai-review-video.py \
+uv run ~/.claude/skills/html-design-studio/scripts/ai-review-video.py \
   --video final-video.mp4 \
   --context director-script.md        # Strongly recommended: this lets the model distinguish “design intent” from a “bug”
 ```

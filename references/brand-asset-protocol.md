@@ -7,7 +7,7 @@
 
 > **This is v1's most important constraint and the lifeline of output stability.** Whether an agent completes this protocol determines whether the result scores 40 or 90. Never skip a step.
 >
-> **v1.1 refactor (2026-04-20):** upgraded from a “brand asset protocol” to a “core asset protocol.” The previous version overemphasized color values and fonts while omitting the most fundamental design assets: logos, product images, and UI screenshots. In Huashu's words: “Beyond so-called brand colors, we obviously need to find and use DJI's logo and use Pocket 4 product imagery. For websites, apps, and other non-physical products, the logo should at least be mandatory. This may be more fundamental than the so-called brand-design spec. Otherwise, what are we communicating?”
+> **v1.1 refactor (2026-04-20):** upgraded from a “brand asset protocol” to a “core asset protocol.” The previous version overemphasized color values and fonts while omitting the most fundamental design assets: logos, product images, and UI screenshots. Production note: “Beyond so-called brand colors, we obviously need to find and use DJI's logo and use Pocket 4 product imagery. For websites, apps, and other non-physical products, the logo should at least be mandatory. This may be more fundamental than the so-called brand-design spec. Otherwise, what are we communicating?”
 
 **Trigger condition:** the task involves a specific brand—the user names a product, company, or explicit client such as Stripe, Linear, Anthropic, Notion, Lovart, DJI, or their own company—whether or not they proactively provide brand materials.
 
@@ -124,7 +124,7 @@ curl -A "Mozilla/5.0" -L "<hero-image-url>" -o assets/<brand>-brand/product-hero
 
 > **Logos follow a different rule from other assets.** If a logo exists, use it; if it does not, stop and ask the user. Other assets—product imagery, UI, references, and supporting images—must pass the “5–10–2–8” quality gate.
 >
-> Huashu, 2026-04-20: “Our principle is five rounds of search, ten candidate assets, and two good selections. Each must score at least 8/10. It is better to use fewer assets than to pad the task with inferior ones.”
+> Production note, 2026-04-20: “Our principle is five rounds of search, ten candidate assets, and two good selections. Each must score at least 8/10. It is better to use fewer assets than to pad the task with inferior ones.”
 
 | Dimension | Standard | Antipattern |
 |---|---|---|
@@ -142,7 +142,7 @@ Record these **8/10 scoring dimensions** in `brand-spec.md`:
 5. **Independent narrative value:** each can carry a narrative role by itself rather than serving as decoration.
 
 **Why this gate is non-negotiable:**
-- Huashu's philosophy is **quality over quantity**. A weak filler asset is worse than no asset: it pollutes visual taste and signals unprofessionalism.
+- The working principle is **quality over quantity**. A weak filler asset is worse than no asset: it pollutes visual taste and signals unprofessionalism.
 - It quantifies **“one detail at 120%, everything else at 80%.”** Eight is the floor for the “other 80%”; the true hero asset should score 9–10.
 - Every visual element either adds or subtracts points in the viewer's perception. A 7/10 asset subtracts points and is worse than empty space.
 
@@ -236,9 +236,9 @@ Handle each missing asset independently:
 
 - **Kimi animation:** color was guessed from memory as orange; Kimi actually uses `#1783FF` blue. The work had to be redone.
 - **Lovart design:** the red of Heytea, shown as demo content inside a product screenshot, was mistaken for Lovart's own color and nearly ruined the design.
-- **DJI Pocket 4 launch animation (2026-04-20; the incident that triggered this protocol upgrade):** the old process extracted only color values. It did not download the DJI logo or Pocket 4 imagery and substituted a CSS silhouette. The result was a “generic black-background technology animation with an orange accent,” with no DJI identity. Huashu asked, “Otherwise, what are we communicating?” → protocol upgraded.
+- **DJI Pocket 4 launch animation (2026-04-20; the incident that triggered this protocol upgrade):** the old process extracted only color values. It did not download the DJI logo or Pocket 4 imagery and substituted a CSS silhouette. The result was a “generic black-background technology animation with an orange accent,” with no DJI identity. The review asked, “Otherwise, what are we communicating?” → protocol upgraded.
 - Colors were extracted but never recorded in `brand-spec.md`; by the third slide, the primary value was forgotten and an improvised “close but not exact” hex was added, destroying consistency.
-- **Five Coding Agents comparison deck (2026-06-06; the incident that expanded the trigger condition):** the agent classified the task as “PowerPoint + no style references,” entered fallback Design-Direction Consultant Mode, extracted only five brand colors, and spawned three design directions. It obtained **none of the five product logos—Claude Code, Cursor, Codex, Copilot, and Trae**. Huashu caught it: “Why didn't we retrieve these products' logos?” Root cause: the comparison/list deck was incorrectly considered outside §1.a, which was thought to apply only to “collateral for a single client,” and the fallback path had no logo checkpoint. → Fixes: ① expand the trigger to include both single-brand work and designs naming or comparing real products; ② fallback never waives logo acquisition; ③ add a “named-product logo sub-gate” in Phase 3.5 before spawning; ④ add the reliable svgl / simpleicons / Google favicon chain to Step 3.1.
+- **Five Coding Agents comparison deck (2026-06-06; the incident that expanded the trigger condition):** the agent classified the task as “PowerPoint + no style references,” entered fallback Design-Direction Consultant Mode, extracted only five brand colors, and spawned three design directions. It obtained **none of the five product logos—Claude Code, Cursor, Codex, Copilot, and Trae**. Review caught it: “Why didn't we retrieve these products' logos?” Root cause: the comparison/list deck was incorrectly considered outside §1.a, which was thought to apply only to “collateral for a single client,” and the fallback path had no logo checkpoint. → Fixes: ① expand the trigger to include both single-brand work and designs naming or comparing real products; ② fallback never waives logo acquisition; ③ add a “named-product logo sub-gate” in Phase 3.5 before spawning; ④ add the reliable svgl / simpleicons / Google favicon chain to Step 3.1.
 
 ##### Cost of the Protocol vs. Cost of Skipping It
 

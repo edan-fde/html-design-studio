@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Fetch authentic images (public domain / CC) from Wikimedia Commons for huashu-design's content-design image workflow (Phase 3.5).
+Fetch authentic images (public domain / CC) from Wikimedia Commons for html-design-studio's content-design image workflow (Phase 3.5).
 
 Why this script exists: content-led designs (parrots, coffee, Malaysia, etc.) require real imagery, not placeholder CSS color blocks.
 Having the model rewrite the fetch logic every time is slow and error-prone (forgetting to clear proxies causes TLS failures; an invalid user agent causes 429s). This script captures the reliable workflow so only the keywords need to change.
@@ -20,7 +20,7 @@ for _k in ("ALL_PROXY", "all_proxy", "HTTP_PROXY", "http_proxy", "HTTPS_PROXY", 
 
 API = "https://commons.wikimedia.org/w/api.php"
 # ② A policy-compliant User-Agent is mandatory; otherwise Wikimedia returns 429.
-UA = "huashu-design-image-fetcher/1.0 (https://huasheng.ai; skill contact)"
+UA = "html-design-studio-image-fetcher/1.0 (https://github.com/edan-fde/html-design-studio)"
 
 
 def _api_get(params):
@@ -73,7 +73,7 @@ def fetch(query, out, count, width):
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Fetch authentic images from Wikimedia Commons (huashu-design Phase 3.5)")
+    ap = argparse.ArgumentParser(description="Fetch authentic images from Wikimedia Commons (html-design-studio Phase 3.5)")
     ap.add_argument("--query", nargs="+", required=True, help="One or more English keywords (English queries perform best)")
     ap.add_argument("--out", required=True, help="Output directory (recommended: project/assets/img)")
     ap.add_argument("--count", type=int, default=2, help="Images per keyword (default: 2)")

@@ -484,7 +484,7 @@ The three reference videos represent three different product characters. **Choos
 
 ## Appendix · Sources for This Document
 
-- Analysis of official Anthropic animations: `参考动画/BEST-PRACTICES.md` (`reference-animation/BEST-PRACTICES.md`; the code-formatted path preserves the original folder name) in Huashu's project directory.
+- Analysis of official Anthropic animations: `参考动画/BEST-PRACTICES.md` (`reference-animation/BEST-PRACTICES.md`; the code-formatted path preserves the original folder name) in the original project directory.
 - Anthropic audio analysis: `AUDIO-BEST-PRACTICES.md` in the same directory.
 - Three reference videos: `ref-{1,2,3}.mp4` with the corresponding `gemini-ref-*.md` and `audio-ref-*.md` files.
 - **Strict filtering:** this reference contains no specific brand color values, font names, or product names.

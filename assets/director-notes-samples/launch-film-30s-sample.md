@@ -1,8 +1,8 @@
 # v5 · "Markdown is the new typewriter."
 
-> Director's Notes for the **huashu-md-html v2.0** launch film
+> Director's Notes for the **markdown-publishing-pipeline v2.0** launch film
 > 30 seconds · 1920×1080 · 25 fps · no voiceover
-> Director: huashu-design (acting as Apple-tier launch film director)
+> Director: html-design-studio (acting as Apple-tier launch film director)
 > Composer: TBD (target: Max Richter / Ólafur Arnalds / Jóhann Jóhannsson minimal-cinematic register)
 > Color base: ivory white #FAFAF6 · ink #1A1A1A · terracotta #C2410C
 > Type: Newsreader (display + body) · JetBrains Mono (interface) · Noto Serif SC (Chinese text)
@@ -31,7 +31,7 @@ We have a story to tell. The story has only one line:
 
 > **“md is the source code; everything else is a product.”**
 
-This is not merely a slogan; it is a worldview. Markdown is not just a lightweight document format—it is the source of the writing. Every downstream form—HTML, DOCX, PDF, EPUB—is a product derived from that one source. huashu-md-html v2.0 expands the chain from four outputs to six, extending not a feature list but the reach of the source itself.
+This is not merely a slogan; it is a worldview. Markdown is not just a lightweight document format—it is the source of the writing. Every downstream form—HTML, DOCX, PDF, EPUB—is a product derived from that one source. markdown-publishing-pipeline v2.0 expands the chain from four outputs to six, extending not a feature list but the reach of the source itself.
 
 If the audience remembers only one idea, it should be this: md is the source. Any retained feature detail is a bonus.
 
@@ -87,7 +87,7 @@ Our design system does not permit a one-off font or corner radius for an isolate
 
 Three types of audiences, ranked by importance:
 
-**Primary audience A · Existing huashu-md-html v1 users (about 60% of traffic)**
+**Primary audience A · Existing markdown-publishing-pipeline v1 users (about 60% of traffic)**
 
 They watch to learn what changed. Within 30 seconds, they must understand:
 
@@ -97,7 +97,7 @@ They watch to learn what changed. Within 30 seconds, they must understand:
 
 → Shots 08 and 09 receive prominent **★ NEW** labels and destination cards. Professional details—printer's crop marks and an Apple Books-style reader frame—must remain legible so existing users immediately understand that these are serious production capabilities, not checkbox additions.
 
-**Secondary audience B · AI-native creators who know of huashu-md-html but have not used it (about 25%)**
+**Secondary audience B · AI-native creators who know of markdown-publishing-pipeline but have not used it (about 25%)**
 
 Their question is: “Why does this matter to me?” Within 30 seconds, they should realize:
 
@@ -288,7 +288,7 @@ These persistent details make the piece feel like a complete film rather than a 
 
 ```
    ╔═════════════════════════╗
-   ║ ● HUASHU-MD-HTML · v2.0 ║
+   ║ ● MARKDOWN-PUBLISHING · v2.0 ║
    ╚═════════════════════════╝
 ```
 
@@ -311,7 +311,7 @@ These persistent details make the piece feel like a complete film rather than a 
 **Chrome D · bottom-right · watermark (continuous)**
 
 ```
-   CREATED BY HUASHU-DESIGN
+   CREATED BY HTML DESIGN STUDIO
 ```
 
 - Font: JetBrains Mono 10px, letter-spacing 0.24em
@@ -628,7 +628,7 @@ At 03.00s, `# markdown.md` begins transforming toward the center.
 **[CHROME]**
 
 - 04.50s · Chrome B (version chip top-right) begins to emerge (fade-in 600ms)
-  - Form: `● HUASHU-MD-HTML · v2.0`
+  - Form: `● MARKDOWN-PUBLISHING · v2.0`
   - terracotta dot, mono text, Ink color
   - Entering position: top: 78px, right: 80px
 - Still hidden: Chrome A, C, E (visible only ≥ 06s)
@@ -758,7 +758,7 @@ Destination card design: **real readable content, not placeholder bars**.
 │  ways. The river forks; the      │
 │  spring stays the same.          │
 │                                  │
-│  ─ huashu, 2026.05.11            │  ← italic 14px, Smoke
+│  ─ studio, 2026.05.11            │  ← italic 14px, Smoke
 │                                  │
 │  article.html · TUFTE THEME      │  ← Mono 10px, 0.18em, Smoke (bottom)
 └─────────────────────────────────┘
@@ -1110,7 +1110,7 @@ Destination card: an **Apple Books-inspired EPUB reader frame**, making the book
    ║ ● ● ●                              ║  ← window chrome (Apple Books)
    ╠════════════════════════════════════╣
    ║                                    ║
-   ║  HUASHU · ORANGE BOOK              ║  ← Mono Bold 10px Terracotta 0.22em
+   ║  STUDIO · ORANGE BOOK              ║  ← Mono Bold 10px Terracotta 0.22em
    ║                                    ║
    ║                                    ║
    ║  On                                ║  ← Newsreader 700, 30px, Ivory paper
@@ -1118,7 +1118,7 @@ Destination card: an **Apple Books-inspired EPUB reader frame**, making the book
    ║                                    ║
    ║  ───                               ║  ← Terracotta rule 40×2px
    ║                                    ║
-   ║  an essay · Huashu                      ║  ← italic 14px Smoke on Charred
+   ║  an essay · Studio                      ║  ← italic 14px Smoke on Charred
    ║                                    ║
    ╠════════════════════════════════════╣
    ║ Apple Books · 1 of 24    EPUB 3   ║  ← Mono 10px Smoke 0.14em
@@ -1135,7 +1135,7 @@ Destination card: an **Apple Books-inspired EPUB reader frame**, making the book
 
 **[TYPE]**
 
-- HUASHU · ORANGE BOOK: JetBrains Mono Bold 10px, Terracotta, `0.22em` tracking
+- STUDIO · ORANGE BOOK: JetBrains Mono Bold 10px, Terracotta, `0.22em` tracking
 - Book title, On Markdown: Newsreader 700, 30px, Ivory on Charred, line-height 1
 - Terracotta rule: 40×2px
 - Author line: Noto Serif SC italic 14px, Smoke
@@ -1454,14 +1454,14 @@ From 29.80–30.00s, a 120×2px Terracotta rule grows 30px below md. It is short
 At 30.00s, all elements are in place. The final frame is:
 
 ```
-                                                                  ● HUASHU-MD-HTML · v2.0
+                                                                  ● MARKDOWN-PUBLISHING · v2.0
                                                                                               (top-right chrome)
 
 
                                             md.                   ← Newsreader 600, 88px, Ink + Terracotta dot
                                           ───                     ← Terracotta rule, 120×2px
 
-                                                                                CREATED BY HUASHU-DESIGN
+                                                                                CREATED BY HTML DESIGN STUDIO
                                                                                               (bottom-right watermark)
 ```
 

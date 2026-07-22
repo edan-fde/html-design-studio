@@ -2,7 +2,7 @@
 
 <div align="center">
 
-# Huashu Design
+# HTML Design Studio
 
 > *"Type. Hit enter. A finished design lands in your lap."*
 
@@ -20,10 +20,10 @@
 
 Not "decent for AI" quality — it looks like a real design team made it. Give the skill your brand assets (logo, colors, UI screenshots) and it reads your brand's voice; give it nothing and the three-track design advisor plus 40 HTML-native styles still keep you out of AI slop territory.
 
-**Every animation in this README was made by huashu-design itself.** No Figma, no After Effects — just a sentence + skill run. Next product launch needs a promo video? You can make it too.
+**Every animation in this README was made by html-design-studio itself.** No Figma, no After Effects — just a sentence + skill run. Next product launch needs a promo video? You can make it too.
 
 ```
-npx skills add alchaincyf/huashu-design
+npx skills add edan-fde/html-design-studio
 ```
 
 Agent-agnostic — Claude Code, Cursor, Codex, OpenClaw, and Hermes can all use it.
@@ -37,48 +37,37 @@ Agent-agnostic — Claude Code, Cursor, Codex, OpenClaw, and Hermes can all use 
 ---
 
 <p align="center">
-  <img src="https://github.com/alchaincyf/huashu-design/releases/download/v2.0/hero-animation-v10-en.gif" alt="huashu-design hero: prompt, direction selection, gallery expansion, focus, and brand reveal" width="100%">
+  <img src="assets/banner.svg" alt="HTML Design Studio" width="100%">
 </p>
 
 <p align="center"><sub>
   ▲ 25 seconds · Terminal → 4 directions → gallery ripple → 4 focus passes → brand reveal<br>
-  👉 <a href="https://www.huasheng.ai/huashu-design-hero/">Open the interactive HTML version with sound</a> ·
-  <a href="https://github.com/alchaincyf/huashu-design/releases/download/v2.0/hero-animation-v10-en.mp4">Download MP4 with BGM + SFX (10 MB)</a>
+  👉 <a href="demos/hero-animation-v10-en.html">Open the interactive HTML demo</a>
 </sub></p>
-
----
-
-## Video Tutorial
-
-New to the skill? Watch Huashu's introductory walkthrough:
-
-<p align="center">
-  <a href="https://www.youtube.com/watch?v=m-_BlUdcIvw"><img src="https://img.youtube.com/vi/m-_BlUdcIvw/maxresdefault.jpg" alt="Huashu Design tutorial" width="70%"></a>
-</p>
-
-<p align="center"><sub>👉 <a href="https://www.youtube.com/watch?v=m-_BlUdcIvw">Watch the full tutorial on YouTube</a></sub></p>
 
 ---
 
 ## Install
 
 ```bash
-npx skills add alchaincyf/huashu-design
+npx skills add edan-fde/html-design-studio
 ```
 
-> **Verify after install**: this skill is more than a single SKILL.md — the `references/`, `assets/`, `scripts/`, and `demos/` subdirectories hold 99 referenced recipes, scripts, and assets that the skill depends on. After installing, check the install path (e.g. `~/.claude/skills/huashu-design/`); if you only see SKILL.md and none of those subdirectories, your `skills` CLI is too old (≤1.5.15 had a bug that synced only the single file, fixed in 1.5.19). Upgrade and reinstall:
+> **Verify after install**: this skill is more than a single SKILL.md — the `references/`, `assets/`, `scripts/`, and `demos/` subdirectories hold 99 referenced recipes, scripts, and assets that the skill depends on. After installing, check the install path (e.g. `~/.claude/skills/html-design-studio/`); if you only see SKILL.md and none of those subdirectories, your `skills` CLI is too old (≤1.5.15 had a bug that synced only the single file, fixed in 1.5.19). Upgrade and reinstall:
 >
 > ```bash
-> npm i -g skills@latest        # or npx skills@latest add alchaincyf/huashu-design
+> npm i -g skills@latest        # or npx skills@latest add edan-fde/html-design-studio
 > ```
 >
 > If it's still wrong after upgrading, fall back to a `git clone` install — clone the repo into any skills directory:
 >
 > ```bash
-> git clone https://github.com/alchaincyf/huashu-design.git ~/.claude/skills/huashu-design
+> git clone https://github.com/edan-fde/html-design-studio.git ~/.claude/skills/html-design-studio
 > ```
 
 Then talk to any compatible agent in your own language. The skill answers in the user's language unless asked otherwise:
+
+Russian prompts and Russian-language presentations are supported.
 
 ```
 "Make a keynote for AI psychology. Give me 3 style directions to pick from."
@@ -94,8 +83,8 @@ No buttons, no panels, no Figma plugin. Agent-agnostic — drops into Claude Cod
 ## Star History
 
 <p align="center">
-  <a href="https://star-history.com/#alchaincyf/huashu-design&Date">
-    <img src="https://api.star-history.com/svg?repos=alchaincyf/huashu-design&type=Date" alt="huashu-design Star History" width="80%">
+  <a href="https://star-history.com/#edan-fde/html-design-studio&Date">
+    <img src="https://api.star-history.com/svg?repos=edan-fde/html-design-studio&type=Date" alt="html-design-studio Star History" width="80%">
   </a>
 </p>
 
@@ -121,55 +110,55 @@ No buttons, no panels, no Figma plugin. Agent-agnostic — drops into Claude Cod
 
 Before any new visual design, the skill runs three complementary approaches in parallel: a 20-style random wheel that breaks habitual choices, migration from a real award-winning reference, and a best-fit world-class designer or studio. This hard gate still applies when the brief already names a style or brand; all three directions interpret the same context differently. The skill produces three actual visual versions before asking the user to choose. Underneath is a library of 40 HTML-native styles: 20 for websites and 20 for slide decks.
 
-<p align="center"><img src="https://github.com/alchaincyf/huashu-design/releases/download/v2.0/w3-fallback-advisor-en.gif" width="100%"></p>
+[Open the interactive demo](demos/w3-fallback-advisor-en.html)
 
 ### iOS App Prototype
 
 Pixel-accurate iPhone 15 Pro body (Dynamic Island / status bar / Home Indicator) · state-driven multi-screen navigation · real images pulled from Wikimedia/Met/Unsplash · Playwright click tests before delivery.
 
-<p align="center"><img src="https://github.com/alchaincyf/huashu-design/releases/download/v2.0/c1-ios-prototype-en.gif" width="100%"></p>
+[Open the interactive demo](demos/c1-ios-prototype-en.html)
 
 ### Motion Design Engine
 
 Stage + Sprite time-slice model · `useTime` / `useSprite` / `interpolate` / `Easing` — four APIs cover every animation need · one command exports MP4 / GIF / 60fps-interpolated / BGM-scored finals.
 
-<p align="center"><img src="https://github.com/alchaincyf/huashu-design/releases/download/v2.0/c3-motion-design-en.gif" width="100%"></p>
+[Open the interactive demo](demos/c3-motion-design-en.html)
 
 ### HTML Slides → Editable PPTX
 
 HTML decks for browser presentation · `html2pptx.js` reads DOM computed styles and translates each element into real PowerPoint objects · exports are **actual text frames**, not image-bed fakes.
 
-<p align="center"><img src="https://github.com/alchaincyf/huashu-design/releases/download/v2.0/c2-slides-pptx-en.gif" width="100%"></p>
+[Open the interactive demo](demos/c2-slides-pptx-en.html)
 
 ### Tweaks · Live Variation Switching
 
 Colors / typography / information density parameterized · side panel toggle · pure-frontend + `localStorage` persistence · survives reload.
 
-<p align="center"><img src="https://github.com/alchaincyf/huashu-design/releases/download/v2.0/c4-tweaks-en.gif" width="100%"></p>
+[Open the interactive demo](demos/c4-tweaks-en.html)
 
 ### Infographic / Data Viz
 
 Magazine-grade typography · precise CSS Grid columns · `text-wrap: pretty` typographic details · driven by real data · exports to vector PDF / 300dpi PNG / SVG.
 
-<p align="center"><img src="https://github.com/alchaincyf/huashu-design/releases/download/v2.0/c5-infographic-en.gif" width="100%"></p>
+[Open the interactive demo](demos/c5-infographic-en.html)
 
 ### 5-Dimension Expert Critique
 
 Philosophical coherence · visual hierarchy · execution craft · functionality · innovation — each scored 0–10 · radar-chart visualization · outputs Keep / Fix / Quick Wins punch list.
 
-<p align="center"><img src="https://github.com/alchaincyf/huashu-design/releases/download/v2.0/c6-expert-review-en.gif" width="100%"></p>
+[Open the interactive demo](demos/c6-expert-review-en.html)
 
 ### Junior Designer Workflow
 
 No heroic one-shot attempts: start with assumptions + placeholders + reasoning, show it to the user early, then iterate. Fixing a misunderstanding early is 100× cheaper than fixing it late.
 
-<p align="center"><img src="https://github.com/alchaincyf/huashu-design/releases/download/v2.0/w2-junior-designer-en.gif" width="100%"></p>
+[Open the interactive demo](demos/w2-junior-designer-en.html)
 
 ### Core Asset Protocol · 5-step hard process
 
 Mandatory whenever the task involves a specific brand: ask → search → download (three fallback paths) → verify + extract → write `brand-spec.md` covering **logo, product shots, UI screenshots, colors, fonts** — all required assets, not just colors.
 
-<p align="center"><img src="https://github.com/alchaincyf/huashu-design/releases/download/v2.0/w1-brand-protocol-en.gif" width="100%"></p>
+[Open the interactive demo](demos/w1-brand-protocol-en.html)
 
 ---
 
@@ -177,24 +166,20 @@ Mandatory whenever the task involves a specific brand: ask → search → downlo
 
 ### Parrot Evolution Website · Three-Track Design Advisor in Practice (2.0)
 
-> **Live demo · [https://www.huasheng.ai/parrots/](https://www.huasheng.ai/parrots/)**
-
 The only brief was "make a website about the evolution of parrots." With no additional direction, the skill ran the full 2.0 advisor workflow: it first determined that images were essential to the content, sourced public-domain natural-history illustrations by Edward Lear and John Gould, then produced three real visual versions in parallel through the random style wheel, an award-winning real-world reference, and Kenya Hara's *White* philosophy. Assets came first; the design was not built around color-block placeholders.
 
 ### "Let's Talk About Skills" · PM After-Party Presentation Deck
 
-> **Live demo · [https://skill-huasheng.vercel.app](https://skill-huasheng.vercel.app)**
-
-A 13-slide HTML deck created entirely with Huashu Design:
+A 13-slide HTML deck created entirely with HTML Design Studio:
 
 - A restrained black-background serif system spanning cover, about, hook, what, why, and closing slides.
 - Two 22-second cinematic demos with BGM and SFX for the Nüwa and Darwin skill workflows, each with a completely independent visual language:
   - **Nüwa:** 3D knowledge orbit, pentagonal distillation, SKILL.md typewriter, and a "21 minutes" hero reveal.
   - **Darwin:** autoresearch loop spin, side-by-side v1/v5 diff, full-screen hill-climb curve, and ratchet-gear lock.
 - Each cinematic defaults to a complete static workflow dashboard so the audience can inspect how the skill works. Pressing ▶ starts the animation; completion fades back to the dashboard.
-- A localized iframe fallback for the 25-second hero animation from huasheng.ai.
+- A localized iframe fallback for the 25-second hero animation.
 - Real data: a 14,495-star historical curve from the GitHub API and DeepSeek V4 specifications verified through web research.
-- Real AI assets: a 4×2 grid generated with `huashu-gpt-image`, split by `extract_grid.py` into eight transparent PNGs, and arranged in a floating 3D orbit.
+- Real AI assets: a 4×2 grid generated with the runtime's image-generation tool, split by `extract_grid.py` into eight transparent PNGs, and arranged in a floating 3D orbit.
 
 **Useful reference pages:**
 
@@ -267,7 +252,7 @@ I'll be upfront: the Core Asset Protocol's philosophy was lifted from system pro
 
 Positioning differences:
 
-| | Claude Design | huashu-design |
+| | Claude Design | html-design-studio |
 |---|---|---|
 | Form | Web product (used in browser) | Skill (used in Claude Code) |
 | Quota | Subscription quota | API usage · parallel agents unblocked |
@@ -276,7 +261,7 @@ Positioning differences:
 | Complex animation | Limited | Stage + Sprite timeline · 60fps export |
 | Agent compatibility | Claude.ai only | Claude Code / Cursor / Trae / Hermes / OpenClaw |
 
-Claude Design is a **better graphics tool**. Huashu-design makes **the graphics-tool layer disappear**. Two paths, different audiences.
+Claude Design is a **better graphics tool**. HTML Design Studio makes **the graphics-tool layer disappear**. Two paths, different audiences.
 
 ---
 
@@ -293,7 +278,7 @@ This is an 80-point skill, not a 100-point product. For people unwilling to open
 ## Repository Structure
 
 ```
-huashu-design/
+html-design-studio/
 ├── SKILL.md                 # Main instructions read by the agent
 ├── README.md                # Default English README
 ├── README.en.md             # English compatibility copy
@@ -339,9 +324,9 @@ Thanks to Anthropic for writing the Claude Design prompts so clearly. This kind 
 
 ---
 
-## Products Designed with Huashu Design
+## Products Designed with HTML Design Studio
 
-The three interface themes for **[FanBox · A Cockpit for Coding Agents](https://github.com/alchaincyf/fanbox)** were designed with Huashu Design. FanBox lets you direct Claude Code or Codex and inspect every file and line they touched.
+The three interface themes for **[FanBox · A Cockpit for Coding Agents](https://github.com/alchaincyf/fanbox)** were designed with HTML Design Studio. FanBox lets you direct Claude Code or Codex and inspect every file and line they touched.
 
 [![FanBox · A Cockpit for Coding Agents](https://raw.githubusercontent.com/alchaincyf/fanbox/master/assets/promo-banner.jpg)](https://github.com/alchaincyf/fanbox)
 
@@ -354,7 +339,6 @@ Community-maintained translations of this skill. Translation quality and license
 | Language | Maintainer | Repository |
 |---|---|---|
 | Korean | [@ktkarchive](https://github.com/ktkarchive) | [ktkarchive/ktk-design](https://github.com/ktkarchive/ktk-design) |
-| Vietnamese | [@letrquan](https://github.com/letrquan) | [letrquan/huashu-design](https://github.com/letrquan/huashu-design) |
 
 Want to add your language? Fork the repo, translate `SKILL.md` + `README.md`, and open an issue here so we can link it.
 
@@ -365,21 +349,3 @@ Want to add your language? Fork the repo, translate `SKILL.md` + `README.md`, an
 **Relicensed to MIT on 2026-05-14.** This skill was previously released under a Personal Use License that restricted commercial use. That restriction is now removed.
 
 Under the [MIT License](LICENSE) you are free to **use, modify, and distribute** this skill for any purpose, **including commercial use** — inside companies, in client deliverables, as part of a paid product, anywhere. No prior authorization, no licensing fee, no notification required. Attribution is appreciated but not required.
-
----
-
-## Connect · Huasheng (Huashu)
-
-Huasheng is an AI-native coder, independent developer, and AI content creator. Notable work: Cat Fill Light (App Store Top 1 in Paid category), *A Book on DeepSeek*, Nüwa.skill (GitHub 21k+ stars). Combined 300k+ followers across platforms.
-
-| Platform | Handle | Link |
-|---|---|---|
-| X / Twitter | @AlchainHust | https://x.com/AlchainHust |
-| WeChat Official Account | Huashu (`花叔`) | Search `花叔` in WeChat—the exact account name is intentionally retained here. |
-| Bilibili | Huashu | https://space.bilibili.com/14097567 |
-| YouTube | Huashu | https://www.youtube.com/@Alchain |
-| Xiaohongshu | Huashu | https://www.xiaohongshu.com/user/profile/5abc6f17e8ac2b109179dfdf |
-| Official Site | huasheng.ai | https://www.huasheng.ai/ |
-| Developer Hub | bookai.top | https://bookai.top |
-
-For collaborations or sponsored content, DM on any of the above.

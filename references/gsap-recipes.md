@@ -1,6 +1,6 @@
 # GSAP Recipes · Translating Design Language into GSAP Timelines
 
-> This file has one purpose: translate huashu-design's established animation language—the five-part narrative, easing system, eight motion principles, and scene recipes in `animation-best-practices.md`, plus the 22-second, five-scene template in `cinematic-patterns.md`—into paste-ready GSAP timeline recipes for the HyperFrames backend.
+> This file has one purpose: translate html-design-studio's established animation language—the five-part narrative, easing system, eight motion principles, and scene recipes in `animation-best-practices.md`, plus the 22-second, five-scene template in `cinematic-patterns.md`—into paste-ready GSAP timeline recipes for the HyperFrames backend.
 >
 > **The skill's own references remain the authority on design judgment; GSAP is only the implementation tool.**
 > For when to hold, which narrative arc to use, and what visual quality means, read `animation-best-practices.md` §0. This document answers only: “How do I express that rule in GSAP?”

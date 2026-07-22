@@ -1,7 +1,7 @@
 # Apple Gallery Showcase · Animated Gallery-Wall Style
 
 > Inspiration: the Claude Design website hero video + the gallery-wall presentation on Apple product pages
-> Proven in: huashu-design launch hero v5
+> Proven in: html-design-studio launch hero v5
 > Best for: **product-launch hero animation, skill-capability demonstrations, and portfolio showcases**—any situation that presents several high-quality outputs at once while guiding the audience's attention
 
 ---
@@ -280,7 +280,7 @@ It seems invisible until you remove it; then its contribution becomes obvious.
 ```html
 <div class="corner-brand">
   <div class="mark"></div>
-  <div>HUASHU · DESIGN</div>
+  <div>HTML DESIGN STUDIO</div>
 </div>
 ```
 

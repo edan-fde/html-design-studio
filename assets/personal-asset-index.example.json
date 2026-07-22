@@ -1,7 +1,7 @@
 {
   "_meta": {
     "description": "Personal asset index template — copy this file and fill in your real data",
-    "how_to_use": "1. Copy this file to ~/.claude/memory/personal-asset-index.json  2. Enter your real information  3. The Huashu Design skill will read it automatically",
+    "how_to_use": "1. Copy this file to ~/.claude/memory/personal-asset-index.json  2. Enter your real information  3. The HTML Design Studio skill will read it automatically",
     "note": "Do not place the real data file inside the skill directory; otherwise private information may be distributed with the skill"
   },
 

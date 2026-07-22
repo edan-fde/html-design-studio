@@ -112,4 +112,4 @@ Show all three styles for one scenario side by side so the user can compare them
 
 **Version:** v1.0
 **Created:** 2026-02-13
-**For:** the recommendation stage of Huashu Design Phase 3
+**For:** the recommendation stage of HTML Design Studio Phase 3

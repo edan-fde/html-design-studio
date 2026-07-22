@@ -192,7 +192,7 @@ async function tts({ text, voice, speed, encoding, timestamps }) {
   if (!voiceId) throw new Error('Missing DOUBAO_TTS_VOICE_ID (check .env or pass --voice)');
 
   const body = {
-    user: { uid: 'huashu-design' },
+    user: { uid: 'html-design-studio' },
     req_params: {
       text,
       speaker: voiceId,

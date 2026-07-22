@@ -1,7 +1,7 @@
-# Audio Design Rules · huashu-design
+# Audio Design Rules · html-design-studio
 
 > Audio recipes for every animated demo. Use together with `sfx-library.md`, the asset catalog.
-> Refined through practice: huashu-design launch-hero iterations v1–v9; Gemini deep analysis of three official Anthropic videos; more than 8,000 A/B comparisons.
+> Refined through practice: html-design-studio launch-hero iterations v1–v9; Gemini deep analysis of three official Anthropic videos; more than 8,000 A/B comparisons.
 
 ---
 
@@ -91,7 +91,7 @@ Not every visual beat needs an SFX. Select them in this order:
 
 ## BGM Selection Decision Tree
 
-The huashu-design skill includes six BGM tracks (`assets/bgm-*.mp3`):
+The html-design-studio skill includes six BGM tracks (`assets/bgm-*.mp3`):
 
 ```
 What is the animation's character?
@@ -115,7 +115,7 @@ Anthropic Code Desktop (`ref-2`) demonstrates that **zero SFX + pure lo-fi BGM**
 
 ## Ready-to-Use Recipes
 
-### Recipe A · Product-Launch Hero (Same Pattern as huashu-design v9)
+### Recipe A · Product-Launch Hero (Same Pattern as html-design-studio v9)
 ```
 Duration: 25 seconds
 BGM: bgm-tech.mp3 · 45% · frequencies below 4 kHz
@@ -258,4 +258,4 @@ Each layer should make sense when heard alone. If the mix works only when both a
 - SFX asset catalog: `sfx-library.md`
 - Visual-style reference: `apple-gallery-showcase.md`
 - Deep audio analysis of three Anthropic videos: `AUDIO-BEST-PRACTICES.md` (author's local research; not distributed with the repository)
-- huashu-design v9 case study: `hero-animation-v9-final.mp4` (author's local sample; not distributed with the repository)
+- html-design-studio v9 case study: `hero-animation-v9-final.mp4` (author's local sample; not distributed with the repository)

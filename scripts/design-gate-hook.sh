@@ -1,7 +1,7 @@
 #!/bin/bash
 # design-gate-hook.sh — PreToolUse(Bash) hook: verify the design-process gate before long-form rendering
 #
-# Non-negotiable rule established 2026-07-17: before huashu-design creates a design, it must provide
+# Non-negotiable rule established 2026-07-17: before html-design-studio creates a design, it must provide
 # ① an asset protocol (brand-spec.md) and ② three real visual directions for the user to choose from
 # (direction-approved.md records the choice or reason for exemption).
 # In the 210s B00 production, rendering the full film before direction approval forced a complete rework.
@@ -50,7 +50,7 @@ done
 
 cat >&2 << EOF
 🛑 Design-process gate: this render is ${DUR}s (long-form, ≥45s), but direction-approved.md was not found in the project.
-huashu-design requires presenting three real visual directions for the user to choose from before a long-form render (unless the user explicitly grants an exemption). Record the choice or exemption in direction-approved.md in the project directory, including the versions shown, screenshot paths, and the user's exact choice.
+html-design-studio requires presenting three real visual directions for the user to choose from before a long-form render (unless the user explicitly grants an exemption). Record the choice or exemption in direction-approved.md in the project directory, including the versions shown, screenshot paths, and the user's exact choice.
 Add the record, then render again. If the user explicitly asks to skip the gate, prefix the command with SKIP_DESIGN_GATE=1.
 (Basis: in the 2026-07-17 B00 production, skipping direction approval before rendering the 210s film forced a complete visual rework.)
 EOF

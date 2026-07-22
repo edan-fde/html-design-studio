@@ -1,7 +1,7 @@
-# SFX Library · huashu-design
+# SFX Library · html-design-studio
 
 > Generated with the ElevenLabs Sound Generation API and tuned for the clean, restrained sound of a polished product launch.
-> A production-ready SFX library for Huashu animations, presentations, and product demos.
+> A production-ready SFX library for HTML Design Studio animations, presentations, and product demos.
 
 **Asset location**: `assets/sfx/<category>/<name>.mp3`
 **Total**: 37 SFX (30 batch generated + 7 v7b reserved)

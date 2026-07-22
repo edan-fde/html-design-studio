@@ -30,7 +30,7 @@ Pipeline:
        retain raw segment findings in an appendix.
 
 API key: read ARK_API_KEY only from the environment or a portable .env location;
-never hard-code it. Set HUASHU_ENV_FILE to override the .env path.
+never hard-code it. Set HTML_DESIGN_STUDIO_ENV_FILE to override the .env path.
 Proxy handling: requests disables trust_env to avoid inherited ALL_PROXY issues.
 """
 
@@ -50,10 +50,10 @@ import requests
 API_URL = "https://ark.cn-beijing.volces.com/api/v3/responses"
 DEFAULT_MODEL = "doubao-seed-2-0-lite-260215"
 ENV_PATHS = [
-    *([Path(os.environ["HUASHU_ENV_FILE"]).expanduser()] if os.getenv("HUASHU_ENV_FILE") else []),
+    *([Path(os.environ["HTML_DESIGN_STUDIO_ENV_FILE"]).expanduser()] if os.getenv("HTML_DESIGN_STUDIO_ENV_FILE") else []),
     Path.cwd() / ".env",
     Path(__file__).resolve().parents[1] / ".env",
-    Path.home() / ".config" / "huashu-design" / ".env",
+    Path.home() / ".config" / "html-design-studio" / ".env",
 ]
 MAX_SEGMENT_MB = 8  # Recompress a segment at a lower setting if its output exceeds this size.
 

@@ -17,7 +17,7 @@
  *   ---
  *
  *   ## intro
- *   Hello, I'm Huashu. In the next five minutes, we'll make sense of what an LLM is.
+ *   In the next five minutes, we'll make sense of what an LLM is.
  *
  *   ## what-is
  *   LLM stands for Large Language Model. [[cue:bigmodel]]It is a neural network with hundreds of billions of parameters.

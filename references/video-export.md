@@ -49,7 +49,7 @@ Use the scripts below for constrained runtimes, single-file delivery, interactiv
 Records a base MP4 at 25fps. Requires Playwright to be installed globally.
 
 ```bash
-NODE_PATH=$(npm root -g) node /path/to/huashu-design/scripts/render-video.js <html-file>
+NODE_PATH=$(npm root -g) node /path/to/html-design-studio/scripts/render-video.js <html-file>
 ```
 
 Optional parameters:
@@ -104,7 +104,7 @@ bash add-music.sh product-promo.mp4 --mood=ad --out=promo-final.mp4
 Generates a 60fps MP4 and GIF from an existing MP4.
 
 ```bash
-bash /path/to/huashu-design/scripts/convert-formats.sh <input.mp4> [gif_width] [--minterpolate]
+bash /path/to/html-design-studio/scripts/convert-formats.sh <input.mp4> [gif_width] [--minterpolate]
 ```
 
 Output (same directory as input):
@@ -132,7 +132,7 @@ The `recordVideo` path in `render-video.js` has three inherent limitations: Chro
 It seeks to each timestamp, captures a frame, and uses ffmpeg to encode the PNG sequence as MP4. The core technique follows HeyGen HyperFrames' “freeze the clock, seek, then capture” model (Apache 2.0), but adds no third-party packages: it uses only this skill's existing Playwright and ffmpeg dependencies and remains runtime-neutral.
 
 ```bash
-NODE_PATH=$(npm root -g) node /path/to/huashu-design/scripts/render-video-seek.js <html-file> --fps=60
+NODE_PATH=$(npm root -g) node /path/to/html-design-studio/scripts/render-video-seek.js <html-file> --fps=60
 ```
 
 Parameters: `--duration` · `--fps` (default 60) · `--width` · `--height` · `--concurrency` (default: four parallel workers) · `--settle` (number of rAF cycles to wait after seeking before capture; default 2, increase for layout animation) · `--keep-chrome`. Output is written beside the HTML with the same base name and an `.mp4` extension.
@@ -214,7 +214,7 @@ Self-check 30 seconds before export:
 - [ ] Duration parameter matches the actual animation duration in HTML
 - [ ] Stage detection sets `loop=false` whenever `window.__recording` is active (required for custom Stage implementations; built into `assets/animations.jsx`)
 - [ ] The final sprite uses `fadeOut={0}` so the last video frame remains visible
-- [ ] Contains "Created by Huashu-Design" watermark (only animation scenes must be added; third-party brand works add the "unofficial production ·" prefix. For details, see SKILL.md § "Skill Promotion Watermark")
+- [ ] Contains "Created by HTML Design Studio" watermark (only animation scenes must be added; third-party brand works add the "unofficial production ·" prefix. For details, see SKILL.md § "Skill Promotion Watermark")
 
 ## Delivery note
 
@@ -257,6 +257,6 @@ If you want to change the size or frame rate, let me know.
   letterSpacing: '0.15em', fontFamily: 'monospace',
   pointerEvents: 'none', zIndex: 100,
 }}>
-  Created by Huashu-Design
+  Created by HTML Design Studio
 </div>
 ```

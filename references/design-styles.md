@@ -364,7 +364,7 @@ Choosing a color is not merely choosing a hue; it is choosing the cultural coord
 
 ## ⚠️ Image-Generation-Only Styles (Recommend Only After Confirming Image-Generation Capability; Never Select by Default)
 
-The soul of the following styles lies in **generated visual assets, custom real-time graphics, 3D, particles, cinematic lighting, or hand-drawn illustration**. The default static HTML/CSS path can produce only a severely reduced mockup, so **exclude them from the default recommendation pool**. Consider them only when the user has confirmed image-generation capability through `huashu-gpt-image`, or has explicitly authorized a custom Canvas/WebGL implementation:
+The soul of the following styles lies in **generated visual assets, custom real-time graphics, 3D, particles, cinematic lighting, or hand-drawn illustration**. The default static HTML/CSS path can produce only a severely reduced mockup, so **exclude them from the default recommendation pool**. Consider them only when the user has confirmed access to the runtime's image-generation tool, or has explicitly authorized a custom Canvas/WebGL implementation:
 
 | Style | Essential quality | Why the default HTML/CSS path cannot reproduce it |
 |------|------|------------------|
@@ -403,7 +403,7 @@ Short prompts are better than long prompts. Describing the mood and content is m
 | Prescribing layout positions | Citing a concrete aesthetic such as "Pentagram editorial feel" |
 | Listing every visual element | Describing what the audience should feel |
 
-For the complete AI image-generation method, see the `huashu-gpt-image` skill.
+For the complete AI image-generation method, follow the runtime's image-generation guidance.
 
 ---
 

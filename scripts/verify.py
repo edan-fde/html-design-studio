@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-verify.py — Playwright wrapper for validating HTML produced by Huashu Design
+verify.py — Playwright wrapper for validating HTML produced by HTML Design Studio
 
 Usage:
     python verify.py path/to/design.html                    # Basic: open + screenshot + capture console errors

@@ -97,9 +97,9 @@ CLICK ▶ to trigger (overlay rises): 22-second cinematic
 
 **Problem:** a 3D orbit or gallery needs floating asset fragments. Emoji such as 📚 and 🎤 are unattractive and unbranded, while an SVG-drawn book spine never looks like a real book.
 
-**Solution:** use `huashu-gpt-image` to generate one large 4 × 2 grid—eight thematically relevant objects, white background, 60 px breathing space, unified style—then extract eight independent transparent PNGs with `extract_grid.py --mode bbox`.
+**Solution:** use the runtime's image-generation tool to generate one large 4 × 2 grid—eight thematically relevant objects, white background, 60 px breathing space, unified style—then extract eight independent transparent PNGs with `extract_grid.py --mode bbox`.
 
-**Prompt essentials** (see the `huashu-gpt-image` skill for detailed prompt patterns):
+**Prompt essentials** (see the runtime's image-generation guidance for detailed prompt patterns):
 - Anchor an identifiable visual world: “1960s Caltech archive aesthetic” or “Hearthstone-style consistent treatment.”
 - Use a white background, which is easy to cut out. Gray creates atmosphere but makes transparent-background extraction difficult.
 - Use 4 × 2, not 5 × 5, to avoid the final-row compression bug.
