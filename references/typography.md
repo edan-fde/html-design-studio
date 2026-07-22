@@ -204,19 +204,6 @@ Chinese does not have the same Ultra Thin-to-Black display ecosystem as Latin ty
 - **The inverse is also true**: heavy Hei Black and Old Song faces carry too much ink at very large sizes, magnifying the density difference between a sparse character such as `一` and a complex one such as `灥`. For uneven titles, step down to a lighter weight.
 - **Vertical setting is a uniquely powerful Chinese display tool**: `writing-mode: vertical-rl` creates spine-like titles, poems, and contents pages that Latin script cannot reproduce naturally. Set Latin letters and numerals inside vertical text with `text-orientation: upright` or `text-combine-upright: all` (to keep two-digit numbers upright as a unit)
 
-## 4A. Russian and Cyrillic typography
-
-Russian artifacts must use font files with verified Cyrillic glyph coverage rather than
-relying on a late system-font fallback. Good starting families include Inter, IBM Plex
-Sans, PT Sans, PT Serif, Noto Sans, and Noto Serif.
-
-- Set `lang="ru"` on the document or relevant content container.
-- Use `«…»` for primary quotation marks and `„…“` for nested quotations.
-- Allow roughly 10–15% more horizontal space than an English placeholder of similar meaning.
-- Use sentence case for long headings; reserve uppercase for short labels.
-- Use `hyphens: auto` only in narrow text columns, never in display headings.
-- Validate every line break with the final Russian copy before export.
-
 ## 5. Anti-pattern list
 
 | ❌ Anti-pattern | Why it is wrong |

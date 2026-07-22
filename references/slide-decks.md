@@ -138,15 +138,6 @@ Suitable for B2B brochures, product promotions, and long-form report decks. Reus
 - **Accent highlight**: use the primary color and bold weight on no more than three key phrases per slide; overuse destroys the anchoring effect
 - **Background**: warm off-white `#FAFAFA` plus a faint radial-gradient texture (`rgba(33,33,33,0.015)`) for a paper-like feel
 
-### Russian-language decks
-
-- Set `lang="ru"` on every slide document.
-- Use fonts with verified Cyrillic coverage, such as Inter, IBM Plex Sans, PT Sans,
-  PT Serif, Noto Sans, or Noto Serif.
-- Budget 10–15% more width than an English placeholder and lay out the final Russian copy.
-- Use `«…»` quotation marks, sentence case for long headings, and the standard slide
-  readability floor; never shrink Russian copy simply to preserve an English-derived layout.
-
 ### Vary the visual protagonist
 
 Thirteen repetitions of “text plus screenshot” become monotonous. **Rotate the visual protagonist across slides**:
