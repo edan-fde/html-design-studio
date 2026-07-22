@@ -2,21 +2,21 @@
 /**
  * HTML animation → MP4 via deterministic frame-by-frame SEEK (Playwright + ffmpeg).
  *
- * 这是 render-video.js（Playwright recordVideo）的逐帧替代渲染器。技术内核借鉴
- * HeyGen HyperFrames（Apache 2.0）的「冻结时钟 + seek 到时间戳截图」思路，但不引入
- * 任何第三方包——只用本 skill 已有的 playwright + ffmpeg，runtime 中立。
+ * A frame-by-frame alternative to render-video.js (Playwright recordVideo). Its technical core borrows
+ * HyperFrames' (Apache 2.0) "freeze the clock + seek to a timestamp + capture" approach, without adding
+ * third-party packages: it uses only the skill's existing Playwright + ffmpeg stack and is runtime-neutral.
  *
- * 相比 render-video.js 解决的三个死结（见 references/video-export.md §「seek 渲染」）：
- *   1. 帧率不再被 Chromium headless compositor 锁死 25fps —— --fps 原生任意帧率
- *   2. 不再需要 convert-formats.sh 的 minterpolate 事后插帧（有 ghosting + macOS
- *      QuickTime 兼容 bug，见 animation-pitfalls §14）—— 每帧都是真实 seek 画面
- *   3. 不录屏 → 无开头黑帧 → 不需要 --trim / --fontwait / __ready 偏移那套逻辑
- *   额外：seek 到时间戳截图，同输入同输出 deterministic（recordVideo 是实时录制非确定性）
+ * It resolves three dead ends in render-video.js (see "Seek Rendering" in references/video-export.md):
+ *   1. Frame rate is no longer capped at 25 fps by Chromium's headless compositor; --fps accepts any native rate
+ *   2. No post-render minterpolate pass in convert-formats.sh (which causes ghosting and a macOS QuickTime
+ *      compatibility bug; see animation-pitfalls §14); every frame is captured from a real seek
+ *   3. No screen recording → no opening black frames → no --trim / --fontwait / __ready offset machinery
+ *   Bonus: timestamp-seek capture is deterministic for identical input; real-time recordVideo is not.
  *
- * 前提：动画必须走 Stage 时钟（assets/animations.jsx 的 <Stage> 或 narration_stage.jsx
- * 的 <NarrationStage>），它们会响应 window.__seekRender 冻结自驱时钟、并暴露
- * window.__seek(t)。纯 CSS @keyframes / Lottie / 非 Stage 驱动的动画不吃 __seek，
- * 这类请继续用 render-video.js。
+ * Requirement: the animation must use the Stage clock (<Stage> from assets/animations.jsx or
+ * <NarrationStage> from narration_stage.jsx). These components respond to window.__seekRender by freezing
+ * their self-driven clock and exposing window.__seek(t). Pure CSS @keyframes, Lottie, and animations not
+ * driven by Stage do not support __seek; continue using render-video.js for those.
  *
  * Requires: global playwright (`npm install -g playwright`), ffmpeg on PATH.
  *
@@ -49,11 +49,11 @@ if (!HTML_FILE || HTML_FILE.startsWith('--')) {
 }
 
 const DURATION    = parseFloat(arg('duration', '30'));
-const FPS         = parseFloat(arg('fps', '60'));      // 原生任意帧率，默认真 60fps
+const FPS         = parseFloat(arg('fps', '60'));      // Any native frame rate; true 60 fps by default.
 const WIDTH       = parseInt(arg('width', '1920'));
 const HEIGHT      = parseInt(arg('height', '1080'));
-const CONCURRENCY = Math.max(1, parseInt(arg('concurrency', '4')));  // 并行 worker 数（每个一个 page）
-const SETTLE      = Math.max(1, parseInt(arg('settle', '2')));        // seek 后等几个 rAF 再截图
+const CONCURRENCY = Math.max(1, parseInt(arg('concurrency', '4')));  // Parallel workers, one page per worker.
+const SETTLE      = Math.max(1, parseInt(arg('settle', '2')));        // rAFs to wait after seeking before capture.
 const READY_TIMEOUT = parseFloat(arg('readytimeout', '8'));
 const KEEP_CHROME = hasFlag('keep-chrome');
 
@@ -63,7 +63,7 @@ const DIR      = path.dirname(HTML_ABS);
 const TMP_DIR  = path.join(DIR, '.seek-tmp-' + Date.now() + '-' + process.pid);
 const MP4_OUT  = path.join(DIR, BASENAME + '.mp4');
 
-// 与 render-video.js 完全一致的 chrome 隐藏规则（保证两条链路出片外观一致）
+// Chrome-hiding rules identical to render-video.js, ensuring visual consistency between both pipelines.
 const HIDE_CHROME_CSS = `
   .no-record,
   .progress, .progress-bar,
@@ -83,7 +83,7 @@ console.log(`▸ Seek-rendering: ${HTML_FILE}`);
 console.log(`  size: ${WIDTH}x${HEIGHT} · ${FPS}fps · duration: ${DURATION}s · frames: ${TOTAL_FRAMES} · workers: ${CONCURRENCY}`);
 console.log(`  output: ${MP4_OUT}`);
 
-// 在 page 上下文里运行：等 SETTLE 个 rAF（让 React/Babel commit + 布局稳定后再截图）
+// Runs in the page context: wait SETTLE rAFs so React/Babel can commit and layout can stabilize before capture.
 async function waitRaf(page, n) {
   await page.evaluate((count) => new Promise(resolve => {
     let i = 0;
@@ -92,12 +92,12 @@ async function waitRaf(page, n) {
   }), n);
 }
 
-// 一个 worker：开一个 page，goto，等 __seek 就绪，渲染分配给它的帧
+// One worker: open a page, navigate, wait for __seek, and render its assigned frames.
 async function renderFrames(context, url, frames) {
   const page = await context.newPage();
   await page.goto(url, { waitUntil: 'load', timeout: 60000 });
 
-  // Stage / NarrationStage 在 __seekRender 模式下会暴露 window.__seek 并冻结自驱时钟
+  // In __seekRender mode, Stage / NarrationStage exposes window.__seek and freezes its self-driven clock.
   await page.waitForFunction(
     () => window.__ready === true && typeof window.__seek === 'function',
     { timeout: READY_TIMEOUT * 1000 },
@@ -126,15 +126,15 @@ async function renderFrames(context, url, frames) {
     deviceScaleFactor: 1,
   });
 
-  // 关键信号：__seekRender 让 Stage / NarrationStage 冻结 wall-clock rAF，改由外部 __seek 推帧
-  // __recording 沿用，让 Stage 强制 loop=false（复用既有约定）
+  // Key signal: __seekRender freezes Stage / NarrationStage's wall-clock rAF and lets external __seek drive frames.
+  // Preserve __recording so Stage forces loop=false under the existing convention.
   await context.addInitScript(() => {
     window.__recording = true;
     window.__seekRender = true;
   });
 
   if (!KEEP_CHROME) {
-    // 与 render-video.js 同款 chrome 隐藏（CSS + 固定栏启发式）
+    // Same chrome hiding as render-video.js (CSS + fixed-bar heuristic).
     await context.addInitScript(css => {
       const HIDE_MARK = 'data-video-hidden';
       function injectStyle() {
@@ -180,7 +180,7 @@ async function renderFrames(context, url, frames) {
     }, HIDE_CHROME_CSS);
   }
 
-  // 把帧 round-robin 分给 CONCURRENCY 个 worker（每个 page 独立 window，seek 互不干扰）
+  // Distribute frames round-robin across CONCURRENCY workers (each page has an independent window, so seeks do not interfere).
   const buckets = Array.from({ length: CONCURRENCY }, () => []);
   for (let f = 0; f < TOTAL_FRAMES; f++) buckets[f % CONCURRENCY].push(f);
 
@@ -191,10 +191,10 @@ async function renderFrames(context, url, frames) {
     const msg = String(e && e.message || e);
     if (/__seek|__ready/.test(msg)) {
       console.error('');
-      console.error('✗ 动画没有暴露 window.__seek（或未就绪）。');
-      console.error('  seek 渲染只支持走 Stage 时钟的动画（assets/animations.jsx 的 <Stage>');
-      console.error('  或 narration_stage.jsx 的 <NarrationStage>）。纯 CSS @keyframes / Lottie /');
-      console.error('  手写非 Stage 动画请改用 render-video.js。');
+      console.error('✗ The animation did not expose window.__seek (or is not ready).');
+      console.error('  Seek rendering only supports animations driven by the Stage clock (<Stage> from assets/animations.jsx');
+      console.error('  or <NarrationStage> from narration_stage.jsx). For pure CSS @keyframes, Lottie,');
+      console.error('  or hand-written non-Stage animation, use render-video.js instead.');
       console.error('');
     }
     await browser.close();
@@ -207,12 +207,12 @@ async function renderFrames(context, url, frames) {
 
   const pngCount = fs.readdirSync(TMP_DIR).filter(f => f.endsWith('.png')).length;
   if (pngCount === 0) {
-    console.error('✗ 没有截到任何帧');
+    console.error('✗ No frames were captured');
     process.exit(1);
   }
   console.log(`▸ Captured ${pngCount}/${TOTAL_FRAMES} frames. Encoding H.264…`);
 
-  // PNG 序列 → MP4。无 trim（本来就没黑帧），输入输出帧率都设 FPS。
+  // PNG sequence → MP4. No trim (there are no black frames); set both input and output rate to FPS.
   const ffmpeg = spawnSync('ffmpeg', [
     '-y',
     '-framerate', String(FPS),

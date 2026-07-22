@@ -1,237 +1,239 @@
-# 多视角并行实验 · Case Study
+# Parallel Multi-Perspective Experiment · Case Study
 
-> huashu-md-html v2.0 launch film 项目 · 2026-05-11
-> 6 位艺术家视角的并行 director's notes + HTML + 关键帧实验
-
----
-
-## 背景
-
-用户要求「为 huashu-md-html v2.0 制作 30 秒升级宣传片」时，主线程先产出了 v5 基线（Anthropic / Penguin Classics 出版社品位）。但用户认为可以做得更好，给了 critical instruction：
-
-> 「调用不同的 subagent 分别再去生成 6 个全然不同的表达方式和视觉设计的版本。你可以试试启用不同的导演和艺术家。然后全都完成后，再评判审校。」
-
-这是首次系统化的「多视角并行 director's notes」实验，验证了一套可复用的工作流。
+> huashu-md-html v2.0 launch film project · 2026-05-11
+> Parallel experiment across six artist perspectives: director's notes, HTML, and keyframes
 
 ---
 
-## 6 个视角的选择逻辑
+## Background
 
-不要随便选 6 个 designer——他们必须**视觉差异度极高**，避免趋同。
+When the user requested a 30-second upgrade film for `huashu-md-html` v2.0, the main thread first produced the v5 baseline, drawing on Anthropic and Penguin Classics. The user believed it could go further and gave a decisive instruction:
 
-最终选择的 6 个视角（含选择理由）：
+> “Ask different subagents to generate six completely different approaches to expression and visual design. Try different directors and artists, then review them together once all are complete.”
 
-| 视角 | 流派 | 美学锚点 | 跟其他视角的差异 |
+This became the first systematic experiment in parallel, multi-perspective direction and validated a reusable workflow.
+
+---
+
+## How the six perspectives were selected
+
+Do not choose six designers at random. Their visual languages must differ radically enough to prevent convergence.
+
+The six selected perspectives were:
+
+| Perspective | Genre | Aesthetic anchor | Differences from other perspectives |
 |------|------|---------|----------------|
-| **v5 基线** | 现代出版社 | Anthropic 赤陶橙 + Penguin Classics 衬线 + Vignelli grid | 安全的「品位」选择 |
-| **v5a Wes Anderson** | 电影章节美学 | The French Dispatch 杂志感 + 1960 Olivetti 工业目录 | 对称构图 + 章节卡片 + 装饰边框 |
-| **v5b Saul Bass** | 60s 影片标题艺术 | cut-paper + Trajan caps + 流动几何 | 剪纸 silhouette + 大字 + 强对角线 |
-| **v5c 王家卫** | 港式新浪潮 | 《花样年华》《2046》 letterboxing + 中文衬线 | 慢拍 + 雾化光晕 + 中文为主 |
-| **v5d Massimo Vignelli** | 1970 现代主义 | Knoll identity manual + NYC Subway map | 严格 grid + 3 色铁律 + 拒绝装饰 |
-| **v5e Kenya Hara** | 极简日式 | MUJI 海报 + 《白》 | 留白哲学 + 无 chrome + ma 间 |
-| **v5f Yayoi Kusama** | 装置艺术 | Infinity Mirror Rooms + Polka Dot Obsession | obsessive 重复 + 单一强色 + 圆点 |
+| **v5 baseline** | Modern publishing | Anthropic terracotta + Penguin Classics serif + Vignelli grid | Safe, assured taste |
+| **v5a Wes Anderson** | Cinematic chapter-card aesthetic | *The French Dispatch* editorial feel + 1960s Olivetti industrial catalogues | Symmetrical compositions + chapter cards + decorative borders |
+| **v5b Saul Bass** | 1960s film-title art | Cut paper + Trajan capitals + kinetic geometry | Paper-cut silhouettes + oversized type + strong diagonals |
+| **v5c Wong Kar-wai** | Hong Kong New Wave | *In the Mood for Love* and *2046*: letterboxing + Chinese serifs | Slow motion + diffused halos + Chinese-led typography |
+| **v5d Massimo Vignelli** | 1970s modernism | Knoll identity manual + NYC Subway map | Strict grid + three-color rule + no decoration |
+| **v5e Kenya Hara** | Japanese minimalism | MUJI posters + *White* | Philosophy of emptiness + no chrome + *ma*, or negative space |
+| **v5f Yayoi Kusama** | Installation art | Infinity Mirror Rooms + Polka Dot Obsession | obsessive repetition + single strong color + polka dots |
 
-**选择原则**：
-1. **3 个不同地理文化**（西方电影 / 日本设计 / 港式中文）
-2. **3 个不同年代**（1960s / 1970s / 2010s+）
-3. **3 个不同载体**（电影 / 平面设计 / 装置艺术）
-4. **每个都有「跟训练语料里通用 SaaS 美学完全相反」的视觉签名**
+**Selection principles**:
+1. **Three geographic cultures** (Western cinema / Japanese design / Hong Kong Chinese culture)
+2. **3 different eras** (1960s / 1970s / 2010s+)
+3. **Three different media** (film / graphic design / installation art)
+4. **Each has a visual signature far removed from generic SaaS aesthetics**
 
 ---
 
-## 实施流程
+## Implementation process
 
-### Step 1 · 为每个视角写独立 brief（约 15 分钟）
+### Step 1 · Write an independent brief for each perspective (about 15 minutes)
 
-每个 brief 包含 8 个固定字段：
+Each brief contains eight fixed fields:
 
 ```
-1. 项目背景（同一份）
-2. 必读参考（同一份 v5-director-notes.md 作方法论模板）
-3. 你要做的事（4 项交付清单）
-4. 该艺术家 DNA（核心字段 6 项）：
-   - 色板（具体 HEX）
-   - 字体（具体名字 + 替代方案）
-   - 视觉语言（核心几条）
-   - 招牌元素（identifiable signatures）
-   - 节奏（区别其他视角）
-   - 反 AI slop 强化版（在该风格语境下的禁区）
-5. 30 秒结构参考（4-6 个 shot 草拟）
-6. destination cards 设计要求（保持真实可读）
-7. 关键约束（30s / 1920×1080 / file:// / Google Fonts CDN）
-8. 输出验证清单 + 完成报告格式
+1. Project background (the same source brief for every subagent)
+2. Must-read reference (the same `v5-director-notes.md` methodology template for every subagent)
+3. Assignment (four required deliverables)
+4. Artist DNA (six core fields):
+   - Color palette (specific HEX values)
+   - Typefaces (specific names + alternatives)
+   - Visual language (core principles)
+   - Signature elements (recognizable motifs)
+   - Rhythm (different from other perspectives)
+   - Style-specific anti-AI-slop rules
+5. 30-second structural reference (draft of 4–6 shots)
+6. Destination-card requirements (real and readable)
+7. Hard constraints (30s / 1920×1080 / `file://` / Google Fonts CDN)
+8. Output QA checklist + completion-report format
 ```
 
-**关键**：每个 brief 必须强调「**不要重复 v5 的美学**」——否则 subagent 会被 v5 director-notes 影响而趋同。
+**Key**: every brief must explicitly say **“Do not repeat the v5 aesthetic.”** Without that constraint, the v5 director's notes will pull the explorations toward the baseline.
 
-### Step 2 · 并行启动 6 个 subagent（同一 message 中 6 个 Agent tool calls）
+### Step 2 · Start six subagents in parallel
 
 ```js
-Agent({ subagent_type: "general-purpose", run_in_background: true, name: "v5a-anderson", ... })
-Agent({ subagent_type: "general-purpose", run_in_background: true, name: "v5b-bass", ... })
-// ... 6 个
+spawn_agent({ task_name: "v5a_anderson", message: "..." })
+spawn_agent({ task_name: "v5b_bass", message: "..." })
+// ...six total
 ```
 
-后台运行，预期 30-60 分钟。
+Dispatch all six asynchronously using the current runtime's subagent tool and allow 30–60 minutes for completion.
 
-### Step 3 · 等待期间的 idle work
+### Step 3 · Productive work while waiting
 
-不要 polling agent 状态。subagent 完成会自动 task-notification。等待期间做：
+Do not busy-poll agent status; use the runtime's wait/notification mechanism. While waiting:
 
-- 修主线程的 v5 基线 bug
-- 写 review framework（每个版本要打的分维度 / Q&A）
-- 沉淀方法论到 skill（这正是这份 case study 的来源）
-- 准备 final summary 文档骨架
+- Fix defects in the v5 baseline
+- Write review framework (dimensions/Q&A for each version)
+- Distill the method into the skill (the origin of this case study)
+- Prepare final summary document skeleton
 
-### Step 4 · 失败处理（约 16% 失败率，可接受）
+### Step 4 · Failure handling (about 16% failure rate, acceptable)
 
-实战观测：6 个 subagent 中约 1 个会因网络或 token 超限失败（Bass 首轮 socket error）。处理：
+Observed in practice: about one of six subagents may fail because of network errors or token limits—the first Bass attempt hit a socket error. Recovery process:
 
-1. 收到 completion notification 时**立即检查**该 agent 的输出文件夹
-2. 缺少关键交付物 → 重启该 agent（同样 brief，可标注「上次失败，请重新执行」）
-3. 部分完成（如有 html 没截图）→ 主线程补 Playwright 截图，不重启 agent
+1. **Inspect the agent's output folder immediately** when its completion notification arrives.
+2. If key deliverables are missing, restart it with the same brief and note that the previous run failed.
+3. If the result is partial—for example, HTML exists but screenshots do not—the main thread can capture the missing Playwright images without restarting the agent.
 
-### Step 5 · 6 版本完成后系统审校
+### Step 5 · Systematic review after all six versions complete
 
-审校 framework（5 维度 + 3 顶层问 + use case 分配）：
+Review framework (5 dimensions + 3 top-level questions + use case allocation):
 
 ```
-5 维度评分（每维 1-10）：
-- Distinctiveness 视觉差异化
-- Coherence 美学一致性
-- Anti-slop 反 AI slop 执行
-- Story arc 节奏与故事弧
-- Pause-and-look 细节密度
+Five-dimension score (1–10 each):
+- Distinctiveness — visual differentiation
+- Coherence — aesthetic consistency
+- Anti-slop — execution of the anti-AI-slop rules
+- Story arc — pacing and narrative structure
+- Pause-and-look — density of rewarding details
 
-3 顶层问：
-- Q1 截图分享？（能在社交平台触发暂停）
-- Q2 记一句话？（能留下命题级记忆）
-- Q3 跨时代？（5 年后回看不显廉价）
+Three top-level questions:
+- Q1 · Would someone share a screenshot? (Can it make viewers pause on social platforms?)
+- Q2 · Will they remember one sentence? (Does it leave a thesis-level memory?)
+- Q3 · Will it age well? (Will it still avoid looking cheap five years from now?)
 
-use case 分配（按平台和受众）：
-- 公众号 / X / B 站 / 朋友圈 / Dribbble / 客户演示 / 私域 / ...
+Use-case assignment by platform and audience:
+- WeChat Official Accounts / X / Bilibili / Moments / Dribbble / client presentations / private channels / ...
 ```
 
-详见 `assets/director-notes-samples/launch-film-30s-sample.md` 的同目录 REVIEW.md。
+The complete rubric lives in the original project's local `REVIEW.md`, which is not distributed with this repository; the included sample is `assets/director-notes-samples/launch-film-30s-sample.md`.
 
 ---
 
-## 实验产出（事实）
+## Experiment output (facts)
 
-### 文档量
+### Documentation volume
 
-- v5 基线 director-notes：11500 字
-- 6 视角 director-notes 各 4000-12000 字
-- 总文档量：约 55000-70000 字
-- 5 大部分结构齐全：6/6 版本
+The counts below are Chinese characters in the source documentation, not English words. An English version should preserve comparable decision density rather than copying the numbers as word counts.
 
-### HTML 实施
+- v5 baseline director's notes: about 11,500 Chinese characters
+- Six perspective-specific sets of director's notes: about 4,000–12,000 Chinese characters each
+- Total documentation: approximately 55,000–70,000 Chinese characters
+- All five major sections substantially complete in all six versions
 
-- 每版独立 animation.html，30 秒，1920×1080
-- 文件大小 28-74KB
-- 全部 file:// 可打开（不依赖 server）
+### HTML implementation
 
-### 关键帧
+- Each version is a self-contained `animation.html`, 30 seconds at 1920×1080
+- File size 28-74KB
+- Every version opens over `file://` with no server dependency
 
-- 每版 10-18 张 PNG，覆盖完整 30 秒故事弧
-- 总截图量：80+ 张
-- 平均每张 PNG 大小：100-200KB
+### Key frames
 
-### 时长
+- 10–18 PNGs per version, covering the complete 30-second story arc
+- Total screenshots: 80+
+- Average PNG size: 100–200 KB
 
-- 6 个 subagent 并行运行：约 12-15 分钟（duration_ms 显示）
-- 主线程并行 idle work（修 v5 + 写方法论）：同期完成
-- 整体「从启动 6 视角到所有 deliverable 到位」：约 60 分钟
+### Duration
+
+- Six parallel subagents: about 12–15 minutes according to `duration_ms`
+- The main thread completed v5 repairs and methodology documentation in the same window
+- End-to-end time from launch to all six complete deliverable sets: about 60 minutes
 
 ---
 
-## 关键洞察（写给 huashu-design 的未来用户）
+## Key insights (written to future users of huashu-design)
 
-### 洞察 1 · 「先写万字 director's notes」方法论**完全 reproducible**
+### Insight 1 · The “write extensive director's notes first” method is **fully reproducible**
 
-6 个 subagent 都按 5 大部分结构产出了 4000-12000 字的完整 spec，且实施 HTML 时都达到了 marketing-ready 质量。这证明方法论本身不依赖单一执行者的天赋——**只要 brief 给得清楚，多个独立执行者能产出一致的高质量结果**。
+All six subagents produced the five major sections at source lengths of 4,000–12,000 Chinese characters, then implemented marketing-ready HTML. The methodology therefore does not depend on one exceptional implementer: **given a precise brief, multiple independent executors can produce consistently strong results.**
 
-### 洞察 2 · 「视角」必须具体到「作品 + 年份」
+### Insight 2 · "Perspective" must be specific to "work + year"
 
-每个 brief 里都列出具体作品对话：
+Specific work dialogues are listed in each brief:
 - Anderson → *The French Dispatch* (2021) + *Moonrise Kingdom* (2012) + Penguin Classics dust jackets + 1960s Olivetti catalogues
 - WKW → *In the Mood for Love* (2000) + *2046* (2004)
 - Vignelli → 1972 NYC Subway map + Knoll identity manual + *The Vignelli Canon*
-- Hara → MUJI brand 1995-2023 + 《白》 + Junya Ishigami transparency
-- Kusama → Infinity Mirrored Rooms (2013-2023) + Polka Dot Obsession 装置
+- Hara → MUJI brand work, 1995–2023 + *White* + Junya Ishigami's transparency
+- Kusama → *Infinity Mirrored Rooms* (2013–2023) + *Polka Dot Obsession*
 
-**实战结果**：所有 subagent 都准确捕捉到了该作品的核心 visual DNA，而不是流派的「平均值」。
+**Observed result**: every subagent captured the source works' distinctive visual DNA instead of producing an averaged genre imitation.
 
-### 洞察 3 · 反 AI slop 的「风格强化版本」是关键
+### Insight 3 · Style-specific anti-AI-slop rules are essential
 
-通用 anti-slop（紫渐变 / emoji / SVG 人物）适用所有版本。但**每个风格还要写「专属 anti-slop」**：
+Universal exclusions—purple gradients, emoji, SVG characters—apply to every version. But **each style also needs its own exclusions**:
 
-- Bass: 不用 Helvetica（太干净，Bass 是粗犷）
-- Vignelli: 不用圆角（所有 corner 90°）
-- Hara: 不用任何渐变 + 不用 sans display
-- Kusama: 不用现代 SaaS look
-- Anderson: 不用 cyber 配色
-- WKW: 不用 Inter（WKW 用衬线）
+- Bass: No Helvetica (too clean, Bass is rough)
+- Vignelli: No rounded corners (all corners 90°)
+- Hara: no gradients and no sans-serif display type
+- Kusama: No modern SaaS look
+- Anderson: no cyber-style palette
+- WKW: No Inter (WKW uses serifs)
 
-加了这些后，6 个版本风格纯度极高，无一相互趋同。
+With these additions, all six versions maintain strong stylistic purity and remain clearly distinct from one another.
 
-### 洞察 4 · 多视角的真正价值不是「选 winner」
+### Insight 4 · The real value of multiple perspectives is not "selecting the winner"
 
-最初设想是 A/B test 选最好的版本。实际审校时发现：**6 个版本各自有清晰 use case**：
-- v5 基线 → 产品页 / 微信读书（信息密度高）
-- Anderson → 公众号长文头图（翻杂志感强）
-- WKW → B 站 / 中文文化向（怀旧温度）
-- Vignelli → 设计圈 / Dribbble（每帧都是印刷海报）
-- Hara → 客户演示 / 静态截图（极简哲学）
-- Kusama → X 短视频 / 病毒传播（视觉冲击）
+The original plan was to choose one A/B-test winner. The review revealed something more useful: **each of the six versions had a clear role**:
+- v5 baseline → product page / WeChat article (high information density)
+- Anderson → long-form WeChat header (strong magazine-page-turning feel)
+- Wong Kar-wai → Bilibili / Chinese cultural audience (nostalgic warmth)
+- Vignelli → design communities / Dribbble (every frame reads as a printed poster)
+- Hara → client demonstration / static still (minimalist philosophy)
+- Kusama → X short video / viral spread (visual impact)
 
-**结论**：marketing 不是 single-shot，是 platform-specific multiplex。6 视角并行的真正价值是**让一个项目有 6 个差异化武器**，不是让 5 个版本上不了台面。
+**Conclusion**: Marketing is not one-size-fits-all; it is platform-specific. The value of six parallel perspectives is not to discard five versions, but to give the project six differentiated tools.
 
-### 洞察 5 · subagent 的失败率 ~16% 是可接受的
+### Insight 5 · Subagent failure rate ~16% is acceptable
 
-6 个里 1 个失败（Bass 首轮 socket error）。处理代价：重启 + 5 分钟简化版 brief，再等 12-15 分钟。**对比 vs. 等 1 个 agent 顺序跑 6 个版本（90+ 分钟）**——并行 + 重试明显更经济。
+One of six attempts failed—the first Bass run hit a socket error. Recovery cost was a restart, five minutes to simplify the brief, and a 12–15-minute wait. Compared with having one agent produce six versions sequentially for 90+ minutes, parallel execution plus retry is clearly more efficient.
 
-### 洞察 6 · 主线程在等待期间必须做 substantive idle work
+### Insight 6 · The main thread should advance substantive work while waiting
 
-subagent 完成需要 12-15 分钟。这段时间主线程绝不该空闲：
+Subagents take 12–15 minutes to complete. The main thread should use that time productively:
 
-- **修主版本 bug**（用户已经反馈的）
-- **写 review framework**（等审校时填）
-- **沉淀方法论到 skill**（如这份 case study）
-- **准备 final summary**（用户回来一目了然）
+- **Fix bugs in the main version** (especially those already reported by the user)
+- **Write the review framework**
+- **Distill the methodology into the skill** (as in this case study)
+- **Prepare the final summary** so users can understand the results at a glance
 
-这是 parallel multi-agent workflow 的「主线程职责」——不是 PM 等结果，是 orchestrator 同步推进。
+That is the main thread's responsibility in a parallel multi-agent workflow: not passive project management, but advancing the work synchronously as an orchestrator.
 
 ---
 
-## 何时启用「多视角并行」
+## When to enable "Multi-perspective parallelism"
 
-| 场景 | 是否启用 | 原因 |
+| Scenario | Whether to enable | Reason |
 |------|---------|------|
-| 用户明确说「想看不同方向」「再多做几个版本」 | ✅ 立刻启用 | 直接需求 |
-| 第一版做出来用户不满意但说不清要啥 | ✅ 启用 | A/B 选优于「我猜你要啥」 |
-| 项目准备多平台分发（X / 公众号 / B 站 / 朋友圈） | ✅ 启用 | 每平台一个版本 |
-| 客户没拍板风格但有预算（time + token） | ✅ 启用 | 反复改 = 5 倍代价 |
-| 用户已经给了明确风格参考且只要 1 个版本 | ❌ 不启用 | 浪费 |
-| 任务是简单 motion graphic / icon 动画 | ❌ 不启用 | 过度工程化 |
-| 时间紧 < 30 分钟 | ❌ 不启用 | subagent 跑不完 |
+| The user clearly said "want to look at different directions" and "do more versions" | ✅ Enable immediately | Direct demand |
+| The user dislikes the first version but cannot articulate the desired direction | ✅ Enable | A/B comparison beats guessing |
+| The project targets several platforms (X / WeChat Official Accounts / Bilibili / Moments) | ✅ Enable | Assign a version to each platform |
+| The client has no clear preference but has sufficient time and token budget | ✅ Enable | Parallel options cost less than repeated undirected revisions |
+| The user has given a clear style reference and needs only one version | ❌ Do not enable | Unnecessary exploration |
+| The task is a simple motion graphic or icon animation | ❌ Do not enable | Over-engineered |
+| Deadline under 30 minutes | ❌ Do not enable | Subagents cannot finish in time |
 
 ---
 
-## 完整方法论流程图
+## Complete methodology flow chart
 
 ```
-用户 brief（含质量预期）
+User brief (including quality expectations)
        ↓
-[主线程] 写 v5 基线 director's notes（万字级 5 大部分）
+[Main thread] Write the extensive v5 baseline director's notes (five major parts)
        ↓
-[主线程] 实施 v5 HTML + 截关键帧（marketing baseline）
+[Main thread] Implement the v5 HTML and capture keyframes (marketing baseline)
        ↓
-[决策点] 是否启用多视角？
+[Decision point] Is multi-view enabled?
        ↓ YES
-[主线程] 选 6 个差异化视角 + 写 6 份独立 brief（每份 8 字段）
+[Main thread] Select six distinct perspectives and write six independent briefs (eight fields each)
        ↓
-[6 subagents 并行]
+[6 subagents parallel]
    ├── v5a brief → director-notes + html + keyframes + README
    ├── v5b brief → ...
    ├── v5c brief → ...
@@ -239,29 +241,29 @@ subagent 完成需要 12-15 分钟。这段时间主线程绝不该空闲：
    ├── v5e brief → ...
    └── v5f brief → ...
        ↓
-[主线程同步做] 修 v5 bug · 写 review framework · 沉淀方法论
+[Main thread in parallel] Repair v5 · Write review framework · Distill methodology
        ↓
-[全 6 通知到达]
+[All six completion notifications arrive]
        ↓
-[主线程] 失败检测 + 重试 / 补截图
+[Main thread] Detect failures · Retry or capture missing screenshots
        ↓
-[主线程] 5 维度评分 + 3 顶层问 + use case 分配
+[Main thread] Score five dimensions · Answer three top-level questions · Assign use cases
        ↓
-[主线程] 写 final REVIEW.md
+[Main thread] Write final REVIEW.md
        ↓
-[交付] 6 完整版本 + review + 平台分发推荐
+[Delivery] Six complete versions + review + platform recommendations
 ```
 
 ---
 
-## 相关文档
+## Related documents
 
-- 完整方法论：`references/launch-film-director-notes.md`
-- 单视角样本：`assets/director-notes-samples/launch-film-30s-sample.md`（v5 基线）
-- 实战项目位置：作者本地 demos 目录（含 6 + 1 视角全套文件，未随仓库分发）
-- 审校 review：作者本地 REVIEW.md（未随仓库分发）
+- Complete methodology: `references/launch-film-director-notes.md`
+- Single-view sample: `assets/director-notes-samples/launch-film-30s-sample.md` (v5 baseline)
+- Original project: the author's local demos directory (contains all six explorations plus the baseline; not included in this repository)
+- Full review: the author's local `REVIEW.md` (not included in this repository)
 
 ---
 
 *Last updated: 2026-05-11*
-*Real case study: huashu-md-html v2.0 launch film 6-perspective parallel experiment*
+*Case study: huashu-md-html v2.0 launch film, six-perspective parallel experiment*

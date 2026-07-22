@@ -1,10 +1,10 @@
-# React + Babel 项目规范
+# React + Babel Project Standards
 
-用HTML+React+Babel做原型时必须遵守的技术规范。不遵守会炸。
+Follow these technical standards when building prototypes with HTML + React + Babel. Violating them will cause runtime failures.
 
-## Pinned Script Tags（必须用这些版本）
+## Pinned Script Tags (must use these versions)
 
-在HTML的`<head>`里放这三个script tag，用**固定版本+integrity hash**：
+Place these three script tags in the HTML `<head>`, using the **exact pinned versions and integrity hashes**:
 
 ```html
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
@@ -12,55 +12,55 @@
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 ```
 
-**不要**用`react@18`或`react@latest`这种unpinned版本——会出现版本漂移/缓存问题。
+**Do not** use unpinned versions such as `react@18` or `react@latest`; version drift and caching problems will follow.
 
-**不要**省略`integrity`——CDN一旦被劫持或篡改，这是防线。
+**Do not** omit `integrity`; it is the last line of defense if the CDN is compromised or its files are altered.
 
-## 文件结构
+## File structure
 
 ```
-项目名/
-├── index.html               # 主HTML
-├── components.jsx           # 组件文件（type="text/babel"加载）
-├── data.js                  # 数据文件
-└── styles.css               # 额外CSS（可选）
+project-name/
+├── index.html               # Main HTML
+├── components.jsx           # Components (loaded with type="text/babel")
+├── data.js                  # data file
+└── styles.css               # Additional CSS (optional)
 ```
 
-HTML里加载方式：
+Load files in this order:
 
 ```html
-<!-- 先React+Babel -->
+<!-- React and Babel first -->
 <script src="https://unpkg.com/react@18.3.1/..."></script>
 <script src="https://unpkg.com/react-dom@18.3.1/..."></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/..."></script>
 
-<!-- 然后你的组件文件 -->
+<!-- then your component file -->
 <script type="text/babel" src="components.jsx"></script>
 <script type="text/babel" src="pages.jsx"></script>
 
-<!-- 最后主入口 -->
+<!-- Finally, the main entry point -->
 <script type="text/babel">
   const root = ReactDOM.createRoot(document.getElementById('root'));
   root.render(<App />);
 </script>
 ```
 
-**不要**用`type="module"`——会和Babel冲突。
+**Do not** use `type="module"`; it conflicts with this Babel setup.
 
-## 三条不可违反的规矩
+## Three non-negotiable rules
 
-### 规矩1：styles 对象必须用唯一命名
+### Rule 1: The styles object must be uniquely named
 
-**错误**（多组件时必炸）：
+**Incorrect** (fails when multiple component files are loaded):
 ```jsx
 // components.jsx
 const styles = { button: {...}, card: {...} };
 
-// pages.jsx  ← 同名覆盖！
+// pages.jsx  ← The duplicate name overwrites the first object.
 const styles = { container: {...}, header: {...} };
 ```
 
-**正确**：每个组件文件的styles用唯一前缀。
+**Correct**: Use a unique prefix for styles in each component file.
 
 ```jsx
 // terminal.jsx
@@ -76,73 +76,73 @@ const sidebarStyles = {
 };
 ```
 
-**或者用inline styles**（小组件推荐）：
+**Or use inline styles** (widget recommendation):
 ```jsx
 <div style={{ padding: 16, background: '#111' }}>...</div>
 ```
 
-这条是**非协商**的。每次写`const styles = {...}`都必须replace成specific命名，否则多组件加载时全栈报错。
+This is **non-negotiable**. Whenever you write `const styles = {...}`, replace `styles` with a specific name. Otherwise, loading multiple component files can break the entire prototype.
 
-### 规矩2：Scope 不共享，需手动export
+### Rule 2: Scopes are isolated; export shared values explicitly
 
-**关键认知**：每个`<script type="text/babel">`被Babel独立编译，它们之间**scope不通**。`components.jsx`里定义的`Terminal`组件，在`pages.jsx`里**默认是undefined**。
+**Key fact**: Babel compiles each `<script type="text/babel">` independently, so **their scopes are isolated**. A `Terminal` component defined in `components.jsx` is not automatically visible in `pages.jsx`.
 
-**解决方式**：在每个组件文件末尾，把要共享的组件/工具export到`window`：
+**Solution**: At the end of each component file, export the components/tools to be shared to `window`:
 
 ```jsx
-// components.jsx 末尾
+// components.jsx at the end
 function Terminal(props) { ... }
 function Line(props) { ... }
 const colors = { green: '#...', red: '#...' };
 
 Object.assign(window, {
   Terminal, Line, colors,
-  // 所有你要在别处用的都列在这里
+  // List every value that other files need here.
 });
 ```
 
-然后`pages.jsx`就能直接用`<Terminal />`，因为JSX会去`window.Terminal`找。
+Then `pages.jsx` can use `<Terminal />` directly because the name resolves through `window.Terminal`.
 
-### 规矩3：不要用 scrollIntoView
+### Rule 3: Do not use scrollIntoView
 
-`scrollIntoView`会把整个HTML容器往上推，搞坏web harness的布局。**永远不要用**。
+`scrollIntoView` can shift the entire HTML container upward and break the preview harness layout. **Never use it.**
 
-替代方案：
+Alternative:
 ```js
-// 滚到容器内某个位置
+// Scroll to a position within the container.
 container.scrollTop = targetElement.offsetTop;
 
-// 或者用element.scrollTo
+// Or call scrollTo on the container element.
 container.scrollTo({
   top: targetElement.offsetTop - 100,
   behavior: 'smooth'
 });
 ```
 
-## 调 Claude API（HTML内）
+## Calling the Claude API from HTML
 
-部分原生 design-agent 环境（如 Claude.ai Artifacts）有免配置的 `window.claude.complete`，但大部分 agent 环境（Claude Code / Codex / Cursor / Trae / etc.）本地里**没有**。
+Some native design-agent environments, such as Claude.ai Artifacts, provide `window.claude.complete` without configuration. Most local agent environments—including Claude Code, Codex, Cursor, and Trae—do not.
 
-如果你的 HTML 原型需要调用 LLM 做 demo（比如做个聊天 interface），两个选项：
+If the HTML prototype needs an LLM for a demonstration, such as a chat interface, use one of these options:
 
-### 选项A：不真调，用mock
+### Option A: Use a mock instead of a live call
 
-Demo场景推荐。写一个假helper，返回预设的response：
+Recommended for demos. Define a helper that returns a fixed response:
 ```jsx
 window.claude = {
   async complete(prompt) {
-    await new Promise(r => setTimeout(r, 800)); // 模拟延迟
-    return "这是一个mock响应。真部署时请替换为真API。";
+    await new Promise(r => setTimeout(r, 800)); // simulates delay
+    return "This is a mock response. Replace it with the real API in production.";
   }
 };
 ```
 
-### 选项B：真调Anthropic API
+### Option B: Call the Anthropic API
 
-需要API key，用户必须在HTML里填入自己的key才能跑。**永远不要把key硬编码在HTML里**。
+This requires an API key. The user must enter their own key at runtime. **Never hardcode API keys in HTML.**
 
 ```html
-<input id="api-key" placeholder="粘贴你的Anthropic API key" />
+<input id="api-key" placeholder="Paste your Anthropic API key" />
 <script>
 window.claude = {
   async complete(prompt) {
@@ -167,19 +167,19 @@ window.claude = {
 </script>
 ```
 
-**注意**：浏览器直接调Anthropic API会遇到CORS问题。如果用户给你的预览环境不支持CORS bypass，这条路不通。这时候用选项A mock，或者告诉用户需要一个proxy后端。
+**Note**: Calling the Anthropic API directly from a browser may fail because of CORS. If the user's preview environment does not provide a CORS proxy, use the mock from Option A or explain that a backend proxy is required.
 
-### 选项 C：用 agent 侧的 LLM 能力生成 mock 数据
+### Option C: Use the LLM capability on the agent side to generate mock data
 
-如果只是本地演示用，可以在当前 agent 会话里临时调用该 agent 的 LLM 能力（或用户装的 multi-model 类 skill）先生成 mock 响应数据，再硬编码写进 HTML。这样 HTML 运行时完全不依赖任何 API。
+For a local-only demo, use the agent's LLM capability—or a multi-model skill installed by the user—to generate representative mock data in advance, then embed it in the HTML. The runtime will have no API dependency.
 
-## 典型 HTML 起手模板
+## Typical HTML starting template
 
-拷贝这个模板作为React原型的骨架：
+Copy this template as the skeleton of the React prototype:
 
 ```html
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -204,10 +204,10 @@ window.claude = {
 <body>
   <div id="root"></div>
 
-  <!-- 你的组件文件 -->
+  <!-- Your component file -->
   <script type="text/babel" src="components.jsx"></script>
 
-  <!-- 主入口 -->
+  <!-- Main entrance -->
   <script type="text/babel">
     const { useState, useEffect } = React;
 
@@ -226,43 +226,43 @@ window.claude = {
 </html>
 ```
 
-## 常见报错及解决
+## Common errors and solutions
 
-**`styles is not defined` 或 `Cannot read property 'button' of undefined`**
-→ 你在一个文件里定义了`const styles`，另一个文件覆盖了。给每个改成specific命名。
+**`styles is not defined` or `Cannot read property 'button' of undefined`**
+→ You defined `const styles` in one file and it was overwritten by another file. Give each one a specific name.
 
 **`Terminal is not defined`**
-→ 跨文件引用时scope不通。在定义Terminal的文件末尾加`Object.assign(window, {Terminal})`。
+→ The scope is blocked when referencing across files. Add `Object.assign(window, {Terminal})` at the end of the file defining Terminal.
 
-**整个页面白屏，控制台没错误**
-→ 多半是JSX语法错误但Babel没报在控制台。把`babel.min.js`临时换成`babel.js`非压缩版，错误信息更清晰。
+**The entire page is blank, but the console shows no errors**
+→ A JSX syntax error is likely being obscured by the minified Babel build. Temporarily replace `babel.min.js` with the unminified `babel.js` to get a clearer error.
 
 **ReactDOM.createRoot is not a function**
-→ 版本不对。确认用了react-dom@18.3.1（而不是17或其他）。
+→ The wrong version is loaded. Confirm that `react-dom@18.3.1` is in use—not 17 or another release.
 
 **`Objects are not valid as a React child`**
-→ 你渲染了一个对象而不是JSX/字符串。通常是`{someObj}`写成了`{someObj.name}`。
+→ You rendered an object rather than JSX or a string. Usually `{someObj}` should be `{someObj.name}`.
 
-## 大项目怎么拆文件
+## How to split files in a large project
 
-**>1000行的单文件**难维护。分拆思路：
+A 1,000-line file is difficult to maintain. Use this structure:
 
 ```
-项目/
+Project/
 ├── index.html
 ├── src/
-│   ├── primitives.jsx      # 基础元素：Button、Card、Badge...
-│   ├── components.jsx      # 业务组件：UserCard、PostList...
+│   ├── primitives.jsx      # Primitives: Button, Card, Badge...
+│   ├── components.jsx      # Domain components: UserCard, PostList...
 │   ├── pages/
-│   │   ├── home.jsx        # 首页
-│   │   ├── detail.jsx      # 详情页
-│   │   └── settings.jsx    # 设置页
-│   ├── router.jsx          # 简单路由（React state切换）
-│   └── app.jsx             # 入口组件
+│   │   ├── home.jsx        # Home page
+│   │   ├── detail.jsx      # Details page
+│   │   └── settings.jsx    # Setting page
+│   ├── router.jsx          # Simple routing through React state
+│   └── app.jsx             # Entry component
 └── data.js                 # mock data
 ```
 
-HTML里按顺序加载：
+Load in order in HTML:
 ```html
 <script type="text/babel" src="src/primitives.jsx"></script>
 <script type="text/babel" src="src/components.jsx"></script>
@@ -273,4 +273,4 @@ HTML里按顺序加载：
 <script type="text/babel" src="src/app.jsx"></script>
 ```
 
-**每个文件末尾**都要`Object.assign(window, {...})`导出要共享的东西。
+At the end of **every file**, export shared values with `Object.assign(window, {...})`.

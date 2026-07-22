@@ -1,27 +1,27 @@
 /**
- * <deck-stage> — HTML幻灯片外壳web component
+ * <deck-stage> — Web-component shell for HTML slides
  *
- * 提供功能：
- * - 固定尺寸canvas（默认1920×1080）+ auto-scale + letterbox
- * - 键盘导航（←/→/Space/Home/End/Esc）
- * - 左右点击区域导航
- * - slide counter (当前/总数)
- * - localStorage持久化当前slide
- * - Speaker notes postMessage (支持外层渲染)
- * - Hash导航 (#slide-5 跳到第5张)
- * - Print-to-PDF支持 (Cmd+P / Ctrl+P 一页一slide)
- * - 自动给每个slide添加 data-screen-label
+ * Features:
+ * - Fixed-size canvas (default: 1920×1080) + auto-scale + letterboxing
+ * - Keyboard navigation (←/→/Space/Home/End/Esc)
+ * - Left/right click-zone navigation
+ * - Slide counter (current/total)
+ * - Persists the current slide in localStorage
+ * - Speaker-notes postMessage support (for outer-shell rendering)
+ * - Hash navigation (#slide-5 jumps to slide 5)
+ * - Print-to-PDF support (Cmd+P / Ctrl+P; one slide per page)
+ * - Automatically adds data-screen-label to every slide
  *
- * 用法：
+ * Usage:
  *   <deck-stage>
  *     <section>Slide 1</section>
  *     <section>Slide 2</section>
  *   </deck-stage>
  *
- * 自定义尺寸：
+ * Custom dimensions:
  *   <deck-stage width="1080" height="1920">...</deck-stage>
  *
- * Speaker notes：在<head>加
+ * Speaker notes: add the following in <head>:
  *   <script type="application/json" id="speaker-notes">
  *   ["slide 1 notes", "slide 2 notes"]
  *   </script>
@@ -43,12 +43,12 @@
       this._width = parseInt(this.getAttribute('width')) || 1920;
       this._height = parseInt(this.getAttribute('height')) || 1080;
 
-      // Shadow DOM 先渲染（独立于子节点，不受 parser 时机影响）
+      // Render the Shadow DOM first; it is independent of children and parser timing.
       this._render();
 
-      // 防御：若 script 放在 <head> 里（而非 </deck-stage> 之后），
-      // parser 此刻可能还没处理完子 <section>，querySelectorAll 会返回空。
-      // 延迟到下一个事件循环，确保子节点都已 parse 完毕。
+      // Defensive handling: if the script is in <head> rather than after </deck-stage>,
+      // the parser may not have processed child <section> elements yet and querySelectorAll returns empty.
+      // Delay until the next event loop so every child has been parsed.
       const init = () => {
         this._collectSlides();
         this._setupEventListeners();
@@ -58,10 +58,10 @@
       };
 
       if (this.ownerDocument.readyState === 'loading') {
-        // 文档还在 parse，等 DOMContentLoaded 一次搞定所有 section
+        // The document is still parsing; DOMContentLoaded will make every section available.
         this.ownerDocument.addEventListener('DOMContentLoaded', init, { once: true });
       } else {
-        // 文档已 parse 完（script 在 body 底部或 defer），下一帧收集即可
+        // Parsing is complete (script at the end of body or deferred); collect on the next frame.
         requestAnimationFrame(init);
       }
     }

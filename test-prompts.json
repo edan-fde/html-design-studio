@@ -1,38 +1,38 @@
 [
   {
     "id": 1,
-    "prompt": "我想做一个SaaS产品的登录页面，给我3个风格方向对比看看",
-    "expected": "触发clarifying questions问design context/brand；产出3个variation的design_canvas；不用紫渐变/emoji/Inter等AI slop；有具体理由说明每个variation的差异维度",
-    "tests": "workflow问问题 + variations逻辑 + 反AI slop清单 + design_canvas使用"
+    "prompt": "I want to create a sign-in page for a SaaS product. Show me three stylistic directions side by side.",
+    "expected": "Ask up to three focused questions about design context and brand, then produce three real, visually distinct single-file HTML directions with screenshots before asking the user to choose. Use the same real content in all three, vary the structural layout rather than merely colors, and avoid AI slop such as generic purple gradients, decorative emoji, or Inter as display type. Stop after presenting the three directions.",
+    "tests": "Three-direction hard gate + focused clarification + structural variation + anti-AI-slop rules + real HTML screenshots"
   },
   {
     "id": 2,
-    "prompt": "帮我做一份10页的产品pitch deck，讲一个AI工具的创业项目",
-    "expected": "用deck_stage.js起手；先口头vocalize设计系统（色彩/字型/layout节奏）等确认；Section divider/content/data/quote多种layout交替；字号≥24px；1-indexed labels",
-    "tests": "Junior Designer先汇报再做 + deck_stage使用 + 视觉节奏 + scale规范"
+    "prompt": "Create a ten-slide product pitch deck for an AI-tool startup.",
+    "expected": "First produce three design directions with two representative 1920×1080 slides per direction and stop for the user's choice. After approval, build the full ten-slide deck with one HTML file per slide and assets/deck_index.html as the default overview shell; articulate the design system, vary slide roles and compositions, use type ≥24 px, export PDF automatically, and offer editable PPTX only as a best-effort derivative.",
+    "tests": "Three-direction deck showcase + multi-file deck_index architecture + design-system checkpoint + slide rhythm + scale standards + HTML-to-PDF delivery chain"
   },
   {
     "id": 3,
-    "prompt": "做个30秒的HTML动画，讲神经网络怎么工作",
-    "expected": "用animations.jsx的Stage+Sprite；先写时间轴再写组件；入场easeOut出场easeIn；分phase讲故事而不是堆动画；文字停留≥3秒",
-    "tests": "animations工作流 + easing正确 + 节奏设计 + 时长控制"
+    "prompt": "Create a 30-second HTML animation explaining how neural networks work.",
+    "expected": "First present three rendered direction boards and stop for the user's choice. After approval, use HyperFrames by default, read animation-pitfalls.md before implementation, define a five-part narrative and timeline, preserve hero-element continuity, use the correct entrance and exit easing, keep text visible for at least three seconds, and deliver a verified MP4 with both BGM and SFX unless the user opts out of audio.",
+    "tests": "Three-direction animation gate + HyperFrames default + narrative continuity + easing and pacing + audio delivery + render verification"
   },
   {
     "id": 4,
-    "prompt": "做一个 Habit Tracker App 原型",
-    "expected": "问用户要 overview 平铺 or flow demo（默认走 overview）；用 assets/ios_frame.jsx，不手写 Dynamic Island；Tracker 属高密度型，每屏 ≥ 3 处信息密度元素（习惯完成率、连续天数、趋势曲线、成就badge等，非装饰）；至少 5-7 屏并排（首页/新建习惯/详情/统计/设置）",
-    "tests": "overview/flow 形态路由 + ios_frame 硬绑定 + 信息密度分型（高密度型）+ 多屏并排"
+    "prompt": "Create a Habit Tracker app prototype.",
+    "expected": "First show three real visual directions and stop for selection. After approval, default to a tiled overview of four to six independently interactive screens without asking the user to choose the delivery layout. Use assets/ios_frame.jsx rather than hand-coding the Dynamic Island, and treat the tracker as information-dense, with at least three meaningful product-specific data elements per screen rather than decorative icons.",
+    "tests": "Three-direction hard gate + tiled interactive overview default + mandatory ios_frame + high-density information classification"
   },
   {
     "id": 5,
-    "prompt": "做一个读书笔记 App 原型",
-    "expected": "overview 平铺为主；ios_frame.jsx；读书笔记偏内容展示类，信息密度要求不如 Tracker 极端，但笔记列表页仍需 ≥ 3 层信息（书籍、引文、标签、进度）；至少 4-6 屏（首页书架/笔记详情/标注高亮/搜索/笔记本管理）；字体优先 serif display",
-    "tests": "overview 默认 + ios_frame + 信息层次 + 内容为主的视觉节奏"
+    "prompt": "Create a reading-notes app prototype.",
+    "expected": "First show three real visual directions and stop for selection. After approval, default to a tiled overview of four to six independently interactive screens using assets/ios_frame.jsx. Reading notes are more content-led and need less density than a tracker, but the notes list should still contain at least three information layers (book, quotation, tags, progress). Prefer a serif display face when it fits the chosen direction.",
+    "tests": "Three-direction hard gate + interactive overview default + ios_frame + information hierarchy + content-led visual rhythm"
   },
   {
     "id": 6,
-    "prompt": "做一个跑步记录 App 原型",
-    "expected": "overview 平铺；ios_frame.jsx；跑步 App 属高密度型（地图、配速曲线、心率区间、每公里分段数据），每屏 ≥ 3 处产品差异化信息；至少 5 屏（今日总览/跑步中实时数据/路线地图/历史记录/月度统计）；避免撞 AI slop（不用紫渐变、不堆装饰 icon，但数据可视化 icon 允许保留）",
-    "tests": "overview + ios_frame + 高密度型数据可视化 + 地图/图表混排 + slop 边界条件"
+    "prompt": "Create a running-log app prototype.",
+    "expected": "First show three real visual directions and stop for selection. After approval, use a tiled overview of four to six independently interactive screens and assets/ios_frame.jsx. Treat the running app as information-dense (map, pace curve, heart-rate zones, per-kilometer splits), with at least three product-specific information elements per screen. Avoid generic purple gradients and decorative-icon piles while retaining icons that carry real data.",
+    "tests": "Three-direction hard gate + interactive overview + ios_frame + dense data visualization + mixed map/chart layout + slop boundary conditions"
   }
 ]

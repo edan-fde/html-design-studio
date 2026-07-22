@@ -1,23 +1,23 @@
 #!/usr/bin/env node
 /**
- * export_deck_pdf.mjs — 把多文件 slide deck 导出为单个矢量 PDF
+ * export_deck_pdf.mjs — Export a multi-file slide deck as a single vector PDF
  *
- * 用法：
+ * Usage:
  *   node export_deck_pdf.mjs --slides <dir> --out <file.pdf> [--width 1920] [--height 1080]
  *
- * 特点：
- *   - 文字保留矢量（可复制、可搜索）
- *   - 背景/图形 1:1 保真（Playwright 内嵌 Chromium 渲染）
- *   - 不需要对 HTML 做任何改造
- *   - 视觉损失 = 0（PDF 就是浏览器打印出来的）
+ * Features:
+ *   - Text remains vector-based (copyable and searchable)
+ *   - Backgrounds and graphics retain 1:1 fidelity (rendered by Playwright's bundled Chromium)
+ *   - Requires no changes to the HTML
+ *   - Zero visual loss (the PDF is the browser's print output)
  *
- * trade-off：
- *   - PDF 不可再编辑文字（要改回到 HTML 改）
+ * trade-off:
+ *   - Text is not editable in the PDF; edit the HTML source instead
  *
- * 依赖：playwright pdf-lib
+ * Dependencies: playwright, pdf-lib
  *   npm install playwright pdf-lib
  *
- * 会按文件名排序（01-xxx.html → 02-xxx.html → ...）
+ * Files are sorted by name (01-xxx.html → 02-xxx.html → ...)
  */
 
 import { chromium } from 'playwright';
@@ -33,7 +33,7 @@ function parseArgs() {
     args[k] = a[i + 1];
   }
   if (!args.slides || !args.out) {
-    console.error('用法: node export_deck_pdf.mjs --slides <dir> --out <file.pdf> [--width 1920] [--height 1080]');
+    console.error('Usage: node export_deck_pdf.mjs --slides <dir> --out <file.pdf> [--width 1920] [--height 1080]');
     process.exit(1);
   }
   args.width = parseInt(args.width);

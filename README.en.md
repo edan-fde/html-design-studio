@@ -1,11 +1,10 @@
-<sub>🌐 <a href="README.md">中文</a> · <b>English</b></sub>
+<sub><b>English</b></sub>
 
 <div align="center">
 
 # Huashu Design
 
 > *"Type. Hit enter. A finished design lands in your lap."*
-> *「打字。回车。一份能交付的设计。」*
 
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Agent-Agnostic](https://img.shields.io/badge/Agent-Agnostic-blueviolet)](https://skills.sh)
@@ -19,7 +18,7 @@
 
 3 to 30 minutes — you ship a **product launch animation**, a clickable App prototype, an editable PPT deck, a print-grade infographic.
 
-Not "decent for AI" quality — it looks like a real design team made it. Give the skill your brand assets (logo, colors, UI screenshots) and it reads your brand's voice; give it nothing and the built-in 20 design vocabularies still keep you out of AI slop territory.
+Not "decent for AI" quality — it looks like a real design team made it. Give the skill your brand assets (logo, colors, UI screenshots) and it reads your brand's voice; give it nothing and the three-track design advisor plus 40 HTML-native styles still keep you out of AI slop territory.
 
 **Every animation in this README was made by huashu-design itself.** No Figma, no After Effects — just a sentence + skill run. Next product launch needs a promo video? You can make it too.
 
@@ -27,25 +26,37 @@ Not "decent for AI" quality — it looks like a real design team made it. Give t
 npx skills add alchaincyf/huashu-design
 ```
 
+Agent-agnostic — Claude Code, Cursor, Codex, OpenClaw, and Hermes can all use it.
+
 > 📣 **Now MIT-licensed.** As of 2026-05-14 this skill is fully open-source under the [MIT License](LICENSE) — free for personal **and** commercial use, no authorization required. ([what changed](#license))
 
 [See it work](#demo-gallery) · [Install](#install) · [What it does](#what-it-does) · [How it works](#core-mechanics) · [vs. Claude Design](#vs-claude-design)
-
-> 📖 **Note for English readers**: this skill is built by a Chinese-speaking developer. The skill's agent prompts (`SKILL.md`, `references/*.md`) are in Chinese but the agent is bilingual — works fine with English tasks. The demos below are the English parallel versions; the Chinese ones are in the default [Chinese README](README.md).
->
-> 📖 **致中文读者**：这个 skill 由花叔（@AlchainHust）开发。一句话能让 agent 在 3–30 分钟内交付**产品发布动画 / 可点击 App 原型 / 可编辑 PPT / 印刷级信息图**。完整中文介绍见 [README.md](README.md)（默认中文）。
 
 </div>
 
 ---
 
 <p align="center">
-  <video src="https://github.com/alchaincyf/huashu-design/releases/download/v2.0/hero-animation-v10-en.mp4" autoplay muted loop playsinline width="100%">
-    Your browser doesn't support inline video. <a href="https://github.com/alchaincyf/huashu-design/releases/download/v2.0/hero-animation-v10-en.mp4">Download MP4</a>.
-  </video>
+  <img src="https://github.com/alchaincyf/huashu-design/releases/download/v2.0/hero-animation-v10-en.gif" alt="huashu-design hero: prompt, direction selection, gallery expansion, focus, and brand reveal" width="100%">
 </p>
 
-<p align="center"><sub>▲ 10-second hero animation showing what huashu-design does (<a href="https://github.com/alchaincyf/huashu-design/releases/download/v2.0/hero-animation-v10-en.mp4">download MP4</a> if autoplay doesn't work)</sub></p>
+<p align="center"><sub>
+  ▲ 25 seconds · Terminal → 4 directions → gallery ripple → 4 focus passes → brand reveal<br>
+  👉 <a href="https://www.huasheng.ai/huashu-design-hero/">Open the interactive HTML version with sound</a> ·
+  <a href="https://github.com/alchaincyf/huashu-design/releases/download/v2.0/hero-animation-v10-en.mp4">Download MP4 with BGM + SFX (10 MB)</a>
+</sub></p>
+
+---
+
+## Video Tutorial
+
+New to the skill? Watch Huashu's introductory walkthrough:
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=m-_BlUdcIvw"><img src="https://img.youtube.com/vi/m-_BlUdcIvw/maxresdefault.jpg" alt="Huashu Design tutorial" width="70%"></a>
+</p>
+
+<p align="center"><sub>👉 <a href="https://www.youtube.com/watch?v=m-_BlUdcIvw">Watch the full tutorial on YouTube</a></sub></p>
 
 ---
 
@@ -67,7 +78,7 @@ npx skills add alchaincyf/huashu-design
 > git clone https://github.com/alchaincyf/huashu-design.git ~/.claude/skills/huashu-design
 > ```
 
-Then just talk to Claude Code:
+Then talk to any compatible agent in your own language. The skill answers in the user's language unless asked otherwise:
 
 ```
 "Make a keynote for AI psychology. Give me 3 style directions to pick from."
@@ -99,18 +110,16 @@ No buttons, no panels, no Figma plugin. Agent-agnostic — drops into Claude Cod
 | Motion design | MP4 (25fps / 60fps interpolation) + GIF (palette-optimized) + BGM | 8–12 min |
 | Design variations | 3+ side-by-side · Tweaks live params · cross-dimension exploration | 10 min |
 | Infographic / data viz | Print-quality typography · exports to PDF/PNG/SVG | 10 min |
-| Design direction advisor | 5 schools × 20 philosophies · 3 directions recommended · Demos generated in parallel | 5 min |
+| Design direction advisor | Three parallel approaches: random style wheel · real-world benchmark · best-fit designer · 3 real visual directions | 5 min |
 | 5-dimension expert critique | Radar chart + Keep/Fix/Quick Wins · actionable punch list | 3 min |
 
 ---
 
 ## Demo Gallery
 
-> English parallel versions of the demos. Chinese versions live at the default filenames (see the Chinese README).
-
 ### Design Direction Advisor
 
-The fallback for vague briefs: pick 3 differentiated directions from 5 schools × 20 philosophies, generate all 3 demos in parallel, let the user choose.
+Before any new visual design, the skill runs three complementary approaches in parallel: a 20-style random wheel that breaks habitual choices, migration from a real award-winning reference, and a best-fit world-class designer or studio. This hard gate still applies when the brief already names a style or brand; all three directions interpret the same context differently. The skill produces three actual visual versions before asking the user to choose. Underneath is a library of 40 HTML-native styles: 20 for websites and 20 for slide decks.
 
 <p align="center"><img src="https://github.com/alchaincyf/huashu-design/releases/download/v2.0/w3-fallback-advisor-en.gif" width="100%"></p>
 
@@ -164,6 +173,39 @@ Mandatory whenever the task involves a specific brand: ask → search → downlo
 
 ---
 
+## Showcase · Real Projects
+
+### Parrot Evolution Website · Three-Track Design Advisor in Practice (2.0)
+
+> **Live demo · [https://www.huasheng.ai/parrots/](https://www.huasheng.ai/parrots/)**
+
+The only brief was "make a website about the evolution of parrots." With no additional direction, the skill ran the full 2.0 advisor workflow: it first determined that images were essential to the content, sourced public-domain natural-history illustrations by Edward Lear and John Gould, then produced three real visual versions in parallel through the random style wheel, an award-winning real-world reference, and Kenya Hara's *White* philosophy. Assets came first; the design was not built around color-block placeholders.
+
+### "Let's Talk About Skills" · PM After-Party Presentation Deck
+
+> **Live demo · [https://skill-huasheng.vercel.app](https://skill-huasheng.vercel.app)**
+
+A 13-slide HTML deck created entirely with Huashu Design:
+
+- A restrained black-background serif system spanning cover, about, hook, what, why, and closing slides.
+- Two 22-second cinematic demos with BGM and SFX for the Nüwa and Darwin skill workflows, each with a completely independent visual language:
+  - **Nüwa:** 3D knowledge orbit, pentagonal distillation, SKILL.md typewriter, and a "21 minutes" hero reveal.
+  - **Darwin:** autoresearch loop spin, side-by-side v1/v5 diff, full-screen hill-climb curve, and ratchet-gear lock.
+- Each cinematic defaults to a complete static workflow dashboard so the audience can inspect how the skill works. Pressing ▶ starts the animation; completion fades back to the dashboard.
+- A localized iframe fallback for the 25-second hero animation from huasheng.ai.
+- Real data: a 14,495-star historical curve from the GitHub API and DeepSeek V4 specifications verified through web research.
+- Real AI assets: a 4×2 grid generated with `huashu-gpt-image`, split by `extract_grid.py` into eight transparent PNGs, and arranged in a floating 3D orbit.
+
+**Useful reference pages:**
+
+- `/slides/slide-04b-nuwa-flow.html` · static dashboard plus cinematic-overlay architecture.
+- `/slides/slide-06b-darwin-flow.html` · a contrasting case with a fully independent visual language.
+- `/slides/slide-03b-deepseek-cover.html` · side-by-side comparison of AI slop and a genuine designer viewpoint.
+
+See `references/cinematic-patterns.md` for the detailed cinematic patterns.
+
+---
+
 ## Core Mechanics
 
 ### Core Asset Protocol
@@ -190,13 +232,14 @@ A/B-tested (v1 vs v2, 6 agents each): **v2 reduced stability variance by 5×**. 
 
 ### Design Direction Advisor (Fallback)
 
-Triggered when the brief is too vague to execute:
+Required before every new visual design, including briefs that already specify a style or brand. It is skipped only when the user explicitly asks to skip it, when iterating on a direction already approved in the same project, or for a purely mechanical non-design operation:
 
-- Don't run on generic intuition — enter Fallback mode
-- Recommend 3 differentiated directions from 5 schools × 20 philosophies, each **from a different school**
-- Each comes with flagship works, gestalt keywords, representative designer
-- Generate 3 visual demos in parallel, let the user choose
-- Once chosen, continue into the Junior Designer main flow
+- Clarify the brief conversationally and proactively request references: project name, logo, brand colors, and websites the user likes.
+- Acquire all content-critical real images first from public-domain or royalty-free sources.
+- Run three complementary approaches in parallel, each producing a real visual version: (1) a second-based random wheel that selects 1 of 20 styles and breaks the model's minimalist bias, (2) migration from a world-class award-winning website, deck, or iOS prototype, and (3) the philosophy of the best-fit designer or studio if budget were unlimited.
+- Never ask the user to choose a visual direction before showing visuals. Put all three versions side by side and let the user choose from evidence.
+- Continue into the Junior Designer workflow after the direction is selected.
+- Use the 40-style HTML-native library (20 web + 20 slide styles, grouped as bold, neutral, and quiet) as a source of options, not doctrine.
 
 ### Junior Designer Workflow
 
@@ -251,9 +294,9 @@ This is an 80-point skill, not a 100-point product. For people unwilling to open
 
 ```
 huashu-design/
-├── SKILL.md                 # Main doc (read by agent, Chinese)
-├── README.md                # Chinese README (default)
-├── README.en.md             # English README (this file)
+├── SKILL.md                 # Main instructions read by the agent
+├── README.md                # Default English README
+├── README.en.md             # English compatibility copy
 ├── assets/                  # Starter Components
 │   ├── animations.jsx       # Stage + Sprite + Easing + interpolate
 │   ├── ios_frame.jsx        # iPhone 15 Pro bezel
@@ -265,9 +308,9 @@ huashu-design/
 │   ├── design_canvas.jsx    # Side-by-side variation display
 │   ├── showcases/           # 24 prebuilt samples (8 scenes × 3 styles)
 │   └── bgm-*.mp3            # 6 scene-specific background tracks
-├── references/              # Drill-down docs by task (Chinese)
+├── references/              # English drill-down docs loaded by task
 │   ├── animation-pitfalls.md
-│   ├── design-styles.md     # 20 design philosophies in detail
+│   ├── design-styles.md     # 40 HTML-native styles: 20 web + 20 slide
 │   ├── slide-decks.md
 │   ├── editable-pptx.md
 │   ├── critique-guide.md
@@ -281,7 +324,7 @@ huashu-design/
 │   ├── export_deck_pptx.mjs
 │   ├── html2pptx.js
 │   └── verify.py
-└── demos/                   # Capability demos referenced by this README
+└── demos/                   # 9 capability demos (c*/w*) plus hero v10
 ```
 
 ---
@@ -296,15 +339,22 @@ Thanks to Anthropic for writing the Claude Design prompts so clearly. This kind 
 
 ---
 
+## Products Designed with Huashu Design
+
+The three interface themes for **[FanBox · A Cockpit for Coding Agents](https://github.com/alchaincyf/fanbox)** were designed with Huashu Design. FanBox lets you direct Claude Code or Codex and inspect every file and line they touched.
+
+[![FanBox · A Cockpit for Coding Agents](https://raw.githubusercontent.com/alchaincyf/fanbox/master/assets/promo-banner.jpg)](https://github.com/alchaincyf/fanbox)
+
+---
+
 ## Available Languages
 
 Community-maintained translations of this skill. Translation quality and license terms are the responsibility of each maintainer — please check the linked repo before relying on it.
 
 | Language | Maintainer | Repository |
 |---|---|---|
-| English | [@namandhakad712](https://github.com/namandhakad712) | [namandhakad712/huashu-design-en](https://github.com/namandhakad712/huashu-design-en) |
-| 한국어 (Korean) | [@ktkarchive](https://github.com/ktkarchive) | [ktkarchive/ktk-design](https://github.com/ktkarchive/ktk-design) |
-| Tiếng Việt (Vietnamese) | [@letrquan](https://github.com/letrquan) | [letrquan/huashu-design](https://github.com/letrquan/huashu-design) |
+| Korean | [@ktkarchive](https://github.com/ktkarchive) | [ktkarchive/ktk-design](https://github.com/ktkarchive/ktk-design) |
+| Vietnamese | [@letrquan](https://github.com/letrquan) | [letrquan/huashu-design](https://github.com/letrquan/huashu-design) |
 
 Want to add your language? Fork the repo, translate `SKILL.md` + `README.md`, and open an issue here so we can link it.
 
@@ -325,10 +375,10 @@ Huasheng is an AI-native coder, independent developer, and AI content creator. N
 | Platform | Handle | Link |
 |---|---|---|
 | X / Twitter | @AlchainHust | https://x.com/AlchainHust |
-| WeChat Official Account | 花叔 | Search "花叔" in WeChat |
-| Bilibili | 花叔 | https://space.bilibili.com/14097567 |
-| YouTube | 花叔 | https://www.youtube.com/@Alchain |
-| Xiaohongshu | 花叔 | https://www.xiaohongshu.com/user/profile/5abc6f17e8ac2b109179dfdf |
+| WeChat Official Account | Huashu (`花叔`) | Search `花叔` in WeChat—the exact account name is intentionally retained here. |
+| Bilibili | Huashu | https://space.bilibili.com/14097567 |
+| YouTube | Huashu | https://www.youtube.com/@Alchain |
+| Xiaohongshu | Huashu | https://www.xiaohongshu.com/user/profile/5abc6f17e8ac2b109179dfdf |
 | Official Site | huasheng.ai | https://www.huasheng.ai/ |
 | Developer Hub | bookai.top | https://bookai.top |
 

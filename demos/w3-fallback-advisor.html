@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="zh-Hans">
+<html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>w3 · Fallback Advisor（中文版）</title>
+<title>w3 · Fallback Advisor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700&family=Noto+Serif+SC:wght@300;400;500;600&family=Inter:wght@200;300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -272,7 +272,7 @@
     display: block;
   }
 
-  /* ============ Brand Reveal (米色盖层) ============ */
+  /* ============ Brand Reveal (beige overlay) ============ */
   .brand-panel {
     position: absolute;
     inset: 0;
@@ -323,59 +323,59 @@
 
 <div class="stage" id="stage">
 
-  <!-- 水印 -->
+  <!-- Watermarks -->
   <div class="watermark-tl">HUASHU · DESIGN</div>
   <div class="watermark-br">V2 · 2026 · w3</div>
 
-  <!-- 顶部标题 -->
+  <!-- Top title -->
   <div class="top-title" id="topTitle">
-    不知道要什么？<span class="accent">先给你 3 个方向</span>
+    Not sure? <span class="accent">Here are three directions.</span>
   </div>
   <div class="sub-caption" id="subCaption">20 Philosophies · 3 Directions</div>
 
-  <!-- 扫描光 -->
+  <!-- Scan light -->
   <div class="scan-light" id="scanLight"></div>
 
-  <!-- 4×5 哲学墙 -->
+  <!-- 4×5 philosophy wall -->
   <div class="wall-viewport" id="wallViewport">
     <div class="wall-grid" id="wallGrid">
       <!-- 20 cells injected by JS -->
     </div>
   </div>
 
-  <!-- 前景 3 张方向卡 -->
+  <!-- Three foreground direction cards -->
   <div class="fg-row" id="fgRow">
-    <!-- card 1: Kenya Hara · 东方极简 -->
+    <!-- Card 1: Kenya Hara · Eastern minimalism -->
     <div class="fg-card" id="card1">
       <div class="card-body">
-        <div class="label">方向 01 · 东方空间</div>
-        <div class="title-cn">原研哉式留白</div>
+        <div class="label">Direction 01 · Eastern Space</div>
+        <div class="title-cn">Kenya Hara</div>
         <div class="title-en">Kenya Hara</div>
-        <div class="feature">赤土橙 · 大量留白 · 宣纸质感</div>
+        <div class="feature">Terracotta · Vast whitespace · Paper grain</div>
       </div>
       <div class="thumb-wrap" id="thumb1">
         <img src="../assets/showcases/website-saas/saas-takram.png" alt="demo takram" />
       </div>
     </div>
-    <!-- card 2: Pentagram · 信息建筑 -->
+    <!-- Card 2: Pentagram · Information architecture -->
     <div class="fg-card" id="card2">
       <div class="card-body">
-        <div class="label">方向 02 · 信息建筑</div>
-        <div class="title-cn">Pentagram 秩序</div>
+        <div class="label">Direction 02 · Information Architecture</div>
+        <div class="title-cn">Pentagram Order</div>
         <div class="title-en">Pentagram</div>
-        <div class="feature">强网格 · 高对比 · 理性版式</div>
+        <div class="feature">Strict grid · High contrast · Rational layout</div>
       </div>
       <div class="thumb-wrap" id="thumb2">
         <img src="../assets/showcases/website-saas/saas-pentagram.png" alt="demo pentagram" />
       </div>
     </div>
-    <!-- card 3: David Carson · 实验先锋 -->
+    <!-- Card 3: David Carson · Experimental edge -->
     <div class="fg-card" id="card3">
       <div class="card-body">
-        <div class="label">方向 03 · 实验先锋</div>
-        <div class="title-cn">David Carson 式</div>
+        <div class="label">Direction 03 · Experimental Edge</div>
+        <div class="title-cn">David Carson</div>
         <div class="title-en">Experimental Edge</div>
-        <div class="feature">破格排印 · 粗野几何 · 视觉冲击</div>
+        <div class="feature">Broken type · Brutal geometry · Visual impact</div>
       </div>
       <div class="thumb-wrap" id="thumb3">
         <img src="../assets/showcases/website-saas/saas-build.png" alt="demo build" />
@@ -408,25 +408,25 @@
   // ============ 20 Philosophies ============
   // 4 rows × 5 cols = 20. Selected: idx 0 (Pentagram), idx 9 (Kenya Hara), idx 12 (David Carson)
   const PHILOSOPHIES = [
-    // row 1 — 信息建筑派
+    // Row 1 — information architecture
     { name: 'Pentagram',    glyph: 'grid' },
     { name: 'M. Vignelli',  glyph: 'bars' },
     { name: 'Apple HIG',    glyph: 'radius' },
     { name: 'Spin',         glyph: 'slash' },
     { name: 'Build',        glyph: 'type' },
-    // row 2 — 运动诗学派
+    // Row 2 — motion poetics
     { name: 'Field.io',     glyph: 'wave' },
     { name: 'Active Theory',glyph: 'orbit' },
     { name: 'Hi-Res!',      glyph: 'dots' },
     { name: 'Locomotive',   glyph: 'arrow' },
     { name: 'Takram',       glyph: 'circle' },
-    // row 3 — 极简/东方
+    // Row 3 — minimalism / Eastern philosophy
     { name: 'Kenya Hara',   glyph: 'ma' },
     { name: 'D. Rams',      glyph: 'square' },
     { name: 'J. Ive',       glyph: 'arc' },
     { name: 'J. Morrison',  glyph: 'minimal' },
     { name: 'S. Ogata',     glyph: 'line' },
-    // row 4 — 实验 & 海报
+    // Row 4 — experimental / poster design
     { name: 'D. Carson',    glyph: 'collage' },
     { name: 'S. Sagmeister',glyph: 'stamp' },
     { name: 'P. Scher',     glyph: 'poster' },

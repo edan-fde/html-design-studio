@@ -1,16 +1,16 @@
 # SFX Library · huashu-design
 
-> 全部由 ElevenLabs Sound Generation API 生成，苹果发布会级音质。
-> 产品级 SFX 资产库，覆盖花叔动画/演示/产品 Demo 全场景。
+> Generated with the ElevenLabs Sound Generation API and tuned for the clean, restrained sound of a polished product launch.
+> A production-ready SFX library for Huashu animations, presentations, and product demos.
 
-**资产位置**：`assets/sfx/<category>/<name>.mp3`
-**总数**：37 个 SFX（30 批量生成 + 7 个 v7b 保留）
-**生成模型**：ElevenLabs Sound Generation API（prompt_influence 0.4）
-**音质**：44.1kHz MP3，苹果发布会级清晰度，无额外混响
+**Asset location**: `assets/sfx/<category>/<name>.mp3`
+**Total**: 37 SFX (30 batch generated + 7 v7b reserved)
+**Generation model**: ElevenLabs Sound Generation API (`prompt_influence: 0.4`)
+**Sound quality**: 44.1kHz MP3, clean transient detail, no added reverb
 
 ---
 
-## 目录结构
+## Directory structure
 
 ```
 assets/sfx/
@@ -27,158 +27,158 @@ assets/sfx/
 
 ---
 
-## 快速索引
+## Quick index
 
-### ⌨️ Keyboard（键盘输入）
+### ⌨️ Keyboard (keyboard input)
 
-| 文件 | 时长 | 用途 | Prompt 要点 |
+| File | Duration | Purpose | Prompt Points |
 |---|---|---|---|
-| `sfx/keyboard/type.mp3` | 0.5s | 单键敲击（mechanical keyboard single key） | mechanical keyboard single key press |
-| `sfx/keyboard/type-fast.mp3` | 1.5s | 连续快速打字（演示输入提示词） | fast continuous typing rhythm, apple magic keyboard |
-| `sfx/keyboard/delete-key.mp3` | 0.5s | backspace 回删 | single backspace key, low pitched thud |
-| `sfx/keyboard/space-tap.mp3` | 0.5s | 空格键轻击 | soft spacebar tap, wide flat |
-| `sfx/keyboard/enter.mp3` | 0.5s | 回车确认（v7b 保留） | enter key press, crisp tactile |
+| `sfx/keyboard/type.mp3` | 0.5s | Single mechanical-key press | mechanical keyboard single key press |
+| `sfx/keyboard/type-fast.mp3` | 1.5s | Rapid continuous typing for prompt-entry demos | fast continuous typing rhythm, apple magic keyboard |
+| `sfx/keyboard/delete-key.mp3` | 0.5s | backspace deletion | single backspace key, low pitched thud |
+| `sfx/keyboard/space-tap.mp3` | 0.5s | Light spacebar tap | soft spacebar tap, wide flat |
+| `sfx/keyboard/enter.mp3` | 0.5s | Enter confirmation (retained from v7b) | enter key press, crisp tactile |
 
-### 🎯 UI（界面交互）
+### 🎯 UI (interface interaction)
 
-| 文件 | 时长 | 用途 | Prompt 要点 |
+| File | Duration | Purpose | Prompt points |
 |---|---|---|---|
-| `sfx/ui/click.mp3` | 0.5s | 标准 UI 点击（v7b 保留） | crisp modern interface click |
-| `sfx/ui/click-soft.mp3` | 0.5s | 柔和 UI click（次要按钮/链接） | soft gentle button click, mid pitched |
-| `sfx/ui/focus.mp3` | 0.5s | 元素聚焦/选中（v7b 保留） | subtle focus tone, element highlight |
-| `sfx/ui/hover-subtle.mp3` | 0.5s | 悬停提示（微秒级反馈） | barely audible tick, air whisper |
-| `sfx/ui/tap-finger.mp3` | 0.5s | 移动端 tap（iOS 界面） | finger tap on touchscreen, muted thud |
-| `sfx/ui/toggle-on.mp3` | 0.5s | 开关打开 | ios toggle switch flip, satisfying click |
+| `sfx/ui/click.mp3` | 0.5s | Standard UI click (v7b reserved) | crisp modern interface click |
+| `sfx/ui/click-soft.mp3` | 0.5s | Soft UI click for secondary buttons and links | soft gentle button click, mid pitched |
+| `sfx/ui/focus.mp3` | 0.5s | Element focus/selection (retained from v7b) | subtle focus tone, element highlight |
+| `sfx/ui/hover-subtle.mp3` | 0.5s | Subtle hover feedback | barely audible tick, air whisper |
+| `sfx/ui/tap-finger.mp3` | 0.5s | Mobile tap (iOS interface) | finger tap on touchscreen, muted thud |
+| `sfx/ui/toggle-on.mp3` | 0.5s | switch on | ios toggle switch flip, satisfying click |
 
-### 🌊 Transition（过渡）
+### 🌊 Transition (transition)
 
-| 文件 | 时长 | 用途 | Prompt 要点 |
+| File | Duration | Purpose | Prompt points |
 |---|---|---|---|
-| `sfx/transition/whoosh.mp3` | 0.5s | 标准 whoosh（v7b 保留） | air whoosh transition |
-| `sfx/transition/whoosh-fast.mp3` | 0.6s | 快速 whoosh（标题闪入、标签切换） | quick fast air whoosh, cinematic |
-| `sfx/transition/swipe-horizontal.mp3` | 0.7s | 横向滑动（轮播、tab 切换） | smooth left-to-right air movement |
-| `sfx/transition/slide-in.mp3` | 0.6s | 元素滑入（side panel、抽屉） | smooth soft whoosh with arrival |
-| `sfx/transition/dissolve.mp3` | 0.8s | 柔化融化（图片淡出淡入） | soft dissolve, airy shimmer |
+| `sfx/transition/whoosh.mp3` | 0.5s | Standard whoosh (retained from v7b) | air whoosh transition |
+| `sfx/transition/whoosh-fast.mp3` | 0.6s | Fast whoosh for title flashes and label changes | quick fast air whoosh, cinematic |
+| `sfx/transition/swipe-horizontal.mp3` | 0.7s | Horizontal sliding (carousel, tab switching) | smooth left-to-right air movement |
+| `sfx/transition/slide-in.mp3` | 0.6s | Element sliding in (side panel, drawer) | smooth soft whoosh with arrival |
+| `sfx/transition/dissolve.mp3` | 0.8s | Soft image dissolve | soft dissolve, airy shimmer |
 
-### 🃏 Container（卡片/容器）
+### 🃏 Container (card/container)
 
-| 文件 | 时长 | 用途 | Prompt 要点 |
+| File | Duration | Purpose | Prompt points |
 |---|---|---|---|
-| `sfx/container/card-snap.mp3` | 0.5s | 卡片吸附/定位（v7b 保留） | card snap into place |
-| `sfx/container/card-flip.mp3` | 0.7s | 卡片翻转（前后面切换） | playing card flip, crisp snap |
-| `sfx/container/stack-collapse.mp3` | 0.8s | 堆叠合拢（列表聚合） | cards stacking, paper taps collapsing |
-| `sfx/container/modal-open.mp3` | 0.6s | 模态框打开 | modal popping open, whoosh + thud |
+| `sfx/container/card-snap.mp3` | 0.5s | Card snapping into alignment (retained from v7b) | card snap into place |
+| `sfx/container/card-flip.mp3` | 0.7s | Card flip between front and back | playing card flip, crisp snap |
+| `sfx/container/stack-collapse.mp3` | 0.8s | Stack collapsing into one group | cards stacking, paper taps collapsing |
+| `sfx/container/modal-open.mp3` | 0.6s | Modal opening | modal popping open, whoosh + thud |
 
-### 🔔 Feedback（通知/反馈）
+### 🔔 Feedback
 
-| 文件 | 时长 | 用途 | Prompt 要点 |
+| File | Duration | Purpose | Prompt points |
 |---|---|---|---|
-| `sfx/feedback/success-chime.mp3` | 1.0s | 成功提示（支付成功、任务完成） | two ascending bell tones, ios-style |
-| `sfx/feedback/error-tone.mp3` | 0.7s | 错误提示（警告、失败） | descending two-note warning, soft |
-| `sfx/feedback/notification-pop.mp3` | 0.6s | 消息弹出（toast、通知） | notification bloop, ios message alert |
-| `sfx/feedback/achievement.mp3` | 1.5s | 成就达成（里程碑、徽章） | triumphant rising arpeggio, game-style |
+| `sfx/feedback/success-chime.mp3` | 1.0s | Success prompt (payment successful, task completed) | two ascending bell tones, ios-style |
+| `sfx/feedback/error-tone.mp3` | 0.7s | Error message (warning, failure) | descending two-note warning, soft |
+| `sfx/feedback/notification-pop.mp3` | 0.6s | Toast or notification appearing | notification bloop, ios message alert |
+| `sfx/feedback/achievement.mp3` | 1.5s | Milestone or badge earned | triumphant rising arpeggio, game-style |
 
-### ⏳ Progress（进度/状态）
+### ⏳ Progress (progress/status)
 
-| 文件 | 时长 | 用途 | Prompt 要点 |
+| File | Duration | Purpose | Prompt points |
 |---|---|---|---|
-| `sfx/progress/loading-tick.mp3` | 0.5s | 加载计时（进度条节拍） | soft short pulse, minimal ambient |
-| `sfx/progress/complete-done.mp3` | 0.8s | 完成确认（step 完成） | two ascending satisfying tones |
-| `sfx/progress/generate-start.mp3` | 0.8s | AI 开始生成 | soft rising shimmer, magical whoosh |
+| `sfx/progress/loading-tick.mp3` | 0.5s | Progress-bar pulse | soft short pulse, minimal ambient |
+| `sfx/progress/complete-done.mp3` | 0.8s | Step-completion confirmation | two ascending satisfying tones |
+| `sfx/progress/generate-start.mp3` | 0.8s | AI starts generating | soft rising shimmer, magical whoosh |
 
-### 💥 Impact（品牌/冲击）
+### 💥 Impact
 
-| 文件 | 时长 | 用途 | Prompt 要点 |
+| File | Duration | Purpose | Prompt Points |
 |---|---|---|---|
-| `sfx/impact/logo-reveal.mp3` | 0.7s | Logo impact（v7b 保留） | logo reveal thud |
-| `sfx/impact/logo-reveal-v2.mp3` | 1.5s | 更长的 Logo impact（电影感） | cinematic bass hit with shimmer tail |
-| `sfx/impact/brand-stamp.mp3` | 1.0s | 印章重击（认证、盖章） | rubber stamp thud, paper contact |
-| `sfx/impact/drop-thud.mp3` | 0.7s | 物件落地（插入、放置） | heavy thud, wood surface contact |
+| `sfx/impact/logo-reveal.mp3` | 0.7s | Logo impact (retained from v7b) | logo reveal thud |
+| `sfx/impact/logo-reveal-v2.mp3` | 1.5s | Longer, cinematic logo impact | cinematic bass hit with shimmer tail |
+| `sfx/impact/brand-stamp.mp3` | 1.0s | Certification or approval stamp | rubber stamp thud, paper contact |
+| `sfx/impact/drop-thud.mp3` | 0.7s | Object landing (insertion, placement) | heavy thud, wood surface contact |
 
-### ✨ Magic（AI 变换）
+### ✨ Magic (AI transformation)
 
-| 文件 | 时长 | 用途 | Prompt 要点 |
+| File | Duration | Purpose | Prompt Points |
 |---|---|---|---|
-| `sfx/magic/sparkle.mp3` | 0.8s | 魔法闪光（AI 高亮、惊喜） | bright twinkling stars, fairy dust |
-| `sfx/magic/ai-process.mp3` | 1.2s | AI 处理音（thinking 状态） | modulating digital hum with shimmer |
-| `sfx/magic/transform.mp3` | 1.0s | 变换过渡（morph 效果） | rising shimmer whoosh with sparkle tail |
+| `sfx/magic/sparkle.mp3` | 0.8s | Reveal, highlight, or surprise | bright twinkling stars, fairy dust |
+| `sfx/magic/ai-process.mp3` | 1.2s | AI processing sound (thinking state) | modulating digital hum with shimmer |
+| `sfx/magic/transform.mp3` | 1.0s | transformation transition (morph effect) | rising shimmer whoosh with sparkle tail |
 
-### 💻 Terminal（命令行）
+### 💻 Terminal (command line)
 
-| 文件 | 时长 | 用途 | Prompt 要点 |
+| File | Duration | Purpose | Prompt points |
 |---|---|---|---|
-| `sfx/terminal/command-execute.mp3` | 0.5s | 命令执行 | crisp digital beep with tick, hacker ui |
-| `sfx/terminal/output-appear.mp3` | 0.6s | 输出出现 | rapid digital ticks, retro printout |
-| `sfx/terminal/cursor-blink.mp3` | 0.5s | 光标闪烁 | subtle soft digital pulse, rhythmic |
+| `sfx/terminal/command-execute.mp3` | 0.5s | Command execution | crisp digital beep with tick, hacker ui |
+| `sfx/terminal/output-appear.mp3` | 0.6s | Output appearing | rapid digital ticks, retro printout |
+| `sfx/terminal/cursor-blink.mp3` | 0.5s | Cursor blink | subtle soft digital pulse, rhythmic |
 
 ---
 
-## 按场景推荐搭配
+## Recommended combinations by scenario
 
-### 💻 Terminal 交互演示
+### 💻 Terminal interactive demonstration
 ```
 type (0.5s) → enter (0.5s) → command-execute (0.5s) → output-appear (0.6s)
 ```
-循环元素：`cursor-blink` 作为 idle 时的环境音。
+Loop `cursor-blink` as a subtle idle ambience.
 
-### 🃏 卡片选择流程
+### 🃏 Card selection process
 ```
-hover-subtle (0.5s, UI悬停) → click-soft (0.5s, 点击) → card-snap (0.5s, 定位)
+hover-subtle (0.5s, UI hover) → click-soft (0.5s, click) → card-snap (0.5s, snap into place)
 ```
-或进阶版：`card-flip` 做前后面切换。
+For a richer variation, use `card-flip` to switch between the front and back.
 
-### 🤖 AI 生成全流程
+### 🤖 Generate the complete set with AI
 ```
-generate-start (0.8s, 启动) → ai-process (1.2s, 处理) → sparkle (0.8s, 闪现) → complete-done (0.8s, 完成)
+generate-start (0.8s, start) → ai-process (1.2s, processing) → sparkle (0.8s, reveal) → complete-done (0.8s, completion)
 ```
-错误时用 `error-tone` 替代 `complete-done`。
+Replace `complete-done` with `error-tone` on error.
 
-### 🎬 Logo Reveal（品牌时刻）
+### 🎬 Logo reveal (brand moment)
 ```
-whoosh-fast (0.6s, 铺垫) → logo-reveal-v2 (1.5s, 落点) → sparkle (0.8s, 尾韵)
+whoosh-fast (0.6s, setup) → logo-reveal-v2 (1.5s, impact) → sparkle (0.8s, trailing accent)
 ```
-简版：`whoosh → logo-reveal`（直接 v7b 两件套）。
+Short version: `whoosh → logo-reveal`, the original v7b two-sound combination.
 
-### 📱 UI 交互演示（移动端）
+### 📱 UI interactive demonstration (mobile)
 ```
-tap-finger (0.5s, 点击) → slide-in (0.6s, 面板滑入) → toggle-on (0.5s, 开关)
+tap-finger (0.5s, tap) → slide-in (0.6s, panel entrance) → toggle-on (0.5s, switch)
 ```
-完成后：`success-chime` 或 `notification-pop`。
+After completion: `success-chime` or `notification-pop`.
 
-### 📊 数据可视化/仪表盘
+### 📊 Data visualization/dashboard
 ```
-loading-tick (0.5s, 节拍) × N → complete-done (0.8s, 数据到位) → achievement (1.5s, 惊艳落点)
+loading-tick (0.5s, beat) × N → complete-done (0.8s, data settles) → achievement (1.5s, emphatic finish)
 ```
 
-### 🎯 表单提交流程
+### 🎯 Form submission process
 ```
 click-soft (0.5s) → loading-tick ×2 (1.0s) → success-chime (1.0s)
 ```
-失败分支：`error-tone (0.7s)`。
+Failed branch: `error-tone (0.7s)`.
 
-### 🪄 Magic Transform 场景
+### 🪄 Transform scene
 ```
 whoosh-fast (0.6s) → transform (1.0s) → sparkle (0.8s)
 ```
-适合：元素变形、效果前后对比、"AI 重写"等演示。
+Suitable for element morphs, before/after comparisons, AI rewriting, and similar transformations.
 
 ---
 
-## 使用规范
+## Usage guidelines
 
-### 音量建议（来自 apple-gallery-showcase.md 音频双轨制）
-- **SFX 主轨**：`1.0`（不做衰减）
-- **BGM 背景轨**：`0.4 ~ 0.5`（SFX 明显穿透）
-- **多 SFX 叠加**：用 `amix=inputs=N:duration=longest:normalize=0` 保留动态范围
+### Volume recommendations (from the dual-track system in `apple-gallery-showcase.md`)
+- **SFX main track**: `1.0` (without attenuation)
+- **BGM bed**: `0.4–0.5` (leave the SFX clearly audible)
+- **Multiple SFX overlay**: Preserve dynamic range with `amix=inputs=N:duration=longest:normalize=0`
 
-### ffmpeg 拼接模板
+### ffmpeg stitching template
 ```bash
-# 单 SFX 对齐时间点：
+# Align one SFX to a timecode:
 ffmpeg -i video.mp4 -itsoffset 2.5 -i sfx/ui/click.mp3 \
   -filter_complex "[0:a][1:a]amix=inputs=2:duration=longest:normalize=0[a]" \
   -map 0:v -map "[a]" output.mp4
 
-# 多 SFX + BGM：
+# Multiple SFX plus BGM:
 ffmpeg -i video.mp4 \
   -itsoffset 1.0 -i sfx/transition/whoosh-fast.mp3 \
   -itsoffset 1.6 -i sfx/impact/logo-reveal-v2.mp3 \
@@ -187,31 +187,31 @@ ffmpeg -i video.mp4 \
   -map 0:v -map "[a]" output.mp4
 ```
 
-### 选型决策树
-1. **有 tactile 动作**（打字/点击/滑动）→ `keyboard/` or `ui/`
-2. **元素进场/出场** → `transition/`
-3. **容器层操作**（卡片/模态） → `container/`
-4. **状态反馈**（成功/失败/通知） → `feedback/`
-5. **进度/时间流逝** → `progress/`
-6. **品牌落点/重要时刻** → `impact/`
-7. **AI 魔法/变换** → `magic/`
-8. **命令行/代码演示** → `terminal/`
+### Selection decision tree
+1. **Tactile action** (typing/click/swipe) → `keyboard/` or `ui/`
+2. **Element entry/exit** → `transition/`
+3. **Container layer operations** (card/modal) → `container/`
+4. **Status feedback** (success/failure/notification) → `feedback/`
+5. **Progress/time lapse** → `progress/`
+6. **Brand placement/important moments** → `impact/`
+7. **AI magic/transformation** → `magic/`
+8. **Command line/code demonstration** → `terminal/`
 
-### 避免叠音堆积
-- 同一个时间点 `max 2 个 SFX` 并发
-- BGM 降到 0.3 以下时可以放 3 个
-- 品牌 impact 时清空其他 SFX（留空 0.2s 再落点）
+### Avoid overcrowding the mix
+- Play at most two SFX at the same time
+- Three are acceptable only when the BGM is below 0.3
+- Remove all competing SFX around a brand impact; leave 0.2s of space before the hit
 
 ---
 
-## Prompt 撰写原则（供复用）
+## Prompt writing principles (for reuse)
 
-参考风格：`apple keynote, tight, minimal, no reverb unless ambient, crisp, elegant`
+Reference style: `apple keynote, tight, minimal, no reverb unless ambient, crisp, elegant`
 
-**好 prompt 的三要素**：
-1. **声音物理描述**：什么物体、什么动作（"mechanical keyboard single key press"）
-2. **质感/风格限定**：apple-style / ios-style / cinematic / retro
-3. **反例排除**：no reverb / clean studio / minimal
+**Three elements of a good prompt**:
+1. **Physical description**: name the object and action, such as “mechanical keyboard single key press.”
+2. **Texture or style constraint**: Apple-style / iOS-style / cinematic / retro.
+3. **Negative constraint**: no reverb / clean studio / minimal.
 
 ❌ "click sound"
 ✅ "crisp ui button click, clean modern interface sound, apple-style, high pitched"
@@ -221,6 +221,6 @@ ffmpeg -i video.mp4 \
 
 ---
 
-## 详见
-- 音频双轨制与 ffmpeg 拼接：`apple-gallery-showcase.md`
-- 原始生成脚本：`/tmp/gen_sfx_batch.sh`（一次性批量生成器）
+## See also
+- Audio dual-track and ffmpeg splicing: `apple-gallery-showcase.md`
+- Original generation script: `/tmp/gen_sfx_batch.sh` (one-off batch generator)

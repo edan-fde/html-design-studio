@@ -1,55 +1,57 @@
 #!/bin/bash
-# design-gate-hook.sh — PreToolUse(Bash) hook：长片渲染前检查设计流程gate文件
+# design-gate-hook.sh — PreToolUse(Bash) hook: verify the design-process gate before long-form rendering
 #
-# 铁律背景（2026-07-17花叔立）：huashu-design做设计前必须①资产协议(brand-spec.md)
-# ②三方向真实视觉给用户选(direction-approved.md记录选择或豁免理由)。
-# B00(210s)实测：跳过方向确认直接渲全片→整片返工。此hook把教训变成机器约束：
-# **时长≥45秒的合成，缺direction-approved.md就不许渲**——长片返工的代价远大于停一下。
+# Non-negotiable rule established 2026-07-17: before huashu-design creates a design, it must provide
+# ① an asset protocol (brand-spec.md) and ② three real visual directions for the user to choose from
+# (direction-approved.md records the choice or reason for exemption).
+# In the 210s B00 production, rendering the full film before direction approval forced a complete rework.
+# This hook turns that lesson into a machine-enforced constraint: **renders ≥45 seconds require
+# direction-approved.md**. Pausing is far cheaper than reworking a long film.
 #
-# 放行条件（任一）：
-#   - 合成时长<45s或无法判定（短片/实验低摩擦，靠SKILL.md gate协议约束）
-#   - 项目目录（或上两级）存在 direction-approved.md
-#   - 命令里显式带 SKIP_DESIGN_GATE=1（花叔明说跳过时用，可审计）
+# Allow when any condition is met:
+#   - Render duration is <45s or cannot be determined (keep short films/experiments low-friction; SKILL.md still governs the gate)
+#   - direction-approved.md exists in the project directory or either of its two parents
+#   - The command explicitly includes SKIP_DESIGN_GATE=1 (an auditable escape hatch for an explicit user exemption)
 #
-# settings.json配置：PreToolUse / matcher "Bash" / command指向本脚本
+# settings.json configuration: PreToolUse / matcher "Bash" / command pointing to this script
 
 INPUT=$(cat)
 CMD=$(printf '%s' "$INPUT" | python3 -c "import json,sys;print(json.load(sys.stdin).get('tool_input',{}).get('command',''))" 2>/dev/null)
 CWD=$(printf '%s' "$INPUT" | python3 -c "import json,sys;print(json.load(sys.stdin).get('cwd',''))" 2>/dev/null)
 
-# 谈论命令的命令（echo/grep等）直接放行，防纯文本误伤（QA Bug1）
+# Allow commands that merely discuss other commands (echo/grep, etc.) to avoid false positives on plain text (QA Bug 1).
 FIRST=$(echo "$CMD" | sed -E 's/^[[:space:]]*//' | cut -d' ' -f1)
 case "$FIRST" in echo|printf|grep|cat|ls|head|tail|wc|sed|awk) exit 0;; esac
-# 只管渲染命令（含npm run render与解说长片渲染）
+# Restrict the hook to render commands (including npm run render and narrated long-form rendering).
 echo "$CMD" | grep -qE "hyperframes(@[0-9.]+)? +render|render-video(-seek)?\.js|render-narration\.sh|npm +run +render\b" || exit 0
-# 显式跳过（可审计的逃生门）
+# Explicit bypass (auditable escape hatch).
 echo "$CMD" | grep -q "SKIP_DESIGN_GATE=1" && exit 0
 
-# 定位项目目录：命令中cd的目标 > hook cwd
+# Locate the project directory: the command's cd target takes precedence over the hook cwd.
 DIR="$CWD"
 CDDIR=$(echo "$CMD" | grep -oE 'cd +"[^"]+"|cd +[^ &;]+' | head -1 | sed -E 's/^cd +//; s/"//g')
 [ -n "$CDDIR" ] && [ -d "$CDDIR" ] && DIR="$CDDIR"
 
-# 取合成时长：hyperframes项目读index.html的data-duration；render-video-seek读--duration参数
+# Determine duration: read data-duration from index.html for HyperFrames projects; read --duration for render-video-seek.
 DUR=""
 D_ARG=$(echo "$CMD" | grep -oE '\-\-duration=[0-9]+' | head -1 | cut -d= -f2)
 [ -n "$D_ARG" ] && DUR="$D_ARG"
 if [ -z "$DUR" ] && [ -f "$DIR/index.html" ]; then
   DUR=$(grep -oE 'data-duration="[0-9.]+"' "$DIR/index.html" | head -1 | grep -oE '[0-9.]+' | cut -d. -f1)
 fi
-# 判不出时长或短片 → 放行
+# Allow unknown durations and short films.
 [ -z "$DUR" ] && exit 0
 [ "$DUR" -lt 45 ] 2>/dev/null && exit 0
 
-# 长片：查gate文件（项目目录及上两级）
+# Long-form render: look for the gate file in the project directory and its two parents.
 for d in "$DIR" "$DIR/.." "$DIR/../.."; do
   [ -f "$d/direction-approved.md" ] && exit 0
 done
 
 cat >&2 << EOF
-🛑 设计流程gate：该合成时长${DUR}s（≥45s长片），但项目内未找到 direction-approved.md。
-huashu-design铁律：长片渲染前必须完成「三方向真实视觉给用户选择」（或用户明示豁免），并把选择/豁免记录写入项目目录的 direction-approved.md（含：展示了哪几版、截图路径、用户的选择原话）。
-补齐后重渲；用户当面明说跳过时，在命令前加 SKIP_DESIGN_GATE=1 显式放行。
-（依据：2026-07-17 B00实测，跳过方向确认渲210s全片→整片视觉返工）
+🛑 Design-process gate: this render is ${DUR}s (long-form, ≥45s), but direction-approved.md was not found in the project.
+huashu-design requires presenting three real visual directions for the user to choose from before a long-form render (unless the user explicitly grants an exemption). Record the choice or exemption in direction-approved.md in the project directory, including the versions shown, screenshot paths, and the user's exact choice.
+Add the record, then render again. If the user explicitly asks to skip the gate, prefix the command with SKIP_DESIGN_GATE=1.
+(Basis: in the 2026-07-17 B00 production, skipping direction approval before rendering the 210s film forced a complete visual rework.)
 EOF
 exit 2

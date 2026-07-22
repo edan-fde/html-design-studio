@@ -538,7 +538,7 @@
   }
   .split-label .em { color: var(--accent); }
 
-  /* ====== Brand Reveal (米色面板 · hero-v10 系列 signature) ====== */
+  /* ====== Brand Reveal (beige panel · hero-v10 family signature) ====== */
   .brand-panel {
     position: absolute;
     inset: 0;
@@ -699,7 +699,7 @@
     </div>
   </div>
 
-  <!-- ====== Brand Reveal (米色面板 · hero-v10 signature) ====== -->
+  <!-- ====== Brand Reveal (beige panel · hero-v10 signature) ====== -->
   <div class="brand-panel" id="brandPanel"></div>
   <div class="brand-reveal" id="brandReveal">
     <div class="brand-wordmark" id="wordmark">huashu<span class="accent">-</span>design</div>
@@ -766,9 +766,9 @@
     connectorIn:  [3.3, 3.9],
     beat2Out:     [8.0, 8.3],        // main scene fades to 0 (0.3s)
 
-    // Brand Reveal (米色面板 · hero-v10 signature): 8.3 - 10s
-    // panelRise 与 beat2Out 微重叠 0.05s，避免黑屏间隙
-    panelRise:    [8.25, 8.7],       // 米色面板 translateY 100%→0 (expoOut)
+    // Brand Reveal (beige panel · hero-v10 signature): 8.3–10s
+    // panelRise overlaps beat2Out by 0.05s to avoid a black-frame gap.
+    panelRise:    [8.25, 8.7],       // Beige panel translateY 100%→0 (expoOut)
     wordmarkIn:   [8.7, 9.3],        // wordmark opacity 0→1 + translateY 20→0 + weight 100→500 (0.6s, expoOut)
     brandLineIn:  [9.3, 9.7],        // brand-line expand 0→280px (0.4s, cubicOut)
     brandHold:    [9.7, 10.0],       // hold (0.3s)
@@ -995,8 +995,8 @@
     titleText.textContent = displayedText;
     caret.style.opacity = caretOp;
 
-    /* ======= Brand Reveal (米色面板 · hero-v10 signature) ======= */
-    // Panel rises from bottom (米色面板 #F5F4F0)
+    /* ======= Brand Reveal (beige panel · hero-v10 signature) ======= */
+    // Panel rises from bottom (beige #F5F4F0).
     const panelP = clampLerp(t, T.panelRise[0], T.panelRise[1]);
     panel.style.transform = `translateY(${(1 - expoOut(panelP)) * 100}%)`;
 

@@ -1,200 +1,200 @@
-# Verification：输出验证流程
+# Verification · Output QA Workflow
 
-一些 design-agent 原生环境（如 Claude.ai Artifacts）有内置的 `fork_verifier_agent` 起 subagent 用 iframe 截图检查。大部分 agent 环境（Claude Code / Codex / Cursor / Trae / 等）里没有这个内置能力——用 Playwright 手动做就能覆盖相同的验证场景。
+Some native design-agent environments, such as Claude.ai Artifacts, include a `fork_verifier_agent` subagent that inspects iframe screenshots. Most agent environments—including Claude Code, Codex, Cursor, and Trae—do not. Playwright can cover the same verification scenarios manually.
 
-## 验证清单
+## Verification Checklist
 
-每次产出HTML后，按这个清单做一遍：
+Run this checklist after every HTML generation:
 
-### 1. 浏览器渲染检查（必做）
+### 1. Browser rendering check (required)
 
-最基础：**HTML能不能打开**？在macOS上：
+Start with the most basic question: **does the HTML open?** On macOS:
 
 ```bash
 open -a "Google Chrome" "/path/to/your/design.html"
 ```
 
-或者用Playwright截图（下一节）。
+or take a screenshot with Playwright (next section).
 
-### 2. 控制台错误检查
+### 2. Console error check
 
-HTML文件里最常见的问题是JS报错导致白屏。用Playwright跑一遍：
+The most common HTML failure is a blank screen caused by a JavaScript error. Check it with Playwright:
 
 ```bash
-python ~/.claude/skills/huashu-design/scripts/verify.py path/to/design.html
+python scripts/verify.py path/to/design.html
 ```
 
-这个脚本会：
-1. 用headless chromium打开HTML
-2. 截图保存到项目目录
-3. 抓取控制台错误
-4. 报告status
+This script will:
+1. Open the HTML in headless Chromium
+2. Save the screenshot to the project directory
+3. Grab console errors
+4. Report status
 
-详见`scripts/verify.py`。
+See `scripts/verify.py` for details.
 
-### 3. 多视口检查
+### 3. Multi-viewport check
 
-如果是响应式设计，抓多个viewport：
+If it is a responsive design, grab multiple viewports:
 
 ```bash
 python verify.py design.html --viewports 1920x1080,1440x900,768x1024,375x667
 ```
 
-### 4. 交互检查
+### 4. Interaction check
 
-Tweaks、动画、按钮切换——默认的静态截图看不到。**建议让用户自己开浏览器点一遍**，或者用Playwright录屏：
+Static screenshots cannot validate Tweaks, animations, or button state changes. **Ask the user to open the page and interact with it**, or record the flow with Playwright:
 
 ```python
 page.video.record('interaction.mp4')
 ```
 
-### 5. 幻灯片逐页检查
+### 5. Check every slide
 
-Deck类HTML，一张张截：
+Capture deck-style HTML one slide at a time:
 
 ```bash
-python verify.py deck.html --slides 10  # 截前10张
+python verify.py deck.html --slides 10  # Capture the first 10 slides.
 ```
 
-生成 `deck-slide-01.png`、`deck-slide-02.png`... 方便快速浏览。
+This generates `deck-slide-01.png`, `deck-slide-02.png`, and so on for quick review.
 
 ## Playwright Setup
 
-首次使用需要：
+Install the required tooling:
 
 ```bash
-# 如果还没装
+# Node.js version, if Playwright is not installed yet:
 npm install -g playwright
 npx playwright install chromium
 
-# 或者Python版
+# Or the Python version:
 pip install playwright
 playwright install chromium
 ```
 
-如果用户已经全局安装 Playwright，直接用即可。
+If the user has installed Playwright globally, just use it directly.
 
-## 截图最佳实践
+## Screenshot best practice
 
-### 截完整页面
+### Screenshot the entire page
 
 ```python
 page.screenshot(path='full.png', full_page=True)
 ```
 
-### 截viewport
+### Screenshot the viewport
 
 ```python
-page.screenshot(path='viewport.png')  # 默认只截可见区域
+page.screenshot(path='viewport.png')  # Only capture the visible area by default
 ```
 
-### 截特定元素
+### Screenshot specific elements
 
 ```python
 element = page.query_selector('.hero-section')
 element.screenshot(path='hero.png')
 ```
 
-### 高清截图
+### High-definition screenshot
 
 ```python
 page = browser.new_page(device_scale_factor=2)  # retina
 ```
 
-### 等动画结束再截
+### Wait for animation to settle before capturing
 
 ```python
-page.wait_for_timeout(2000)  # 等2秒让动画settle
+page.wait_for_timeout(2000)  # Wait two seconds for the animation to settle.
 page.screenshot(...)
 ```
 
-## 把截图发给用户
+## Send the screenshot to the user
 
-### 本地截图直接打开
+### Open the local screenshot directly
 
 ```bash
 open screenshot.png
 ```
 
-用户会在自己的 Preview/Figma/VSCode/浏览器 里看。
+The user can inspect it in Preview, Figma, VS Code, or a browser.
 
-### 上传图床分享链接
+### Upload the image sharing link
 
-如果需要给远程协作者看（比如 Slack/飞书/微信），让用户用自己的图床工具或 MCP 上传截图，拿到一个永久链接，可以粘贴到任何地方。
+If you need to show it to remote collaborators (such as Slack/Feishu/WeChat), let the user upload the screenshot using their own image sharing tool or MCP, and get a permanent link that can be pasted anywhere.
 
-## 验证出错时
+## When a verification error occurs
 
-### 页面白屏
+### The page is blank
 
-控制台一定有错。先检查：
+There must be an error in the console. First check:
 
-1. React+Babel script tag的integrity hash对不对（见`react-setup.md`）
-2. 是不是`const styles = {...}`命名冲突
-3. 跨文件的组件有没有export到`window`
-4. JSX语法错误（babel.min.js不报错，换babel.js非压缩版）
+1. React+Babel script tag's integrity hash is correct (see `react-setup.md`)
+2. Is there a naming conflict with `const styles = {...}`
+3. Are cross-file components exported to `window`
+4. JSX syntax errors (`babel.min.js` can obscure them; switch temporarily to the unminified `babel.js`)
 
-### 动画卡
+### Animation stutters
 
-- 用Chrome DevTools Performance tab录一段
-- 找layout thrashing（频繁的reflow）
-- 动效优先用`transform`和`opacity`（GPU加速）
+- Use Chrome DevTools Performance tab to record a section
+- Look for layout thrashing (frequent reflows)
+- Prefer `transform` and `opacity` for motion so the compositor can accelerate it
 
-### 字体不对
+### The font is wrong
 
-- 检查`@font-face`的url是否可访问
-- 检查fallback字体
-- 中文字体加载慢：先显示fallback，加载完再切换
+- Confirm that each `@font-face` URL is accessible
+- Inspect the fallback chain
+- Chinese fonts load slowly: show the fallback immediately, then swap after the font arrives
 
-### 布局错位
+### The layout is misaligned
 
-- 检查`box-sizing: border-box`是否全局应用
-- 检查`*  margin: 0; padding: 0`reset
-- Chrome DevTools里打开gridlines看实际布局
+- Check whether `box-sizing: border-box` is applied globally
+- Check the global `* { margin: 0; padding: 0; }` reset
+- Open gridlines in Chrome DevTools to see the actual layout
 
-## 验证=设计师的第二双眼
+## Verification = designer's second pair of eyes
 
-**永远要自己过一遍**。AI写代码时经常出现：
+**Always perform the review yourself.** Common AI-generated-code failures include:
 
-- 看起来对但interaction有bug
-- 静态截图好但scroll时错位
-- 宽屏好看但窄屏崩
-- Dark mode忘了测
-- Tweaks切换后某些组件没响应
+- Looks right but has bugs in interaction
+- Static screenshots are good but misaligned when scrolling
+- Wide screens look correct while narrow screens break
+- Dark mode forgot to test
+- Some components do not respond after switching Tweaks
 
-**最后1分钟的验证可以省1小时的返工**。
+**The last 1 minute of verification can save 1 hour of rework**.
 
-## 常用验证脚本命令
+## Common verification script commands
 
 ```bash
-# 基础：打开+截图+抓错
+# Basic: open, capture, and report errors.
 python verify.py design.html
 
-# 多viewport
+# Multiple viewports.
 python verify.py design.html --viewports 1920x1080,375x667
 
-# 多slide
+# Multiple slides.
 python verify.py deck.html --slides 10
 
-# 输出到指定目录
+# Output to the specified directory
 python verify.py design.html --output ./screenshots/
 
-# headless=false，打开真实浏览器给你看
+# headless=false: open a visible browser for manual review.
 python verify.py design.html --show
 ```
 
-## 视频产物硬校验（verify-video.sh）
+## Video product hard verification (verify-video.sh)
 
-渲染出的 MP4/成片不靠肉眼过，用脚本硬校验（HTML 合成侧的校验由 `hyperframes check` 五门审计负责，这个脚本只管产物侧）：
+Do not validate a rendered MP4 solely by eye. Use the script for deterministic checks. `hyperframes check` handles the five-part composition audit; this script validates only the rendered deliverable:
 
 ```bash
-# 成品（默认要求有音轨）
+# Finished deliverable; an audio track is required by default.
 bash scripts/verify-video.sh final.mp4 --duration=22 --fps=60 --width=1920 --height=1080
 
-# 无声中间产物
+# Silent intermediate render.
 bash scripts/verify-video.sh raw.mp4 --duration=10 --fps=60 --no-audio
 
-# 刻意黑场开场的电影风
+# Cinematic render with an intentionally black opening.
 bash scripts/verify-video.sh film.mp4 --duration=30 --fps=60 --allow-black-open
 ```
 
-检查项：分辨率/帧率、时长误差（±2%）、audio stream 存在性（无音轨=半成品铁律的机器执行）、首尾黑帧（blackdetect，录制起点偏移/loop 回跳的典型症状）、LUFS 响度（成品目标 -14±4）。exit code 非 0 就不许交付。
+Checks include resolution and frame rate, duration tolerance (±2%), the presence of an audio stream (no audio track means the render is mechanically classified as unfinished), black frames at the beginning or end (`blackdetect`, often indicating an offset recording start or loop bounce), and LUFS loudness (target: -14 ±4 for a finished deliverable). Do not deliver if the command exits nonzero.

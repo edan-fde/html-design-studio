@@ -1,80 +1,81 @@
-# App / iOS 原型专属守则 · 完整操作手册
+# App / iOS Prototype Rules · Complete Operating Manual
 
-> 从 SKILL.md 下沉的完整版。SKILL.md 保留 7 条硬规则速查，本文件是每条规则的展开：架构选型、取图渠道与代码、AppPhone JSX 骨架、ios_frame 三步用法、品位锚点全表。
+> The expanded version of the rules summarized in `SKILL.md`. `SKILL.md` retains a seven-rule quick reference; this document explains each rule in full: architecture selection, image sources and code, the `AppPhone` JSX skeleton, the three-step `ios_frame` workflow, and the complete set of taste anchors.
 
+When creating an iOS, Android, or mobile-app prototype (triggers include “app prototype,” “iOS mockup,” “mobile application,” and “build an app”), the following rules **override** the general placeholder principle. An app prototype is a live demonstration; static staging and beige placeholder cards are unconvincing.
 
-做 iOS/Android/移动 app 原型时（触发：「app 原型」「iOS mockup」「移动应用」「做个 app」），下面四条**覆盖**通用 placeholder 原则——app 原型是 demo 现场，静态摆拍和米白占位卡没有说服力。
+### 0. Choose the Architecture First (Mandatory)
 
-### 0. 架构选型（必先决定）
+**Default to single-file inline React**: put all JSX, data, and styles directly in the main HTML file inside `<script type="text/babel">...</script>`. **Do not** load them externally with `<script src="components.jsx">`. Under the `file://` protocol, the browser blocks external JavaScript as cross-origin content. Requiring the user to start an HTTP server violates the expectation that a prototype should open with a double-click. Embed local images as base64 data URLs; never assume a server is present.
 
-**默认单文件 inline React**——所有 JSX/data/styles 直接写进主 HTML 的 `<script type="text/babel">...</script>` 标签，**不要**用 `<script src="components.jsx">` 外部加载。原因：`file://` 协议下浏览器把外部 JS 当跨 origin 拦截，强制用户起 HTTP server 违反「双击就能开」的原型直觉。引用本地图片必须 base64 内嵌 data URL，别假设有 server。
+**Split the project into external files only in two cases:**
+- (a) The single file exceeds 1,000 lines and becomes difficult to maintain → split it into `components.jsx` + `data.js`, and provide explicit delivery instructions (the `python3 -m http.server` command and the URL to open).
+- (b) Multiple subagents need to build different screens in parallel → use `index.html` plus one standalone HTML file per screen (`today.html`, `graph.html`, etc.), aggregated with iframes. Each screen must itself remain a self-contained single file.
 
-**拆外部文件只在两种情况**：
-- (a) 单文件 >1000 行难维护 → 拆成 `components.jsx` + `data.js`，同时明确交付说明（`python3 -m http.server` 命令 + 访问 URL）
-- (b) 需要多 subagent 并行写不同屏 → `index.html` + 每屏独立 HTML（`today.html`/`graph.html`...），iframe 聚合，每屏也都是自包含单文件
+**Architecture cheatsheet:**
 
-**选型速查**：
-
-| 场景 | 架构 | 交付方式 |
+| Scenario | Architecture | Delivery |
 |------|------|----------|
-| 单人做 4-6 屏原型（主流） | 单文件 inline | 一个 `.html` 双击开 |
-| 单人做大型 App（>10 屏） | 多 jsx + server | 附启动命令 |
-| 多 agent 并行 | 多 HTML + iframe | `index.html` 聚合，每屏独立可开 |
+| One person building a 4–6-screen prototype (most common) | Single inline file | One `.html` file that opens on double-click |
+| One person building a large app (>10 screens) | Multiple JSX files + server | Include a startup command |
+| Multiple agents working in parallel | Multiple HTML files + iframe | Aggregate in `index.html`; each screen opens independently |
 
-### 1. 先找真图，不是 placeholder 摆着
+### 1. Find Real Images First—Do Not Leave Placeholders Sitting There
 
-默认主动去取真实图片填充，不要画 SVG、不要拿米白卡摆着、不要等用户要求。常用渠道：
+Proactively obtain real images by default. Do not draw SVG replacements, leave beige placeholder cards in place, or wait for the user to ask. Common sources:
 
-| 场景 | 首选渠道 |
+| Scenario | Preferred Source |
 |------|---------|
-| 美术/博物馆/历史内容 | Wikimedia Commons（公共领域）、Met Museum Open Access、Art Institute of Chicago API |
-| 通用生活/摄影 | Unsplash、Pexels（免版权） |
-| 用户本地已有素材 | `~/Downloads`、项目 `_archive/` 或用户配置的素材库 |
+| Art, museum, or historical content | Wikimedia Commons (public domain), The Met Open Access, Art Institute of Chicago API |
+| General lifestyle or photography | Unsplash, Pexels (royalty-free) |
+| Assets already on the user's machine | `~/Downloads`, the project's `_archive/`, or the user's configured asset library |
 
-Wikimedia 下载避坑（本机 curl 走代理 TLS 会炸，Python urllib 直接走得通）：
+Wikimedia download pitfall (on this machine, `curl` fails TLS through the proxy; Python's `urllib` connects successfully):
 
 ```python
-# 合规 User-Agent 是硬性要求，否则 429
+# A compliant User-Agent is mandatory; otherwise Wikimedia returns 429
 UA = 'ProjectName/0.1 (https://github.com/you; you@example.com)'
-# 用 MediaWiki API 查真实 URL
+# Use the MediaWiki API to discover the actual URL
 api = 'https://commons.wikimedia.org/w/api.php'
-# action=query&list=categorymembers 批量拿系列 / prop=imageinfo+iiurlwidth 取指定宽度 thumburl
+# action=query&list=categorymembers retrieves a series in bulk;
+# prop=imageinfo+iiurlwidth returns a thumbnail URL at the requested width
 ```
 
-**只有**当所有渠道都失败 / 版权不清 / 用户明确要求时，才退回诚实 placeholder（仍然不画烂 SVG）。
+Fall back to an honest placeholder **only** when every source fails, rights are unclear, or the user explicitly requests one. Even then, do not draw a bad SVG.
 
-**真图诚实性测试**（关键）：取图之前先问自己——「如果去掉这张图，信息是否有损？」
+**Honesty test for real imagery** (critical): before obtaining an image, ask yourself, “Would removing this image cause information to be lost?”
 
-| 场景 | 判断 | 动作 |
+| Scenario | Assessment | Action |
 |------|------|------|
-| 文章/Essay 列表的封面、Profile 页的风景头图、设置页的装饰 banner | 装饰，与内容无内在关联 | **不要加**。加了就是 AI slop，等同紫色渐变 |
-| 博物馆/人物内容的肖像、产品详情的实物、地图卡片的地点 | 内容本身，有内在关联 | **必须加** |
-| 图谱/可视化背景的极淡纹理 | 氛围，服从内容不抢戏 | 加，但 opacity ≤ 0.08 |
+| Covers in an article or essay list, a scenic profile-page header, a decorative settings-page banner | Decorative; no intrinsic relationship to the content | **Do not add it.** Doing so is AI slop—the photographic equivalent of a purple gradient. |
+| A portrait in museum or biographical content, the physical product on a product page, the location shown in a map card | The image is the content; there is an intrinsic relationship | **Must be included** |
+| An extremely faint texture behind a graph or visualization | Atmospheric; subordinate to the content and never competing with it | Add it, but keep opacity ≤ 0.08 |
 
-**反例**：给文字 Essay 配 Unsplash「灵感图」、给笔记 App 配 stock photo 模特——都是 AI slop。取真图的许可不等于滥用真图的通行证。
+**Counterexamples:** pairing an essay with an Unsplash “inspiration image,” or putting a stock-photo model in a notes app. Both are AI slop. Permission to use real imagery is not permission to misuse it.
 
-### 2. 交付形态：默认「平铺 + 可操作」，不要问用户
+### 2. Delivery Format: “Tiled + Interactive” by Default—Do Not Ask
 
-iOS App 原型的**默认交付形态就一种，不要再问用户「要平铺还是可操作」**：**平铺 4-6 个主界面，且每一台都能交互**。一眼看全貌（多台 iPhone 并排），又每台都能点 tab 切换、在界面上做基本操作（展开、切换、选中、打开弹层）。两个好处一次给齐，别让用户二选一。
+There is exactly one **default delivery format for an iOS app prototype**. Do not ask whether the user wants “tiled or interactive”: **tile four to six primary screens, and make every phone interactive**. The user can understand the whole app at a glance from several iPhones arranged side by side, while still being able to switch tabs and perform basic operations such as expanding, selecting, toggling, and opening modals. Provide both benefits at once; do not force a choice.
 
-| 维度 | 默认做法 |
+| Dimension | Default |
 |------|---------|
-| **屏数** | 平铺 **4-6 个主界面**（覆盖 app 的核心功能面，不是随便摆几个）。多于 6 个抓最主要的 4-6 个，其余可在单台内通过 tab/导航到达 |
-| **布局** | 多台独立 iPhone 横向 `flexWrap` 并排，每台上方一行 italic 小字标签说明这是哪个界面 |
-| **每台交互** | 每台都是独立的迷你状态机：tab bar 可切、界面内按钮/卡片/开关可点、能弹 modal——不是静态摆拍 |
+| **Screen count** | Tile **4–6 primary screens** covering the app's core functional surfaces—not an arbitrary assortment. If more than six exist, show the most important 4–6 and make the others reachable through tabs or navigation within a phone. |
+| **Layout** | Arrange independent iPhones horizontally with `flexWrap`; place a one-line italic label above each phone identifying the screen. |
+| **Interaction in each phone** | Each phone is an independent miniature state machine: tabs switch, buttons/cards/toggles respond, and modals can open. It is not a static staged screenshot. |
 
-**只有两种特例才偏离默认**（用户明确说了才走，否则一律默认）：
-- 用户明确「只要静态截图 / 不用能点 / 就看 layout」→ 退回纯静态 overview（每台只渲染 `ScreenComponent`，不挂状态机）
-- 用户明确「只演示一条流程 / 走一遍 onboarding / 单机 demo」→ 单台 `AppPhone` 走完整 flow
+Depart from this default only for two explicit exceptions:
+- The user explicitly requests “static screenshots only,” “it does not need to be clickable,” or “I only want to see the layout” → provide a purely static overview (each phone renders only its `ScreenComponent`, with no state machine attached).
+- The user explicitly requests “demonstrate one flow only,” “walk through onboarding,” or “single-device demo” → use one `AppPhone` to run the full flow.
 
-**默认骨架**（平铺多台，每台各自一个带 state 的 AppPhone）：
+**Default skeleton** (multiple tiled phones, each with its own stateful `AppPhone`):
 
 ```jsx
-// 每台 = 一个独立状态机，初始落在自己负责的主界面
+// Each phone is an independent state machine whose initial state is its assigned primary screen
 function AppPhone({ initial }) {
   const [screen, setScreen] = React.useState(initial);
   const [modal, setModal] = React.useState(null);
-  // 按 screen 渲染对应 ScreenComponent，传入 onTabChange/onOpen/onClose/onToggle 等 callback
+  // Render the appropriate ScreenComponent for screen and pass
+  // callbacks such as onTabChange/onOpen/onClose/onToggle
   return (
     <IosFrame>
       <ScreenComponent
@@ -87,7 +88,7 @@ function AppPhone({ initial }) {
   );
 }
 
-// 平铺：4-6 台并排，每台 initial 落在不同主界面
+// Tile 4–6 phones side by side, each initialized to a different primary screen
 <div style={{display: 'flex', gap: 32, flexWrap: 'wrap', padding: 48, alignItems: 'flex-start'}}>
   {mainScreens.map(s => (
     <div key={s.id}>
@@ -98,49 +99,49 @@ function AppPhone({ initial }) {
 </div>
 ```
 
-Screen 组件接 callback props（`onTabChange`、`onOpen`、`onClose`、`onToggle`、`onAnnotation`），不硬编码状态。TabBar、按钮、作品卡、开关加 `cursor: pointer` + hover 反馈。每台落在不同主界面，但 tab 切换后能到达彼此——平铺给全貌，点击给纵深。
+Screen components accept callback props (`onTabChange`, `onOpen`, `onClose`, `onToggle`, `onAnnotation`) rather than hard-coding state. Add `cursor: pointer` and hover feedback to the tab bar, buttons, artwork cards, and switches. Each phone opens on a different primary screen, but tab switching should make the screens mutually reachable: tiling gives breadth; interaction gives depth.
 
-### 3. 交付前跑真实点击测试
+### 3. Run Real Click Tests Before Delivery
 
-静态截图只能看 layout，交互 bug 要点过才发现。用 Playwright 跑 3 项最小点击测试：进入详情 / 关键标注点 / tab 切换。检查 `pageerror` 为 0 再交付。Playwright 可用 `npx playwright` 调用，或按本机全局安装路径（`npm root -g` + `/playwright`）。
+Static screenshots reveal layout issues, but interaction bugs appear only after clicking. Use Playwright to run three minimum click tests: open a detail view, activate a key annotation point, and switch tabs. Confirm that `pageerror` remains at zero before delivery. Invoke Playwright with `npx playwright` or through its global installation path (`npm root -g` + `/playwright`).
 
-### 4. 品位锚点（pursue list，fallback 首选）
+### 4. Taste Anchors (Preferred Fallbacks)
 
-没有 design system 时默认往这些方向走，避免撞 AI slop：
+When no design system exists, default toward these directions to avoid AI slop:
 
-| 维度 | 首选 | 避免 |
+| Dimension | Prefer | Avoid |
 |------|------|------|
-| **字体** | 衬线 display（Newsreader/Source Serif/EB Garamond）+ `-apple-system` body | 全场 SF Pro 或 Inter——太像系统默认，没风格 |
-| **色彩** | 一个有温度的底色 + **单个** accent 贯穿全场（rust 橙/墨绿/深红）| 多色聚类（除非数据真的有 ≥3 个分类维度） |
-| **信息密度·克制型**（默认）| 少一层容器、少一个 border、少一个**装饰性** icon——给内容留气口 | 每条卡片都配无意义的 icon + tag + status dot |
-| **信息密度·高密度型**（例外）| 当产品核心卖点是「智能 / 数据 / 上下文感知」时（AI 工具、Dashboard、Tracker、Copilot、番茄钟、健康监测、记账类），每屏需**至少 3 处可见的产品差异化信息**：非装饰性数据、对话/推理片段、状态推断、上下文关联 | 只放一个按钮一个时钟——AI 的智能感没表达出来，跟普通 App 没区别 |
-| **细节签名** | 留一处「值得截图」的质感：极淡油画底纹 / serif 斜体引语 / 全屏黑底录音波形 | 到处平均用力，结果处处平淡 |
+| **Typography** | Serif display face (Newsreader / Source Serif / EB Garamond) + `-apple-system` for body text | SF Pro or Inter everywhere—it looks like an unstyled system default |
+| **Color** | One warm background tone + **one** accent carried through the entire design (rust orange / deep green / dark red) | Multicolor clustering unless the data genuinely has at least three categorical dimensions |
+| **Information density · restrained mode** (default) | One fewer container, one fewer border, one fewer **decorative** icon—leave breathing room for content | A meaningless icon + tag + status dot on every card |
+| **Information density · high-density mode** (exception) | When the product's core value is intelligence, data, or contextual awareness (AI tools, dashboards, trackers, copilots, Pomodoro apps, health monitoring, accounting), every screen needs **at least three visible pieces of differentiating product information**: meaningful data, dialogue or reasoning excerpts, inferred state, or contextual relationships | A single button and a clock—the intelligence is invisible, making the product indistinguishable from an ordinary app |
+| **Signature detail** | One screenshot-worthy moment: an extremely faint oil-paint texture, a serif italic quotation, or a full-screen black recording waveform | Applying equal effort everywhere and making every area equally bland |
 
-**两条原则同时生效**：
-1. 品位 = 一个细节做到 120%，其它做到 80%——不是所有地方都精致，而是在合适的地方足够精致
-2. 减法是 fallback，不是普适律——产品核心卖点需要信息密度支撑时（AI / 数据 / 上下文感知类），加法优先于克制。详见下文「信息密度分型」
+**Both principles apply at the same time:**
+1. Taste means taking one detail to 120% and the rest to 80%. It does not mean making every area precious; it means making the right area sufficiently refined.
+2. Subtraction is a fallback, not a universal law. When a product's core value depends on information density—AI, data, or contextual-awareness products—addition takes priority over restraint. See “Information-Density Types” below.
 
-### 5. iOS 设备框必须用 `assets/ios_frame.jsx`——禁止手写 Dynamic Island / status bar
+### 5. iOS Device Frames Must Use `assets/ios_frame.jsx`—Never Hand-Code the Dynamic Island or Status Bar
 
-做 iPhone mockup 时**硬性绑定** `assets/ios_frame.jsx`。这是已经对齐过 iPhone 15 Pro 精确规格的标准外壳：bezel、Dynamic Island（124×36、top:12、居中）、status bar（时间/信号/电池、两侧避让岛、vertical center 对齐岛中线）、Home Indicator、content 区 top padding 都处理好了。
+Every iPhone mockup is **strictly required** to use `assets/ios_frame.jsx`. This standard shell is already aligned to exact iPhone 15 Pro specifications: bezel, Dynamic Island (124 × 36, `top: 12`, centered), status bar (time/signal/battery, kept clear of both sides of the island and vertically centered on the island's midline), Home Indicator, and content-area top padding.
 
-**禁止在你的 HTML 里自己写**以下任何一项：
-- `.dynamic-island` / `.island` / `position: absolute; top: 11/12px; width: ~120; 居中的黑圆角矩形`
-- `.status-bar` with 手写的时间/信号/电池图标
-- `.home-indicator` / 底部 home bar
-- iPhone bezel 的圆角外框 + 黑描边 + shadow
+**Do not hand-code** any of the following in project HTML:
+- `.dynamic-island` / `.island` / a centered black rounded rectangle using `position: absolute`, `top: 11px` or `12px`, and a width around `120px`
+- A `.status-bar` with hand-built time, signal, or battery icons
+- `.home-indicator` / the bottom home bar
+- The rounded iPhone bezel with a black outline and shadow
 
-自己写 99% 会撞位置 bug——status bar 的时间/电池被岛挤压、或 content top padding 算错导致第一行内容盖在岛下。iPhone 15 Pro 的刘海是**固定 124×36 像素**，留给 status bar 两侧的可用宽度很窄，不是你凭空估的。
+Hand-built versions have positioning bugs 99% of the time: the island crowds the status-bar time or battery, or incorrect content top padding puts the first line beneath the island. The iPhone 15 Pro cutout is a **fixed 124 × 36 pixels**. The usable width on each side is narrow; do not estimate it from memory.
 
-**用法（严格三步）**：
+**Usage (exactly three steps):**
 
 ```jsx
-// 步骤 1: Read 本 skill 的 assets/ios_frame.jsx（相对本 SKILL.md 的路径）
-// 步骤 2: 把整个 iosFrameStyles 常量 + IosFrame 组件贴进你的 <script type="text/babel">
-// 步骤 3: 你自己的屏组件包在 <IosFrame>...</IosFrame> 里，不碰 island/status bar/home indicator
+// Step 1: Read this skill's assets/ios_frame.jsx (path relative to this SKILL.md)
+// Step 2: Copy the complete iosFrameStyles constant and IosFrame component into your <script type="text/babel">
+// Step 3: Wrap your screen component in <IosFrame>...</IosFrame> and do not touch the island/status bar/Home Indicator
 <IosFrame time="9:41" battery={85}>
-  <YourScreen />  {/* 内容从 top 54 开始渲染，下边留给 home indicator，你不用管 */}
+  <YourScreen />  {/* Content begins at top: 54; the bottom space for the Home Indicator is already handled */}
 </IosFrame>
 ```
 
-**例外**：只有用户明确要求「假装是 iPhone 14 非 Pro 的刘海」「做 Android 不是 iOS」「自定义设备形态」时才绕过——此时读对应 `android_frame.jsx` 或修改 `ios_frame.jsx` 的常量，**不要**在项目 HTML 里另起一套 island/status bar。
+**Exception:** bypass this only when the user explicitly asks for “an iPhone 14 non-Pro notch,” “Android rather than iOS,” or a custom device form. In that case, read the corresponding `android_frame.jsx` or modify the constants in `ios_frame.jsx`. **Do not** create a separate island/status-bar implementation inside the project HTML.

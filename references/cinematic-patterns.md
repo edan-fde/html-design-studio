@@ -1,190 +1,189 @@
-# Cinematic Patterns · Workflow Demo 的 Best Practice
+# Cinematic Patterns · Best Practices for Workflow Demos
 
-> 从「PPT 动画」升级到「发布会级 cinematic」的 5 个关键 pattern。
-> 蒸馏自 2026-04 「聊聊 skill」 deck 的两个 cinematic demo（Nuwa workflow + Darwin workflow），实测可复现。
+> Five patterns that elevate “PowerPoint animation” into launch-event-quality cinematics.
+> Distilled from two cinematic demos in the April 2026 “Let’s Talk About Skills” deck—the Nuwa and Darwin workflows—and verified in practice.
 
 ---
 
-## 0 · 这份文档解决什么问题
+## 0 · The Problem This Document Solves
 
-当你需要做「演示一个工作流的 demo 动画」时（典型场景：skill 工作流、产品 onboarding、API 调用流程、agent 任务执行），有两种常见做法：
+When demonstrating a workflow through animation—common cases include a skill workflow, product onboarding, an API call sequence, or agent task execution—there are two common approaches:
 
-| 范式 | 长什么样 | 后果 |
+| Paradigm | What It Looks Like | Result |
 |---|---|---|
-| **PPT 动画**（差） | step 1 fade in → step 2 fade in → step 3 fade in，4 个 box 同屏排列 | 观众感觉「就是一个 PPT 加了 fade 效果」，没有 wow moment |
-| **Cinematic**（好） | scene-based，一次只 focus 一件事，scene 之间是 dissolve / focus pull / morph | 观众感觉「这是一个产品发布会片段」，会想截图分享 |
+| **PowerPoint animation** (poor) | Step 1 fades in → step 2 fades in → step 3 fades in; four boxes remain arranged on screen | The audience thinks, “This is just PowerPoint with fades.” There is no wow moment. |
+| **Cinematic** (good) | Scene-based; only one subject is in focus at a time; scenes connect through dissolves, focus pulls, or morphs | The audience feels they are watching part of a product launch and wants to capture and share it. |
 
-差异的根源**不是动画技术**，是**叙事范式**。本文档讲怎么从前者升级到后者。
+The difference comes **not from animation technology**, but from the **narrative paradigm**. This document explains how to move from the first to the second.
 
 ---
 
-## 1 · 五个核心 pattern
+## 1 · Five Core Patterns
 
-### Pattern A · Dashboard + Cinematic Overlay 双层结构
+### Pattern A · Two Layers: Dashboard + Cinematic Overlay
 
-**问题**：单纯的 cinematic 默认是黑屏 + 一个 ▶ 按钮，用户翻到这页如果没点，什么都看不到。
+**Problem:** a pure cinematic often defaults to a black screen with a ▶ button. If the user reaches the page without clicking, they see nothing.
 
-**解决**：
+**Solution:**
 ```
-DEFAULT 状态 (永远显示)：完整静态 workflow dashboard
-  └── 观众一眼看清这个 skill / 工作流怎么跑
+DEFAULT state (always visible): complete static workflow dashboard
+  └── The audience understands how the skill or workflow operates at a glance
 
-POINT ▶ 触发 (overlay 浮上来)：22 秒 cinematic
-  └── 跑完自动 fade 回 DEFAULT
-
+CLICK ▶ to trigger (overlay rises): 22-second cinematic
+  └── Automatically fades back to DEFAULT when complete
 ```
 
-**实现要点**：
-- `.dash` 默认 visible，`.cinema` 默认 `opacity: 0; pointer-events: none`
-- `.play-cta` 是右下角金色小按钮（不是中央大覆盖）
-- 点击 → `cinema.classList.add('show')` + `dash.classList.add('hide')`
-- 用 `requestAnimationFrame` 跑一次（不是循环），结束后 `endCinematic()` reverse 状态
+**Implementation notes:**
+- `.dash` is visible by default; `.cinema` defaults to `opacity: 0; pointer-events: none`.
+- `.play-cta` is a small gold button in the lower-right corner, not a large centered overlay.
+- On click: `cinema.classList.add('show')` + `dash.classList.add('hide')`.
+- Run once with `requestAnimationFrame`, not in a loop. Call `endCinematic()` at completion to reverse the state.
 
-**反 pattern**：默认 = 中央大 ▶ overlay 覆盖一切，没点之前页面是空白的。
+**Antipattern:** the default is a large centered ▶ overlay that covers everything, leaving the page blank before the click.
 
 ---
 
-### Pattern B · Scene-based, NOT Step-based
+### Pattern B · Scene-Based, Not Step-Based
 
-**问题**：把动画拆成「step 1 显示 → step 2 显示 → ...」就是 PPT 思维。
+**Problem:** breaking an animation into “show step 1 → show step 2 → ...” is PowerPoint thinking.
 
-**解决**：拆成 5 个 scene，每个 scene 是**独立的镜头**，全屏只 focus 一件事：
+**Solution:** divide it into five scenes. Each scene is an **independent shot** with exactly one full-screen focus:
 
-| Scene 类型 | 职责 | 时长 |
+| Scene Type | Responsibility | Duration |
 |---|---|---|
-| 1 · Invoke | 用户输入触发（终端 typewriter）| 3-4s |
-| 2 · Process | 核心工作流的可视化（独特视觉语言）| 5-6s |
-| 3 · Result/Insight | 提炼出的关键产物（可视化）| 4-5s |
-| 4 · Output | 实际产物展示（文件 / diff / 数字）| 3-4s |
-| 5 · Hero Reveal | 收尾 hero moment（大字 + 价值主张）| 4-5s |
+| 1 · Invoke | User input triggers the workflow, such as a terminal typewriter | 3–4 s |
+| 2 · Process | Visualize the core workflow in a distinctive visual language | 5–6 s |
+| 3 · Result / Insight | Visualize the key artifact or insight extracted | 4–5 s |
+| 4 · Output | Show the actual output: file, diff, or metric | 3–4 s |
+| 5 · Hero Reveal | Closing hero moment: large type + value proposition | 4–5 s |
 
-**总时长 ≈ 22 秒**——这是经过测试的黄金长度：
-- 短于 18 秒：PM 还没进入状态就结束了
-- 长于 25 秒：失去耐心
-- 22 秒刚好够「钩住 → 展开 → 收束 → 留下印象」
+**Total duration ≈22 seconds**, the tested sweet spot:
+- Under 18 seconds: the product manager has not settled in before it ends.
+- Over 25 seconds: attention starts to fade.
+- Twenty-two seconds is enough to hook → develop → resolve → leave an impression.
 
-**实现要点**：
-- `T = { DURATION: 22.0, s1_in: [0, 0.7], s2_in: [3.8, 4.6], ... }` 全局时间轴
-- 单个 `requestAnimationFrame(render)` 跑所有 scene 的 opacity / transform 计算
-- 不要用 setTimeout 链（容易断掉、难调试）
-- Easing 必用 `expoOut` / `easeOut` / cubic-bezier，**禁止 linear**
+**Implementation notes:**
+- Define one global timeline: `T = { DURATION: 22.0, s1_in: [0, 0.7], s2_in: [3.8, 4.6], ... }`.
+- Use one `requestAnimationFrame(render)` loop for opacity and transform calculations across all scenes.
+- Do not chain `setTimeout`; chains break easily and are difficult to debug.
+- Use `expoOut`, `easeOut`, or cubic-bezier easing. **Never use linear motion.**
 
 ---
 
-### Pattern C · 每个 demo 的视觉语言必须独立
+### Pattern C · Every Demo Must Have Its Own Visual Language
 
-**问题**：做完第一个 cinematic 后，做第二个时偷懒复用同一个模板（同样的 orbit + pentagon + typewriter + hero 大字），只换了文案。
+**Problem:** after finishing the first cinematic, the second lazily reuses the same template—the same orbit, pentagon, typewriter, and large hero type—with only the copy changed.
 
-**后果**：观众发现两个 skill「长得一模一样」，等于在说「这两个 skill 没区别」。
+**Result:** the audience notices that two skills look identical, effectively saying, “These skills are no different.”
 
-**解决**：每个工作流的核心隐喻不同，视觉语言就必须不同。
+**Solution:** each workflow has a different core metaphor and therefore needs a different visual language.
 
-**对照案例**：
+**Comparison:**
 
-| 维度 | Nuwa（蒸馏人）| Darwin（优化 skill）|
+| Dimension | Nuwa (distills a person) | Darwin (optimizes a skill) |
 |---|---|---|
-| 核心隐喻 | 收集 → 提炼 → 写 | 循环 → 评估 → 棘轮 |
-| 视觉运动 | 漂浮 / 辐射 / pentagon | 循环 / 上升 / 对比 |
-| Scene 2 | 3D Orbit · 8 张档案在透视椭圆漂浮 | Spin Loop · token 沿 6 节点圆环跑 5 圈 |
-| Scene 3 | Pentagon · 5 token 从中央辐射 | v1 vs v5 · 并列 diff（红版 vs 金版） |
-| Scene 4 | SKILL.md typewriter | Hill-Climb · 全屏曲线绘制 |
-| Scene 5 hero | 「21 分钟」serif italic 大字 | 旋转齿轮 ⚙ + 「KEPT +1.1」金色 tag |
+| Core metaphor | Gather → distill → write | Loop → evaluate → ratchet |
+| Visual motion | Floating / radiating / pentagon | Cycling / rising / comparing |
+| Scene 2 | 3D Orbit · eight archives floating around a perspective ellipse | Spin Loop · a token completes five laps around a six-node ring |
+| Scene 3 | Pentagon · five tokens radiate from the center | v1 vs. v5 · side-by-side diff, red version vs. gold version |
+| Scene 4 | `SKILL.md` typewriter | Hill-Climb · full-screen curve drawing |
+| Scene 5 hero | “21 minutes” in large serif italics | Rotating gear ⚙ + gold “KEPT +1.1” tag |
 
-**判断标准**：盖住文案，只看视觉，能不能区分这是哪个 demo？区分不了就是偷懒。
-
----
-
-### Pattern D · 用 AI 生成的真实素材，不要 emoji 或 SVG 手画
-
-**问题**：3D orbit / gallery 里需要素材碎片漂浮，emoji（📚🎤）丑且无品牌、SVG 手画书脊永远不像真书。
-
-**解决**：用 `huashu-gpt-image` 跑一张 4×2 grid 大图（8 件主题相关物品 · 白底 · 60px breathing space · unified style），用 `extract_grid.py --mode bbox` 抠成 8 张独立透明 PNG。
-
-**Prompt 要点**（详细 prompt patterns 见 `huashu-gpt-image` skill）：
-- IP 锚定（"1960s Caltech archive aesthetic" / "Hearthstone-style consistent treatment"）
-- 白底（便于抠图，灰底氛围好但抠透明背景困难）
-- 4×2 不要 5×5（避免末行压缩 bug）
-- Persona finishing（"You are a Wired magazine curator preparing an exhibition photo"）
-
-**反 pattern**：用 emoji 当 icon、用 CSS 剪影代替产品图。
+**Test:** cover the copy and inspect only the visuals. Can you tell which demo it is? If not, the work is derivative.
 
 ---
 
-### Pattern E · BGM + SFX 双轨制
+### Pattern D · Use Real AI-Generated Assets, Not Emoji or Hand-Drawn SVG
 
-**问题**：只有动画没有声音，观众潜意识感觉「这玩意像个穷酸 demo」。
+**Problem:** a 3D orbit or gallery needs floating asset fragments. Emoji such as 📚 and 🎤 are unattractive and unbranded, while an SVG-drawn book spine never looks like a real book.
 
-**解决**：BGM 长音 + 11 个 SFX cues。
+**Solution:** use `huashu-gpt-image` to generate one large 4 × 2 grid—eight thematically relevant objects, white background, 60 px breathing space, unified style—then extract eight independent transparent PNGs with `extract_grid.py --mode bbox`.
 
-**通用 SFX cue 配方**（适用于工作流 demo）：
+**Prompt essentials** (see the `huashu-gpt-image` skill for detailed prompt patterns):
+- Anchor an identifiable visual world: “1960s Caltech archive aesthetic” or “Hearthstone-style consistent treatment.”
+- Use a white background, which is easy to cut out. Gray creates atmosphere but makes transparent-background extraction difficult.
+- Use 4 × 2, not 5 × 5, to avoid the final-row compression bug.
+- Add persona-based finishing: “You are a Wired magazine curator preparing an exhibition photo.”
 
-| 时点 | SFX | 触发场景 |
+**Antipattern:** emoji as icons, or CSS silhouettes in place of product imagery.
+
+---
+
+### Pattern E · Two Audio Tracks: BGM + SFX
+
+**Problem:** motion without sound subconsciously feels like “a bargain-basement demo.”
+
+**Solution:** a continuous BGM bed plus eleven SFX cues.
+
+**General SFX cue recipe for workflow demos:**
+
+| Time | SFX | Trigger |
 |---|---|---|
-| 0.10s | whoosh | 终端从下方升起 |
-| 3.0s | enter | typewriter 完成、按 enter |
-| 4.0s | slide-in | scene 2 元素入场 |
-| 5-9s × 5 次 | sparkle | 关键过程节点（每代 / 每个 token / 每个数据点）|
-| 14s | click | 切换到 output scene |
-| 17.8s | logo-reveal | hero reveal 时刻 |
-| typewriter | type | 每 2 字符触发一次（密度别太高）|
+| 0.10 s | whoosh | Terminal rises from below |
+| 3.0 s | enter | Typewriter finishes and Enter is pressed |
+| 4.0 s | slide-in | Scene 2 elements enter |
+| 5–9 s × five times | sparkle | Key process nodes: each generation, token, or data point |
+| 14 s | click | Switch to the output scene |
+| 17.8 s | logo-reveal | Hero reveal |
+| During typewriter | type | Trigger once every two characters; keep density controlled |
 
-**频段隔离**：BGM volume 0.32（低频底噪），SFX volume 0.55（中高频 punch），sparkle 0.7（要醒目），logo-reveal 0.85（最强 hero moment）。
+**Frequency and level separation:** BGM volume 0.32 for the low-frequency bed; SFX volume 0.55 for a mid/high-frequency punch; sparkle 0.7 so it stands out; logo-reveal 0.85 for the strongest hero moment.
 
-**用户控制**：
-- 必须有 ▶ 启动覆盖（浏览器 autoplay 限制）
-- 右上角小 mute 按钮（用户随时切静音）
-- 不要做成「翻到这页就强制响」
+**User control:**
+- A ▶ start control is mandatory because browsers restrict autoplay.
+- Include a small mute button in the upper-right so the user can silence audio at any time.
+- Never force sound to play as soon as the user reaches the slide.
 
 ---
 
-## 2 · 静态 Dashboard 设计要点
+## 2 · Static Dashboard Design
 
-Dashboard 是双层结构的 Layer 1，PM 不点 ▶ 也能看懂这个 skill。
+The dashboard is Layer 1 of the two-layer structure. A product manager who never clicks ▶ must still understand the skill.
 
-**布局**：3 列 grid（或 1 大 + 2 小），每个 panel 解决一个问题：
+**Layout:** use a three-column grid, or one large panel plus two small panels. Each panel answers one question:
 
-| Panel 类型 | 解决什么问题 | 案例 |
+| Panel Type | Question Answered | Example |
 |---|---|---|
-| **Pipeline / Flow Diagram** | 「这个 skill 的工作流程是什么？」| Nuwa 4 阶段 pipeline · Darwin autoresearch loop |
-| **Snapshot / State** | 「跑出来的真实数据长什么样？」| Darwin 8 维 rubric snapshot |
-| **Trajectory / Evolution** | 「多次运行后怎么变化？」| Darwin 5 代 hill-climb 曲线 |
-| **Examples / Gallery** | 「已经产出过哪些东西？」| Nuwa 21 personas gallery |
-| **Strip · Example I/O** | 「输入什么 → 输出什么」| Nuwa example strip：`› nuwa 蒸馏 费曼 → feynman.skill (21 min)` |
+| **Pipeline / Flow Diagram** | “What is this skill's workflow?” | Nuwa four-stage pipeline · Darwin autoresearch loop |
+| **Snapshot / State** | “What does the real output data look like?” | Darwin eight-dimension rubric snapshot |
+| **Trajectory / Evolution** | “How does it change over repeated runs?” | Darwin five-generation hill-climb curve |
+| **Examples / Gallery** | “What has already been produced?” | Nuwa gallery of 21 personas |
+| **Strip · Example I/O** | “What goes in → what comes out?” | Nuwa example strip: `› nuwa distill Feynman → feynman.skill (21 min)` |
 
-**关键约束**：
-- 信息密度要够（每个 panel 都要承载差异化信息）
-- 但不能塞数据 slop（每个数字都要有意义）
-- 配色与 cinematic 一致（同色系，方便切换不突兀）
+**Key constraints:**
+- Information density must be sufficient; every panel should carry differentiating information.
+- Do not add data slop; every number must mean something.
+- Keep the palette consistent with the cinematic so switching between layers does not feel abrupt.
 
 ---
 
-## 3 · 调试与开发工具
+## 3 · Debugging and Development Tools
 
-任何长动画必须配三个 dev 工具，否则调试会爆炸。
+Every long animation needs three development tools. Without them, debugging becomes unmanageable.
 
-### 工具 1 · `?seek=N` 冻结到第 N 秒
+### Tool 1 · Freeze at Second N with `?seek=N`
 
 ```js
 const seek = parseFloat(params.get('seek'));
 if (!isNaN(seek)) {
   started = true; muted = true;
-  frozenT = seek;  // render() 用这个 t 而不是 elapsed
+  frozenT = seek;  // render() uses this t rather than elapsed time
   cinema.classList.add('show'); dash.classList.add('hide');
 }
 
-// render() 里：
+// Inside render():
 let t = frozenT !== null ? frozenT : (elapsed % T.DURATION);
 ```
 
-用法：`http://.../slide.html?seek=12` 直接看第 12 秒画面，不用等播放。
+Usage: `http://.../slide.html?seek=12` displays the frame at 12 seconds immediately, with no wait for playback.
 
-### 工具 2 · `?autoplay=1` 跳过 ▶ overlay
+### Tool 2 · Skip the ▶ Overlay with `?autoplay=1`
 
-方便 playwright 自动截图测试，也方便嵌入 iframe 时 force 启动。
+Useful for automated Playwright screenshots and for forcing playback when embedded in an iframe.
 
-### 工具 3 · 手动 REPLAY 按钮
+### Tool 3 · Manual REPLAY Button
 
-右上角小按钮，用户/调试时可以重播任意次。CSS：
+A small button in the upper-right lets users and developers replay the animation at any time. CSS:
 
 ```css
 .replay{position:absolute;top:18px;right:18px;background:rgba(212,165,116,0.1);
@@ -195,70 +194,70 @@ let t = frozenT !== null ? frozenT : (elapsed % T.DURATION);
 
 ---
 
-## 4 · iframe 嵌入坑（如果 cinematic 嵌在 deck 里）
+## 4 · iframe Embedding Pitfalls
 
-### 坑 1 · 父窗口的 click zone 拦截 iframe 内按钮
+### Pitfall 1 · Parent-Window Click Zones Intercept Buttons Inside the iframe
 
-如果 deck index.html 加了「左右 22vw 透明 click zone 翻页」，会**覆盖到 iframe 内的 ▶ play 按钮**——用户点按钮被吞成「下一页」。
+If the deck's `index.html` adds transparent 22 vw left/right click zones for navigation, they can **cover the ▶ play button inside the iframe**. The user's click is swallowed and interpreted as “next slide.”
 
-**修复**：click zone 加 `top: 12vh; bottom: 25vh`，给顶部和底部 25% 不拦截，让 iframe 内的中央 ▶ 和右下角 ▶ 都能点。
+**Fix:** give the click zones `top: 12vh; bottom: 25vh`, leaving the top and bottom 25% unobstructed so both a centered ▶ and a lower-right ▶ inside the iframe remain clickable.
 
-### 坑 2 · iframe 抢焦点后键盘事件丢失
+### Pitfall 2 · Keyboard Events Disappear After the iframe Takes Focus
 
-用户点过 iframe 后，焦点在 iframe 里，父窗口的 ←/→ 键盘事件收不到。
+After the user clicks inside an iframe, focus moves there and the parent window no longer receives ←/→ keyboard events.
 
-**修复**：
+**Fix:**
 ```js
 iframe.addEventListener('load', () => {
-  // 注入键盘转发器
+  // Inject a keyboard-event forwarder
   const doc = iframe.contentDocument;
   doc.addEventListener('keydown', (e) => {
     window.dispatchEvent(new KeyboardEvent('keydown', { key: e.key, ... }));
   });
-  // 点击后焦点拽回父窗口
+  // Return focus to the parent window after a click
   doc.addEventListener('click', () => setTimeout(() => window.focus(), 0));
 });
 ```
 
-### 坑 3 · file:// vs https:// 行为差异
+### Pitfall 3 · Different Behavior Under `file://` and `https://`
 
-本地 file:// 测好的 cinematic 部署后可能崩，因为：
-- file:// 下 iframe contentDocument 同源
-- https:// 下也同源（如果同 host），但 audio autoplay 限制更严格
+A cinematic tested locally under `file://` may fail after deployment because:
+- Under `file://`, the iframe's `contentDocument` is same-origin.
+- Under `https://`, it is also same-origin when served from the same host, but audio autoplay restrictions are stricter.
 
-**修复**：
-- 部署前用 `python3 -m http.server` 起本地 HTTP 测试一遍
-- BGM 必须等用户点击 ▶ 后再 `bgm.play()`，不要 page-load 立刻播
-
----
-
-## 5 · 反 pattern 速查表
-
-| ❌ 反 pattern | ✅ 正 pattern |
-|---|---|
-| 默认 = 黑屏 ▶ overlay | 默认 = 静态 dashboard，▶ 是辅助 |
-| 4 个 step 横排同屏 fade in | 5 个 scene 全屏切换，每场只 focus 一件事 |
-| 复用模板换文案做不同 demo | 每个 demo 独立视觉语言（盖文案能区分） |
-| emoji / SVG 手画当素材 | gpt-image-2 大图 + extract_grid 抠图 |
-| 无 BGM 无 SFX | BGM + 11 SFX cues 双轨制 |
-| 用 setTimeout 链 schedule | requestAnimationFrame + 全局时间轴 T 对象 |
-| linear 动画 | Expo / cubic-bezier easing |
-| 没有 dev 工具 | `?seek=N` + `?autoplay=1` + REPLAY 按钮 |
-| iframe 内的按钮被父 click zone 吞 | click zone 加 top/bottom margin 给按钮让位 |
+**Fix:**
+- Before deployment, run `python3 -m http.server` and test under local HTTP.
+- Call `bgm.play()` only after the user clicks ▶. Never play it immediately on page load.
 
 ---
 
-## 6 · 时间预算
+## 5 · Antipattern Cheatsheet
 
-按这套 pattern，一个完整 cinematic demo（含 dashboard）：
-
-| 任务 | 时间 |
+| ❌ Antipattern | ✅ Correct Pattern |
 |---|---|
-| 设计 5-scene narrative + 视觉语言 | 30 分钟（要慎重，决定独立性）|
-| Dashboard 静态布局 + 内容 | 1 小时 |
-| Cinematic 5 scenes 实现 | 1.5 小时 |
-| Audio cues 调时序 + replay 按钮 | 30 分钟 |
-| Playwright 截图验证 5 个关键时刻 | 15 分钟 |
-| **单个 demo 总计** | **3-4 小时** |
+| Default = black screen + ▶ overlay | Default = static dashboard; ▶ is secondary |
+| Four horizontally arranged steps fade in on one screen | Five full-screen scene changes, one focus per scene |
+| Reuse one template with different copy for every demo | Independent visual language for each demo, distinguishable even with copy hidden |
+| Emoji / hand-drawn SVG used as imagery | One large `gpt-image-2` grid + cutouts from `extract_grid` |
+| No BGM and no SFX | Two-layer BGM + eleven-SFX-cue system |
+| Schedule with a `setTimeout` chain | `requestAnimationFrame` + global timeline object `T` |
+| Linear animation | Exponential or cubic-bezier easing |
+| No development tools | `?seek=N` + `?autoplay=1` + REPLAY button |
+| Parent click zone swallows iframe buttons | Add top/bottom margins to the click zone to leave buttons accessible |
 
-第二个 demo 复用框架但**视觉语言必须独立**，时间约 2-3 小时。
+---
+
+## 6 · Time Budget
+
+Using these patterns, one complete cinematic demo including its dashboard takes:
+
+| Task | Time |
+|---|---|
+| Design the five-scene narrative and visual language | 30 minutes; be deliberate, because this determines distinctiveness |
+| Static dashboard layout + content | 1 hour |
+| Implement five cinematic scenes | 1.5 hours |
+| Time audio cues + add replay button | 30 minutes |
+| Verify five key moments with Playwright screenshots | 15 minutes |
+| **Total per demo** | **3–4 hours** |
+
+A second demo can reuse the framework, but **its visual language must remain independent**; budget approximately 2–3 hours.

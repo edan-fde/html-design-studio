@@ -15,10 +15,10 @@
     --muted: rgba(255,255,255,0.40);
     --dim: rgba(255,255,255,0.18);
     --hairline: rgba(255,255,255,0.12);
-    --accent: #D97757;          /* terracotta — 致敬 Anthropic 血统 */
+    --accent: #D97757;          /* terracotta — a nod to Anthropic's visual lineage */
     --accent-deep: #B85D3D;
 
-    /* Claude Design palette — Act 0 专用 */
+    /* Claude Design palette — Act 0 only */
     --cd-bg: #F5F4F0;
     --cd-panel: #FFFFFF;
     --cd-ink: #1A1918;
@@ -388,7 +388,7 @@
   }
   .watermark.visible { opacity: 1; }
 
-  /* ============ Act 0 — Claude Design 致敬（+讽刺） ============ */
+  /* ============ Act 0 — Claude Design homage (with a wink) ============ */
   .act0 {
     background: #0a0a0a;
   }
@@ -762,7 +762,7 @@
 
   <div class="watermark" id="watermark">Created by Huashu-Design</div>
 
-  <!-- ========== Act 0: Claude Design 致敬 ========== -->
+  <!-- ========== Act 0: Claude Design homage ========== -->
   <div class="scene act0" id="act0ClaudeDesign">
     <div class="cd-browser" id="cdBrowser">
       <!-- Chrome bar -->
@@ -940,7 +940,7 @@
   <div class="scene act3" id="act3Brand">
     <div class="brand-wordmark" id="wordmark">huashu<span class="accent">-</span>design</div>
     <div class="farewell-quote" id="farewell">For them, we built this.</div>
-    <div class="farewell-cn" id="farewellCn">· 为 他 们 · 我 们 造 了 这 个 ·</div>
+    <div class="farewell-cn" id="farewellCn">· FOR THEM · WE BUILT THIS ·</div>
     <div class="brand-url" id="url">huasheng.ai/huashu-design-hero</div>
   </div>
 
@@ -967,7 +967,14 @@
     'preview-25-consciousness-prob.png','preview-26-divider-4.png','preview-27-cot-faithfulness.png','preview-28-alignment-faking.png',
     'preview-29-divider-5.png','preview-30-open-questions.png','preview-31-giving-back.png','preview-32-closing.png',
   ];
-  const BASE = '../../../2026.04-AI心理学/演讲PPT-北大/';
+  // Configure slide previews with ?slides=path-or-url or window.HUASHU_SLIDE_BASE.
+  // Without configuration, use the packaged project-relative showcase image.
+  const requestedSlideBase = new URLSearchParams(window.location.search).get('slides')
+    || window.HUASHU_SLIDE_BASE;
+  const BASE = requestedSlideBase
+    ? new URL(requestedSlideBase.endsWith('/') ? requestedSlideBase : `${requestedSlideBase}/`, window.location.href).href
+    : null;
+  const FALLBACK_PREVIEW = new URL('../assets/showcases/ppt/ppt-takram.png', window.location.href).href;
 
   // ---------- Build gallery ----------
   const COLS = 8, ROWS = 6, COUNT = COLS * ROWS;
@@ -981,15 +988,15 @@
     if (zIdx > 12) card.classList.add('depth-near');
     else if (zIdx < -12) card.classList.add('depth-far');
     const img = document.createElement('img');
-    img.src = BASE + SLIDE_FILES[slideIdx];
-    img.onerror = () => { img.src = BASE + 'preview-01-cover.png'; };
+    img.src = BASE ? new URL(SLIDE_FILES[slideIdx], BASE).href : FALLBACK_PREVIEW;
+    img.onerror = BASE ? () => { img.onerror = null; img.src = FALLBACK_PREVIEW; } : null;
     card.appendChild(img);
     galleryCanvas.appendChild(card);
     galleryCards.push(card);
   }
-  for (let i = 0; i < 32; i++) {
+  if (BASE) for (let i = 0; i < 32; i++) {
     const im = new Image();
-    im.src = BASE + SLIDE_FILES[i];
+    im.src = new URL(SLIDE_FILES[i], BASE).href;
   }
 
   // ---------- Easings ----------
@@ -1013,13 +1020,13 @@
   const T = {
     DURATION: 30.0,
 
-    // ===== Act 0: Claude Design 致敬 (0 - 4s) =====
+    // ===== Act 0: Claude Design homage (0–4s) =====
     a0_in:   [0.3, 1.2],       // browser fade + scale in
-    a0_hold: [1.2, 3.4],       // tweaks 自动动
-    a0_out:  [3.4, 4.0],       // browser 退场
+    a0_hold: [1.2, 3.4],       // Tweaks animate automatically.
+    a0_out:  [3.4, 4.0],       // Browser exits.
 
-    cd_tweak_anim: [1.4, 3.3], // tweaks thumb 自动拖动窗口
-    cd_accent_switch: [2.1, 2.5], // accent color dot 切换到深绿
+    cd_tweak_anim: [1.4, 3.3], // Tweaks thumb drags automatically.
+    cd_accent_switch: [2.1, 2.5], // Accent-color dot switches to deep green.
 
     cd_caption_in:  [1.6, 2.2],
     cd_caption_hold:[2.2, 3.3],
@@ -1116,7 +1123,7 @@
   const urlEl = document.getElementById('url');
   const watermark = document.getElementById('watermark');
 
-  const COMMAND = '/huashu-design 做一份发布会PPT';
+  const COMMAND = '/huashu-design Create a launch-event deck';
 
   // ---------- Gallery transforms ----------
   const GALLERY_TILT = 'perspective(2400px) rotateX(14deg) rotateY(-10deg) rotateZ(-2deg)';
@@ -1140,7 +1147,7 @@
 
   // ---------- Render ----------
   function render(t) {
-    // ============ Act 0: Claude Design 致敬 ============
+    // ============ Act 0: Claude Design homage ============
     if (t < T.a0_out[1]) {
       let op;
       if (t < T.a0_in[1]) op = lerp(t, T.a0_in[0], T.a0_in[1], 0, 1, expoOut);
@@ -1161,7 +1168,7 @@
       cdBrowser.style.transform = `translate(-50%, -50%) scale(${finalScale})`;
       cdBrowser.style.filter = blurOut > 0.1 ? `blur(${blurOut}px)` : '';
 
-      // Tweaks thumb 自动拖动（模拟用户在调节）
+      // Drag the Tweaks thumb automatically to simulate user adjustment.
       const tw = clampLerp(t, T.cd_tweak_anim[0], T.cd_tweak_anim[1]);
       // Headline slider: 58% → 72% → 62%
       let headlinePct;
@@ -1172,12 +1179,12 @@
       const densityPct = 40 + 15 * easeInOut(tw);
       cdThumb2.style.left = densityPct + '%';
 
-      // Accent 从橙切换到深绿（模拟用户在选色）
+      // Switch the accent from orange to deep green to simulate color selection.
       const switched = t >= T.cd_accent_switch[0];
       if (switched) {
         cdDot1.classList.add('active');
         cdDot2.classList.remove('active');
-        // Poster 颜色跟着变
+        // Update the poster color with the selection.
         cdPoster.style.background = 'var(--cd-green)';
       } else {
         cdDot1.classList.remove('active');

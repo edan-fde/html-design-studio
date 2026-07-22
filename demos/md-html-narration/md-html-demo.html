@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>md还是html，这是个蠢问题 · 解说 demo (v3 · 字幕+持续运动+修溢出)</title>
+<title>Markdown or HTML? That Is the Wrong Question · Narration Demo (v3 · Subtitles + Continuous Motion + Overflow Fixes)</title>
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -19,61 +19,61 @@
 <div id="root"></div>
 
 <script type="text/babel">
-// ── timeline.json (inline · 精简版，每段含 chunks 用于字幕) ───
-const TIMELINE = {"title":"md还是html，这是个蠢问题","totalDuration":198.168,"voiceover":"voiceover.mp3","scenes":[
+// ── timeline.json (inline · compact version; every scene includes subtitle chunks) ───
+const TIMELINE = {"title":"Markdown or HTML? That Is the Wrong Question","totalDuration":198.168,"voiceover":"voiceover.mp3","scenes":[
   {"id":"opening","start":0,"end":22.32,"duration":22.32,"chunks":[
-    {"text":"前两天，","absoluteStart":0,"absoluteEnd":0.984},
-    {"text":"Claude Code 团队的 Thariq 发了篇爆文。标题就一句话，HTML 是新的 markdown。","absoluteStart":0.984,"absoluteEnd":8.5},
-    {"text":"他说他几乎不再写 md 文件了，全让 AI 给他生成 HTML。500 万阅读，X 上立马吵翻了。","absoluteStart":8.5,"absoluteEnd":14.952},
-    {"text":"一派是 md 党，觉得 md 才是 AI 时代的源代码。另一派觉得 HTML 才是终极答案。","absoluteStart":14.952,"absoluteEnd":22.32}
+    {"text":"A few days ago,","absoluteStart":0,"absoluteEnd":0.984},
+    {"text":"Thariq from the Claude Code team published a viral post: HTML is the new Markdown.","absoluteStart":0.984,"absoluteEnd":8.5},
+    {"text":"He said he barely writes Markdown anymore; AI generates HTML for him. Five million views later, X erupted.","absoluteStart":8.5,"absoluteEnd":14.952},
+    {"text":"One camp called Markdown the source code of the AI era. The other said HTML was the final form.","absoluteStart":14.952,"absoluteEnd":22.32}
   ],"cues":[{"id":"thariq","absoluteTime":0.984},{"id":"two-camps","absoluteTime":14.952}]},
   {"id":"md-side","start":22.82,"end":56.516,"duration":33.696,"chunks":[
-    {"text":"md 党的证据其实挺硬的。","absoluteStart":22.82,"absoluteEnd":26.5},
-    {"text":"OpenAI 去年发的 AGENTS.md，60000 多个项目用，","absoluteStart":26.5,"absoluteEnd":31.5},
-    {"text":"AWS、Anthropic、Google、微软、OpenAI，AI 半壁江山一起捐进 Linux Foundation。","absoluteStart":31.5,"absoluteEnd":38.5},
-    {"text":"Karpathy 的 llm-wiki，单一个 CLAUDE.md 文件，5 万 star。","absoluteStart":38.5,"absoluteEnd":45.14},
-    {"text":"Cloudflare 实测，同一篇博客 HTML 一万六千 token，转成 md 只要三千。省 80%。","absoluteStart":45.14,"absoluteEnd":54.764},
-    {"text":"GitHub 官方说：文档不再是描述代码，文档就是代码。","absoluteStart":54.764,"absoluteEnd":56.516}
+    {"text":"The case for Markdown is genuinely strong.","absoluteStart":22.82,"absoluteEnd":26.5},
+    {"text":"OpenAI's AGENTS.md is used by more than 60,000 projects.","absoluteStart":26.5,"absoluteEnd":31.5},
+    {"text":"AWS, Anthropic, Google, Microsoft, and OpenAI donated it to the Linux Foundation.","absoluteStart":31.5,"absoluteEnd":38.5},
+    {"text":"Karpathy's llm-wiki has a CLAUDE.md file with fifty thousand stars.","absoluteStart":38.5,"absoluteEnd":45.14},
+    {"text":"Cloudflare measured one post at 16,000 tokens in HTML and 3,000 in Markdown: an 80% saving.","absoluteStart":45.14,"absoluteEnd":54.764},
+    {"text":"GitHub put it plainly: documentation no longer describes code. Documentation is code.","absoluteStart":54.764,"absoluteEnd":56.516}
   ],"cues":[{"id":"agents-md","absoluteTime":27.5},{"id":"token-saving","absoluteTime":45.14},{"id":"doc-is-code","absoluteTime":54.764}]},
   {"id":"html-side","start":57.016,"end":100.168,"duration":43.152,"chunks":[
-    {"text":"但 html 党也没说错。Thariq 的论据我都同意。","absoluteStart":57.016,"absoluteEnd":62.92},
-    {"text":"第一是空间信息。diff、调用图、架构图本来就有空间维度，html 能左右对照。","absoluteStart":62.92,"absoluteEnd":74.632},
-    {"text":"第二是动态体验。按钮颜色、easing 曲线，文字描述再多没用，html 能让你直接看见。","absoluteStart":74.632,"absoluteEnd":85.864},
-    {"text":"第三是结构化阅读。可折叠章节、tab 代码块、边栏术语表。","absoluteStart":85.864,"absoluteEnd":93},
-    {"text":"Anthropic 的 Live Artifacts，HTML 已升级为可交互、能拉实时数据的 dashboard。","absoluteStart":93,"absoluteEnd":100.168}
+    {"text":"But the HTML camp is not wrong either. I agree with Thariq's arguments.","absoluteStart":57.016,"absoluteEnd":62.92},
+    {"text":"First: spatial information. Diffs, call graphs, and architecture diagrams belong side by side.","absoluteStart":62.92,"absoluteEnd":74.632},
+    {"text":"Second: dynamic experience. Prose cannot convey button states or easing curves; HTML lets you feel them.","absoluteStart":74.632,"absoluteEnd":85.864},
+    {"text":"Third: structured reading. Collapsible sections, tabbed code, and sidebar glossaries.","absoluteStart":85.864,"absoluteEnd":93},
+    {"text":"With Anthropic's Live Artifacts, HTML has become an interactive dashboard that can pull live data.","absoluteStart":93,"absoluteEnd":100.168}
   ],"cues":[{"id":"spatial","absoluteTime":62.92},{"id":"dynamic","absoluteTime":74.632},{"id":"structured","absoluteTime":85.864}]},
   {"id":"the-real-question","start":100.668,"end":117.588,"duration":16.92,"chunks":[
-    {"text":"我看完想说，","absoluteStart":100.668,"absoluteEnd":101.748},
-    {"text":"这俩根本是在争一个蠢问题。","absoluteStart":101.748,"absoluteEnd":106},
-    {"text":"两边都赢了。但赢的是不同的问题。","absoluteStart":106,"absoluteEnd":109.044},
-    {"text":"md 党回答：我们用什么写。","absoluteStart":109.044,"absoluteEnd":112.62},
-    {"text":"html 党回答：我们给人什么看。","absoluteStart":112.62,"absoluteEnd":115.5},
-    {"text":"两个不同问题，怎么会有谁取代谁。","absoluteStart":115.5,"absoluteEnd":117.588}
+    {"text":"After reading it all, I wanted to say:","absoluteStart":100.668,"absoluteEnd":101.748},
+    {"text":"both camps are arguing over the wrong question.","absoluteStart":101.748,"absoluteEnd":106},
+    {"text":"Both sides have won, just at different things.","absoluteStart":106,"absoluteEnd":109.044},
+    {"text":"Markdown answers: what should we write in?","absoluteStart":109.044,"absoluteEnd":112.62},
+    {"text":"HTML answers: what should we show people?","absoluteStart":112.62,"absoluteEnd":115.5},
+    {"text":"Those are different questions. Why should one replace the other?","absoluteStart":115.5,"absoluteEnd":117.588}
   ],"cues":[{"id":"reveal","absoluteTime":101.748},{"id":"question-md","absoluteTime":109.044},{"id":"question-html","absoluteTime":112.62}]},
   {"id":"the-split","start":118.088,"end":158.744,"duration":40.656,"chunks":[
-    {"text":"我觉得真问题是这个。","absoluteStart":118.088,"absoluteEnd":121},
-    {"text":"md 和 html 不是替代，是分工关系。","absoluteStart":121,"absoluteEnd":126.5},
-    {"text":"以前你写 md 自己也看 md，要折中，所以 md 胜出。","absoluteStart":126.5,"absoluteEnd":131},
-    {"text":"AI 出现后，生产成本被 AI 吸收。","absoluteStart":131,"absoluteEnd":135},
-    {"text":"原来要折中的需求，被拆成了两端的极端最优。","absoluteStart":135,"absoluteEnd":140},
-    {"text":"生产端要轻、要快、要 token efficient——那就是 md。","absoluteStart":140,"absoluteEnd":148.28},
-    {"text":"消费端要丰富、要可视化、要好分享——那就是 html。","absoluteStart":148.28,"absoluteEnd":153.464},
-    {"text":"两端各自登顶，中间那个折中位置，没人需要了。","absoluteStart":153.464,"absoluteEnd":158.744}
+    {"text":"Here is the real question.","absoluteStart":118.088,"absoluteEnd":121},
+    {"text":"Markdown and HTML are not substitutes. They divide the work.","absoluteStart":121,"absoluteEnd":126.5},
+    {"text":"You once wrote and read the same Markdown, so compromise made it win.","absoluteStart":126.5,"absoluteEnd":131},
+    {"text":"With AI, production cost can be absorbed by the machine.","absoluteStart":131,"absoluteEnd":135},
+    {"text":"One compromise can now split into two optimized extremes.","absoluteStart":135,"absoluteEnd":140},
+    {"text":"Production must be light, fast, and token-efficient: that is Markdown.","absoluteStart":140,"absoluteEnd":148.28},
+    {"text":"Consumption must be rich, visual, and easy to share: that is HTML.","absoluteStart":148.28,"absoluteEnd":153.464},
+    {"text":"Each medium wins at its own end. Nobody needs the compromised middle.","absoluteStart":153.464,"absoluteEnd":158.744}
   ],"cues":[{"id":"split","absoluteTime":122.84},{"id":"ai-changes","absoluteTime":131},{"id":"md-side-win","absoluteTime":148.28},{"id":"html-side-win","absoluteTime":153.464}]},
   {"id":"activity-proof","start":159.244,"end":184.084,"duration":24.84,"chunks":[
-    {"text":"最干净的活样本是 Thariq 自己。","absoluteStart":159.244,"absoluteEnd":162.5},
-    {"text":"3 月份他发《Skills 指南》，强调核心还是 markdown。","absoluteStart":162.5,"absoluteEnd":167},
-    {"text":"5 月份他发《HTML is the new markdown》。","absoluteStart":167,"absoluteEnd":169.372},
-    {"text":"同一个人，两端各自登顶，互不打架。","absoluteStart":169.372,"absoluteEnd":174},
-    {"text":"Karpathy 和 Lex Fridman 那对组合也一样。","absoluteStart":174,"absoluteEnd":177},
-    {"text":"内核是 markdown wiki，外壳是动态 HTML——是加了一层消费层。","absoluteStart":177,"absoluteEnd":184.084}
+    {"text":"Thariq himself is the cleanest living example.","absoluteStart":159.244,"absoluteEnd":162.5},
+    {"text":"In March, his guide to Skills kept Markdown at the core.","absoluteStart":162.5,"absoluteEnd":167},
+    {"text":"In May, he published 'HTML Is the New Markdown.'","absoluteStart":167,"absoluteEnd":169.372},
+    {"text":"The same person uses each medium where it excels, with no contradiction.","absoluteStart":169.372,"absoluteEnd":174},
+    {"text":"Karpathy and Lex Fridman offer the same pattern.","absoluteStart":174,"absoluteEnd":177},
+    {"text":"The core is a Markdown wiki; the shell is dynamic HTML: a consumption layer on top.","absoluteStart":177,"absoluteEnd":184.084}
   ],"cues":[{"id":"thariq-march","absoluteTime":164.236},{"id":"same-person","absoluteTime":169.372},{"id":"karpathy-lex","absoluteTime":176.764}]},
   {"id":"closing","start":184.584,"end":197.88,"duration":13.296,"chunks":[
-    {"text":"所以下次你想吵这个的时候，","absoluteStart":184.584,"absoluteEnd":186.672},
-    {"text":"先问自己一句——你面对的是「写」，还是「看」？","absoluteStart":186.672,"absoluteEnd":192},
-    {"text":"写，用 md。","absoluteStart":192,"absoluteEnd":193.704},
-    {"text":"看，用 html。","absoluteStart":193.704,"absoluteEnd":195.5},
-    {"text":"工具替你处理切换，立场可以放下了。","absoluteStart":195.5,"absoluteEnd":197.88}
+    {"text":"So the next time this argument starts,","absoluteStart":184.584,"absoluteEnd":186.672},
+    {"text":"ask yourself: are you dealing with writing, or with viewing?","absoluteStart":186.672,"absoluteEnd":192},
+    {"text":"For writing, use Markdown.","absoluteStart":192,"absoluteEnd":193.704},
+    {"text":"For viewing, use HTML.","absoluteStart":193.704,"absoluteEnd":195.5},
+    {"text":"Let the tools handle the conversion. Let go of the tribal allegiance.","absoluteStart":195.5,"absoluteEnd":197.88}
   ],"cues":[{"id":"final","absoluteTime":186.672},{"id":"md-final","absoluteTime":192},{"id":"html-final","absoluteTime":193.704}]}
 ]};
 
@@ -152,7 +152,7 @@ const NarrationStageLib = (() => {
 })();
 const { NarrationStage, Cue, useNarration, useSceneFade } = NarrationStageLib;
 
-// ── 设计 token ────────────────────────────────────────────
+// ── Design tokens ─────────────────────────────────────────
 const C = {
   paper: '#f5f1e8', paperDeep: '#ebe5d4',
   ink: '#1a1a1a', inkSoft: '#3a3a3a', inkMute: '#888',
@@ -160,7 +160,7 @@ const C = {
 };
 const F = {
   display: '"Source Serif 4", "Noto Serif SC", Georgia, serif',
-  body: '"Noto Sans SC", "Noto Serif SC", "Source Serif 4", sans-serif',
+  body: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", "Source Serif 4", sans-serif',
   mono: '"JetBrains Mono", Menlo, monospace',
 };
 
@@ -173,8 +173,8 @@ const lerpC = (from, to, t) => ({
   opacity: lerp(from.opacity ?? 1, to.opacity ?? 1, t),
 });
 
-// ── HERO 状态表（v3：缩小 scale 避免溢出，y 留给字幕区） ──
-// 字幕条占 y=88-100 区域，所以 hero y ≤ 70%
+// ── Hero state table (v3: reduced scale prevents overflow; y leaves room for subtitles) ──
+// The subtitle band occupies y=88–100, so hero y must remain ≤70%.
 const HERO_KEYS = {
   opening:             { md: { x: 50, y: 28, scale: 1.0, opacity: 1 }, html: { x: 50, y: 55, scale: 1.0, opacity: 1 } },
   'md-side':           { md: { x: 72, y: 48, scale: 1.4, opacity: 1 }, html: { x: 92, y: 12, scale: 0.3, opacity: 0.5 } },
@@ -186,7 +186,7 @@ const HERO_KEYS = {
 };
 const SCENE_ORDER = ['opening', 'md-side', 'html-side', 'the-real-question', 'the-split', 'activity-proof', 'closing'];
 
-// ── HeroAnchor: 跨 scene hero + 持续微动（消除 3s 静止）──
+// ── HeroAnchor: cross-scene hero + continuous micro-motion (eliminates 3s freezes) ──
 const HeroAnchor = () => {
   const { time, scene } = useNarration();
   if (!scene) return null;
@@ -199,14 +199,14 @@ const HeroAnchor = () => {
   const md = lerpC(fromPos.md, toPos.md, t);
   const html = lerpC(fromPos.html, toPos.html, t);
 
-  // ── 持续微动：scale 呼吸 + figure-8 飘移（确保任意 3s 都有变化）──
+  // Continuous micro-motion: breathing scale + figure-eight drift ensures visible change in every 3s interval.
   const breath = 1 + Math.sin(time * 0.7) * 0.018;
   const driftXm = Math.cos(time * 0.32) * 0.6;
   const driftYm = Math.sin(time * 0.41) * 0.5;
   const driftXh = Math.sin(time * 0.28) * 0.6;
   const driftYh = Math.cos(time * 0.37) * 0.5;
 
-  const baseSize = 240; // 缩小 from 360
+  const baseSize = 240; // Reduced from 360.
   const renderHero = (label, pos, color, dx, dy) => {
     const px = (pos.x + dx) * 19.2;
     const py = (pos.y + dy) * 10.8;
@@ -245,61 +245,57 @@ const BackgroundDrift = () => {
   );
 };
 
-// ── Subtitles: B 站风字幕（白字 + 黑描边，无背景，每行 ≤12 字不截断句子）──
-// 把每个 chunk 按标点切成短行，按字数比例分配 chunk 时间窗显示
-
-// 切分算法：先按强标点（。！？\n）切句，每句再按弱标点（，、；：）合并到 maxLen
-// 中英混合：英文字母按 0.5 字算（视觉宽度近似）
+// ── Subtitles: clean halo text with no background; wrap English by words and CJK by characters. ──
+// Divide each chunk into short lines and allocate its time window by visual line length.
 function visualLen(s) {
   let n = 0;
-  for (const ch of s) n += /[a-zA-Z0-9 .,'":;\-]/.test(ch) ? 0.5 : 1;
+  for (const ch of s) {
+    if (/\s/u.test(ch)) n += 0.25;
+    else if (/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(ch)) n += 1;
+    else if (/[\p{L}\p{N}]/u.test(ch)) n += 0.5;
+    else n += 0.45;
+  }
   return n;
+}
+function textTokens(text) {
+  return text.match(/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]|[\p{L}\p{N}]+(?:['’._/@:+-][\p{L}\p{N}]+)*|\s+|[^\s]/gu) || [];
+}
+function hardWrapToken(token, maxLen) {
+  const parts = [];
+  let current = '';
+  for (const ch of token) {
+    if (current && visualLen(current + ch) > maxLen) { parts.push(current); current = ch; }
+    else current += ch;
+  }
+  if (current) parts.push(current);
+  return parts;
 }
 function splitChunkToLines(text, maxLen = 13) {
   const lines = [];
-  // 1. 按强标点切句（保留标点）
-  const sentences = [];
-  let buf = '';
-  for (const ch of text) {
-    buf += ch;
-    if ('。！？\n'.includes(ch)) {
-      if (buf.trim()) sentences.push(buf.trim());
-      buf = '';
-    }
-  }
-  if (buf.trim()) sentences.push(buf.trim());
-
-  // 2. 每句按弱标点切并合并到 maxLen 以内（不跨句号边界）
-  for (const sent of sentences) {
-    if (visualLen(sent) <= maxLen) { lines.push(sent); continue; }
-    // 按弱标点切（保留标点跟前段）
-    const parts = [];
-    let pbuf = '';
-    for (const ch of sent) {
-      pbuf += ch;
-      if ('，、；：'.includes(ch)) { parts.push(pbuf); pbuf = ''; }
-    }
-    if (pbuf) parts.push(pbuf);
-    // 合并到 maxLen
-    let merged = '';
-    for (const p of parts) {
-      if (visualLen(merged) + visualLen(p) <= maxLen) merged += p;
-      else { if (merged) lines.push(merged); merged = p; }
-    }
-    if (merged) {
-      if (visualLen(merged) <= maxLen) lines.push(merged);
-      else {
-        // 兜底硬切（罕见：单个标点段超 maxLen）
-        let hbuf = '';
-        for (const ch of merged) {
-          hbuf += ch;
-          if (visualLen(hbuf) >= maxLen) { lines.push(hbuf); hbuf = ''; }
-        }
-        if (hbuf) lines.push(hbuf);
+  let line = '';
+  const flush = () => {
+    const clean = line.trim();
+    if (clean) lines.push(clean);
+    line = '';
+  };
+  for (const token of textTokens(String(text || ''))) {
+    if (/\n/u.test(token)) { flush(); continue; }
+    const isSpace = /^\s+$/u.test(token);
+    const attachesBackward = /^[,.;:!?%)\]}。！？；：、]/u.test(token);
+    if (!isSpace && !attachesBackward && line.trim() && visualLen(line + token) > maxLen) flush();
+    if (!isSpace && visualLen(token) > maxLen) {
+      for (const part of hardWrapToken(token, maxLen)) {
+        if (line.trim() && visualLen(line + part) > maxLen) flush();
+        line += part;
+        if (visualLen(line) >= maxLen) flush();
       }
+    } else if (!(isSpace && !line)) {
+      line += token;
     }
+    if (/[.!?。！？]\s*$/u.test(token)) flush();
   }
-  return lines.filter(l => l.trim());
+  flush();
+  return lines;
 }
 
 const Subtitles = () => {
@@ -309,7 +305,7 @@ const Subtitles = () => {
   if (!active) return null;
   const lines = splitChunkToLines(active.text);
   if (lines.length === 0) return null;
-  // 按字数比例把 chunk 时长分配给每行
+  // Allocate chunk duration to lines in proportion to visual length.
   const totalLen = lines.reduce((s, l) => s + visualLen(l), 0);
   const chunkDur = active.absoluteEnd - active.absoluteStart;
   let acc = active.absoluteStart;
@@ -320,7 +316,7 @@ const Subtitles = () => {
     if (time < acc + dur) { activeLine = line; lineStart = acc; break; }
     acc += dur;
   }
-  // 行内淡入 0.15s
+  // Fade each line in over 0.15s.
   const lineProg = Math.min(1, (time - lineStart) / 0.15);
   return (
     <div style={{
@@ -328,10 +324,10 @@ const Subtitles = () => {
       display: 'flex', justifyContent: 'center', pointerEvents: 'none', zIndex: 50,
     }}>
       <div key={lineStart} style={{
-        fontFamily: '"PingFang SC", "Noto Sans SC", -apple-system, sans-serif',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", sans-serif',
         fontSize: 32, fontWeight: 600, color: C.ink,
         letterSpacing: '0.04em', lineHeight: 1.2, textAlign: 'center',
-        // 浅纸白背景上：深墨字 + 极细白色光晕，让字在底上跳出来又不重
+        // Dark ink with a fine pale halo lifts the text gently from the paper background.
         textShadow: '0 0 6px rgba(245,241,232,0.9), 0 0 12px rgba(245,241,232,0.7), 0 1px 2px rgba(255,255,255,0.5)',
         opacity: lineProg, transform: `translateY(${(1 - lineProg) * 4}px)`,
       }}>
@@ -341,7 +337,7 @@ const Subtitles = () => {
   );
 };
 
-// ── 段标签 ─────────────────────────────────────────────
+// ── Scene labels ─────────────────────────────────────────
 const SceneLabel = ({ sceneId, text }) => {
   const op = useSceneFade(sceneId, 0.4, 0.4);
   return (
@@ -352,7 +348,7 @@ const SceneLabel = ({ sceneId, text }) => {
   );
 };
 
-// ── 各 scene 辅助元素 ──────────────────────────────────
+// ── Supporting elements for each scene ──────────────────
 const OpeningAux = () => {
   const op = useSceneFade('opening', 0.6, 1.0);
   return (
@@ -368,7 +364,7 @@ const OpeningAux = () => {
       <Cue id="two-camps">{(t, p) => t && (
         <div style={{ position: 'absolute', top: 110, right: 100, opacity: op * p, transform: `translateY(${(1-p)*16}px)`, fontFamily: F.mono, fontSize: 18, color: C.inkSoft, textAlign: 'right' }}>
           <div style={{ fontSize: 38, fontWeight: 700, color: C.ink, letterSpacing: '-0.02em' }}>5,000,000</div>
-          <div style={{ fontSize: 13, color: C.inkMute, letterSpacing: '0.18em', marginTop: 4 }}>阅读 · &lt; 24H</div>
+          <div style={{ fontSize: 13, color: C.inkMute, letterSpacing: '0.18em', marginTop: 4 }}>VIEWS · &lt; 24H</div>
         </div>
       )}</Cue>
     </>
@@ -383,7 +379,7 @@ const MdSideAux = () => {
         <div style={{ position: 'absolute', left: 80, top: 200, opacity: op * p, transform: `translateY(${(1-p)*16}px)` }}>
           <div style={{ fontFamily: F.mono, fontSize: 13, color: C.inkMute, marginBottom: 6, letterSpacing: '0.12em' }}>AGENTS.md · OpenAI 2025</div>
           <div style={{ fontSize: 76, fontFamily: F.display, fontWeight: 700, color: C.ink, lineHeight: 0.95 }}>60,000<span style={{ color: C.html }}>+</span></div>
-          <div style={{ fontSize: 18, color: C.inkSoft, marginTop: 4, fontFamily: F.body }}>开源项目采用</div>
+          <div style={{ fontSize: 18, color: C.inkSoft, marginTop: 4, fontFamily: F.body }}>open-source projects</div>
           <div style={{ marginTop: 14, fontFamily: F.mono, fontSize: 12, color: C.inkMute, letterSpacing: '0.1em' }}>AWS · ANTHROPIC · GOOGLE · MICROSOFT · OPENAI</div>
         </div>
       )}</Cue>
@@ -395,7 +391,7 @@ const MdSideAux = () => {
       )}</Cue>
       <Cue id="token-saving">{(t, p) => t && (
         <div style={{ position: 'absolute', left: 80, top: 640, opacity: op * p, transform: `translateY(${(1-p)*14}px)`, padding: '28px 36px', background: C.ink, color: C.paper, minWidth: 540, fontFamily: F.mono }}>
-          <div style={{ fontSize: 11, color: '#999', letterSpacing: '0.2em', marginBottom: 14 }}>CLOUDFLARE 实测 · 同一篇博客</div>
+          <div style={{ fontSize: 11, color: '#999', letterSpacing: '0.2em', marginBottom: 14 }}>CLOUDFLARE TEST · SAME BLOG POST</div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 20, marginBottom: 14 }}>
             <div>
               <div style={{ fontSize: 11, color: '#777', marginBottom: 2 }}>HTML</div>
@@ -417,9 +413,9 @@ const MdSideAux = () => {
 const HtmlSideAux = () => {
   const op = useSceneFade('html-side', 0.6, 0.8);
   const items = [
-    { cue: 'spatial', label: '空间信息', desc: 'diff · 调用图 · 架构图', md: '一行字', html: '左右对照', topPx: 220 },
-    { cue: 'dynamic', label: '动态体验', desc: '按钮 · easing · 动效', md: '文字描述', html: '直接看见', topPx: 410 },
-    { cue: 'structured', label: '结构化阅读', desc: '可折叠 · tab · 边栏', md: '线性堆字', html: '真的会读', topPx: 600 },
+    { cue: 'spatial', label: 'Spatial Information', desc: 'diff · call graph · architecture', md: 'one line', html: 'side by side', topPx: 220 },
+    { cue: 'dynamic', label: 'Dynamic Experience', desc: 'button · easing · motion', md: 'describe it', html: 'experience it', topPx: 410 },
+    { cue: 'structured', label: 'Structured Reading', desc: 'collapse · tabs · sidebar', md: 'linear text', html: 'designed reading', topPx: 600 },
   ];
   return (
     <>
@@ -449,21 +445,21 @@ const RealQuestionAux = () => {
     <>
       <Cue id="reveal">{(t, p) => (
         <div style={{ position: 'absolute', top: 480, left: 0, right: 0, textAlign: 'center', opacity: op * p }}>
-          <div style={{ fontSize: 26, fontFamily: F.body, color: C.inkMute, marginBottom: 14, fontWeight: 300 }}>这俩根本是在争一个</div>
-          <div style={{ fontSize: 170, fontFamily: F.display, fontWeight: 800, color: C.html, lineHeight: 0.95, letterSpacing: '0.05em', fontStyle: 'italic' }}>蠢问题</div>
+          <div style={{ fontSize: 26, fontFamily: F.body, color: C.inkMute, marginBottom: 14, fontWeight: 300 }}>Both camps are arguing over the</div>
+          <div style={{ fontSize: 150, fontFamily: F.display, fontWeight: 800, color: C.html, lineHeight: 0.95, letterSpacing: '0.02em', fontStyle: 'italic' }}>wrong question</div>
         </div>
       )}</Cue>
       <Cue id="question-md">{(t, p) => (
         <div style={{ position: 'absolute', top: 770, left: 200, opacity: op * p, transform: `translateX(${(1-p)*-20}px)`, fontFamily: F.body, fontSize: 32, color: C.ink, textAlign: 'right', maxWidth: 360 }}>
-          <div style={{ fontFamily: F.mono, fontSize: 13, color: C.md, letterSpacing: '0.18em', marginBottom: 8 }}>MD 党在回答</div>
-          我们用什么<span style={{ color: C.md, fontStyle: 'italic', fontWeight: 700 }}>写</span>?
+          <div style={{ fontFamily: F.mono, fontSize: 13, color: C.md, letterSpacing: '0.18em', marginBottom: 8 }}>MARKDOWN ANSWERS</div>
+          What should we <span style={{ color: C.md, fontStyle: 'italic', fontWeight: 700 }}>write in</span>?
         </div>
       )}</Cue>
       <div style={{ position: 'absolute', top: 800, left: 0, right: 0, fontSize: 48, color: C.inkMute, textAlign: 'center', fontFamily: F.mono, opacity: op * 0.6 }}>≠</div>
       <Cue id="question-html">{(t, p) => (
         <div style={{ position: 'absolute', top: 770, right: 200, opacity: op * p, transform: `translateX(${(1-p)*20}px)`, fontFamily: F.body, fontSize: 32, color: C.ink, maxWidth: 360 }}>
-          <div style={{ fontFamily: F.mono, fontSize: 13, color: C.html, letterSpacing: '0.18em', marginBottom: 8 }}>HTML 党在回答</div>
-          我们给人什么<span style={{ color: C.html, fontStyle: 'italic', fontWeight: 700 }}>看</span>?
+          <div style={{ fontFamily: F.mono, fontSize: 13, color: C.html, letterSpacing: '0.18em', marginBottom: 8 }}>HTML ANSWERS</div>
+          What should people <span style={{ color: C.html, fontStyle: 'italic', fontWeight: 700 }}>see</span>?
         </div>
       )}</Cue>
     </>
@@ -476,31 +472,31 @@ const SplitAux = () => {
     <>
       <Cue id="split">{(t, p) => (
         <div style={{ position: 'absolute', top: 110, left: 0, right: 0, textAlign: 'center', opacity: op * p, transform: `translateY(${(1-p)*15}px)` }}>
-          <div style={{ fontSize: 22, color: C.inkMute, fontFamily: F.body, marginBottom: 6 }}>md 和 html 不是替代，是</div>
+          <div style={{ fontSize: 22, color: C.inkMute, fontFamily: F.body, marginBottom: 6 }}>Markdown and HTML are not substitutes. They</div>
           <div style={{ fontSize: 110, fontFamily: F.display, fontWeight: 800, color: C.ink, letterSpacing: '0.04em', lineHeight: 1 }}>
-            分工<span style={{ color: C.html }}>关系</span>
+            divide the <span style={{ color: C.html }}>work</span>
           </div>
         </div>
       )}</Cue>
       <Cue id="ai-changes">{(t, p) => t && (
         <div style={{ position: 'absolute', top: 320, left: 0, right: 0, textAlign: 'center', opacity: op * p, fontFamily: F.body, fontSize: 20, color: C.inkSoft, lineHeight: 1.7, maxWidth: 1100, margin: '0 auto' }}>
           <div style={{ maxWidth: 980, margin: '0 auto' }}>
-            以前你写 md 自己也看 md，所以折中。<br/>
-            AI 出现后，生产成本被 AI 吸收，原来要折中的需求<strong>被拆成了两端的极端最优。</strong>
+            You once wrote and read the same Markdown, so compromise was necessary.<br/>
+            AI absorbs the cost of production, splitting that compromise into <strong>two optimized extremes.</strong>
           </div>
         </div>
       )}</Cue>
-      {/* 生产端 / 消费端标签放 hero 上方，避免被遮挡 */}
+      {/* Place production/consumption labels above the hero to avoid occlusion. */}
       <Cue id="md-side-win">{(t, p) => (
         <div style={{ position: 'absolute', top: 470, left: '22%', transform: `translateX(-50%) translateY(${(1-p)*30}px)`, opacity: op * p, textAlign: 'center' }}>
-          <div style={{ fontFamily: F.mono, fontSize: 13, color: C.md, letterSpacing: '0.22em', marginBottom: 6 }}>生产端</div>
-          <div style={{ fontSize: 19, color: C.inkSoft, fontFamily: F.body }}>轻 · 快 · token-efficient</div>
+          <div style={{ fontFamily: F.mono, fontSize: 13, color: C.md, letterSpacing: '0.22em', marginBottom: 6 }}>PRODUCTION</div>
+          <div style={{ fontSize: 19, color: C.inkSoft, fontFamily: F.body }}>light · fast · token-efficient</div>
         </div>
       )}</Cue>
       <Cue id="html-side-win">{(t, p) => (
         <div style={{ position: 'absolute', top: 470, left: '78%', transform: `translateX(-50%) translateY(${(1-p)*30}px)`, opacity: op * p, textAlign: 'center' }}>
-          <div style={{ fontFamily: F.mono, fontSize: 13, color: C.html, letterSpacing: '0.22em', marginBottom: 6 }}>消费端</div>
-          <div style={{ fontSize: 19, color: C.inkSoft, fontFamily: F.body }}>丰富 · 可视化 · 好分享</div>
+          <div style={{ fontFamily: F.mono, fontSize: 13, color: C.html, letterSpacing: '0.22em', marginBottom: 6 }}>CONSUMPTION</div>
+          <div style={{ fontSize: 19, color: C.inkSoft, fontFamily: F.body }}>rich · visual · shareable</div>
         </div>
       )}</Cue>
     </>
@@ -512,13 +508,13 @@ const ProofAux = () => {
   return (
     <>
       <div style={{ position: 'absolute', top: 320, left: 0, right: 0, textAlign: 'center', opacity: op, fontSize: 28, fontFamily: F.body, color: C.ink }}>
-        最干净的活样本是 <span style={{ color: C.html, fontFamily: F.mono, fontWeight: 700 }}>@thariq</span>
+        The cleanest living example is <span style={{ color: C.html, fontFamily: F.mono, fontWeight: 700 }}>@thariq</span>
       </div>
       <Cue id="thariq-march">{(t, p) => (
         <div style={{ position: 'absolute', top: 410, left: '50%', transform: `translateX(-50%) translateY(${(1-p)*16}px)`, opacity: op * p, display: 'flex', alignItems: 'center', gap: 22 }}>
           <div style={{ fontFamily: F.mono, fontSize: 19, color: C.md, fontWeight: 700, minWidth: 90, textAlign: 'right' }}>2026.03</div>
           <div style={{ width: 12, height: 12, borderRadius: 6, background: C.md }} />
-          <div style={{ fontSize: 23, fontFamily: F.body, color: C.ink, minWidth: 380 }}>《Skills 指南》—— <span style={{ color: C.md }}>核心还是 markdown</span></div>
+          <div style={{ fontSize: 23, fontFamily: F.body, color: C.ink, minWidth: 380 }}>Guide to Skills — <span style={{ color: C.md }}>Markdown at the core</span></div>
         </div>
       )}</Cue>
       <Cue id="same-person">{(t, p) => (
@@ -530,7 +526,7 @@ const ProofAux = () => {
       )}</Cue>
       <Cue id="same-person">{(t, p) => t && (
         <div style={{ position: 'absolute', top: 580, left: 0, right: 0, textAlign: 'center', opacity: op * p, fontFamily: F.display, fontSize: 28, color: C.ink, fontStyle: 'italic' }}>
-          同一个人 · 两端各自登顶 · 互不打架
+          ONE PERSON · EACH MEDIUM AT ITS BEST · NO CONTRADICTION
         </div>
       )}</Cue>
       <Cue id="karpathy-lex">{(t, p) => t && (
@@ -538,13 +534,13 @@ const ProofAux = () => {
           <div style={{ fontFamily: F.mono, fontSize: 12, color: '#999', letterSpacing: '0.2em' }}>KARPATHY × LEX</div>
           <div style={{ display: 'flex', gap: 20, alignItems: 'center', fontFamily: F.body }}>
             <div>
-              <div style={{ fontSize: 10, color: '#999', fontFamily: F.mono, marginBottom: 2, letterSpacing: '0.12em' }}>内核</div>
+              <div style={{ fontSize: 10, color: '#999', fontFamily: F.mono, marginBottom: 2, letterSpacing: '0.12em' }}>CORE</div>
               <div style={{ fontSize: 19, color: C.md, fontWeight: 600 }}>markdown wiki</div>
             </div>
             <div style={{ fontSize: 19, color: '#666' }}>+</div>
             <div>
-              <div style={{ fontSize: 10, color: '#999', fontFamily: F.mono, marginBottom: 2, letterSpacing: '0.12em' }}>外壳</div>
-              <div style={{ fontSize: 19, color: C.html, fontWeight: 600 }}>动态 HTML</div>
+              <div style={{ fontSize: 10, color: '#999', fontFamily: F.mono, marginBottom: 2, letterSpacing: '0.12em' }}>SHELL</div>
+              <div style={{ fontSize: 19, color: C.html, fontWeight: 600 }}>dynamic HTML</div>
             </div>
           </div>
         </div>
@@ -559,22 +555,22 @@ const ClosingAux = () => {
     <>
       <Cue id="final">{(t, p) => (
         <div style={{ position: 'absolute', top: 110, left: 0, right: 0, textAlign: 'center', opacity: op * p, transform: `translateY(${(1-p)*12}px)` }}>
-          <div style={{ fontSize: 22, color: C.inkMute, fontFamily: F.body, marginBottom: 12 }}>下次想吵的时候，先问自己 ——</div>
+          <div style={{ fontSize: 22, color: C.inkMute, fontFamily: F.body, marginBottom: 12 }}>Next time the argument starts, ask yourself —</div>
           <div style={{ fontSize: 68, fontFamily: F.display, fontWeight: 700, color: C.ink, lineHeight: 1.15 }}>
-            你面对的是「<span style={{ color: C.md }}>写</span>」，
-            还是「<span style={{ color: C.html }}>看</span>」?
+            Is this about <span style={{ color: C.md }}>writing</span>,
+            or about <span style={{ color: C.html }}>viewing</span>?
           </div>
         </div>
       )}</Cue>
       <Cue id="md-final">{(t, p) => (
         <div style={{ position: 'absolute', top: 740, left: '28%', transform: `translateX(-50%) translateY(${(1-p)*16}px)`, opacity: op * p, textAlign: 'center' }}>
-          <div style={{ fontSize: 42, fontFamily: F.display, fontWeight: 600, color: C.md, letterSpacing: '0.04em' }}>写</div>
+          <div style={{ fontSize: 42, fontFamily: F.display, fontWeight: 600, color: C.md, letterSpacing: '0.04em' }}>WRITE</div>
           <div style={{ fontSize: 22, color: C.inkMute, fontFamily: F.mono, marginTop: 4 }}>↓</div>
         </div>
       )}</Cue>
       <Cue id="html-final">{(t, p) => (
         <div style={{ position: 'absolute', top: 740, left: '72%', transform: `translateX(-50%) translateY(${(1-p)*16}px)`, opacity: op * p, textAlign: 'center' }}>
-          <div style={{ fontSize: 42, fontFamily: F.display, fontWeight: 600, color: C.html, letterSpacing: '0.04em' }}>看</div>
+          <div style={{ fontSize: 42, fontFamily: F.display, fontWeight: 600, color: C.html, letterSpacing: '0.04em' }}>VIEW</div>
           <div style={{ fontSize: 22, color: C.inkMute, fontFamily: F.mono, marginTop: 4 }}>↓</div>
         </div>
       )}</Cue>
@@ -582,18 +578,18 @@ const ClosingAux = () => {
   );
 };
 
-// ── 主 App ─────────────────────────────────────────
+// ── Main app ────────────────────────────────────────
 const App = () => (
   <NarrationStage timeline={TIMELINE} audioSrc="_narration/voiceover.mp3" width={1920} height={1080} background={C.paper}>
     <BackgroundDrift />
     <HeroAnchor />
     <SceneLabel sceneId="opening" text="2026.05.07 · X" />
-    <SceneLabel sceneId="md-side" text="MD 党的证据" />
-    <SceneLabel sceneId="html-side" text="HTML 党的证据" />
-    <SceneLabel sceneId="the-real-question" text="真问题" />
-    <SceneLabel sceneId="the-split" text="MD 生产 · HTML 消费" />
-    <SceneLabel sceneId="activity-proof" text="活样本" />
-    <SceneLabel sceneId="closing" text="结语" />
+    <SceneLabel sceneId="md-side" text="THE CASE FOR MARKDOWN" />
+    <SceneLabel sceneId="html-side" text="THE CASE FOR HTML" />
+    <SceneLabel sceneId="the-real-question" text="THE REAL QUESTION" />
+    <SceneLabel sceneId="the-split" text="MARKDOWN PRODUCTION · HTML CONSUMPTION" />
+    <SceneLabel sceneId="activity-proof" text="A LIVING EXAMPLE" />
+    <SceneLabel sceneId="closing" text="CONCLUSION" />
     <OpeningAux />
     <MdSideAux />
     <HtmlSideAux />
@@ -601,7 +597,7 @@ const App = () => (
     <SplitAux />
     <ProofAux />
     <ClosingAux />
-    {/* 字幕条放最上层（z-index 自然在 DOM 顺序最后），盖住下方内容 */}
+    {/* Keep subtitles last in DOM order so their natural z-index places them above the content. */}
     <Subtitles />
     <div style={{ position: 'absolute', bottom: 24, right: 36, fontSize: 11, color: 'rgba(26,26,26,0.35)', letterSpacing: '0.2em', fontFamily: F.mono, pointerEvents: 'none' }}>
       Created by Huashu-Design

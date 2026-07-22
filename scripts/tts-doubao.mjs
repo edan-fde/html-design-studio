@@ -1,28 +1,29 @@
 #!/usr/bin/env node
 /**
- * tts-doubao.mjs · 豆包语音 TTS（火山引擎 openspeech）
+ * tts-doubao.mjs · Doubao Voice TTS (Volcengine OpenSpeech)
  *
- * 用法：
- *   node scripts/tts-doubao.mjs --text "你好" --out demo.mp3
+ * Usage:
+ *   node scripts/tts-doubao.mjs --text "Hello" --out demo.mp3
  *   node scripts/tts-doubao.mjs --text-file script.txt --out out.mp3 --speed 1.0
- *   node scripts/tts-doubao.mjs --text "你好" --out demo.mp3 --timestamps   # 附带字级时间戳
+ *   node scripts/tts-doubao.mjs --text "Hello" --out demo.mp3 --timestamps   # Include word-level timestamps
  *
- * 输出：
- *   - mp3 文件写到 --out 路径
- *   - stdout 打印一行 JSON: {"path":"...","duration":12.34,"bytes":54321}
- *   - 带 --timestamps 时额外含 words: [{text,start,end,confidence}]（秒，相对本段音频开头）
- *     注意：时间戳文本是 TN 后文本（如 "2025" 会变成 "二零二五"），标点附在前一个字上；
- *     需要 2.0 资源（seed-tts-2.0 / seed-icl-2.0），仅中英文。
+ * Output:
+ *   - Writes the audio file to --out
+ *   - Prints one JSON line to stdout: {"path":"...","duration":12.34,"bytes":54321}
+ *   - With --timestamps, also includes words: [{text,start,end,confidence}] (seconds from the start of this segment)
+ *     Note: timestamp text is text-normalized (for example, "2025" may become "twenty twenty-five"),
+ *     and punctuation is attached to the preceding token. Requires a 2.0 resource
+ *     (seed-tts-2.0 / seed-icl-2.0); Chinese and English only.
  *
- * 依赖：Node 18+（自带 fetch/crypto）、ffprobe（测时长，brew install ffmpeg）
+ * Dependencies: Node 18+ (built-in fetch/crypto), ffprobe (duration measurement; brew install ffmpeg)
  *
- * env（自动从 skill 根目录 .env 读取，也可走 process.env 覆盖）：
- *   DOUBAO_TTS_API_KEY     可选（新版 API Key 鉴权）
- *   DOUBAO_APP_ID          可选（控制台 App ID，与 DOUBAO_ACCESS_KEY 配套）
- *   DOUBAO_ACCESS_KEY      可选（控制台 Access Token，与 DOUBAO_APP_ID 配套）
- *   DOUBAO_TTS_VOICE_ID    必填（音色 id）
- *   DOUBAO_TTS_RESOURCE_ID 可选（默认按音色自动推断）
- *   DOUBAO_TTS_ENDPOINT    默认 https://openspeech.bytedance.com/api/v3/tts/unidirectional
+ * Environment (loaded automatically from .env in the skill root; process.env overrides values):
+ *   DOUBAO_TTS_API_KEY     Optional (new API-key authentication)
+ *   DOUBAO_APP_ID          Optional (console App ID, paired with DOUBAO_ACCESS_KEY)
+ *   DOUBAO_ACCESS_KEY      Optional (console Access Token, paired with DOUBAO_APP_ID)
+ *   DOUBAO_TTS_VOICE_ID    Required (voice ID)
+ *   DOUBAO_TTS_RESOURCE_ID Optional (inferred from the voice by default)
+ *   DOUBAO_TTS_ENDPOINT    Default: https://openspeech.bytedance.com/api/v3/tts/unidirectional
  */
 
 import fs from 'node:fs';
@@ -71,15 +72,15 @@ function parseArgs(argv) {
 
 function usage() {
   console.error(`
-tts-doubao.mjs · 豆包语音 TTS
+tts-doubao.mjs · Doubao Voice TTS
 
-  --text <str>          要合成的文本
-  --text-file <path>    从文件读取文本（与 --text 二选一）
-  --out <path>          输出 mp3 路径（必填）
-  --speed <float>       语速倍率，默认 1.0（0.5-2.0）
-  --voice <voice_id>    覆盖 .env 里的音色 id
-  --encoding <ext>      mp3 / wav / pcm，默认 mp3
-  --timestamps          请求字级时间戳（enable_subtitle），结果 JSON 多一个 words 数组
+  --text <str>          Text to synthesize
+  --text-file <path>    Read text from a file (mutually exclusive with --text)
+  --out <path>          Output audio path (required)
+  --speed <float>       Speech-rate multiplier, default 1.0 (0.5–2.0)
+  --voice <voice_id>    Override the voice ID from .env
+  --encoding <ext>      mp3 / wav / pcm, default mp3
+  --timestamps          Request word-level timestamps (enable_subtitle); adds a words array to the result JSON
 `.trim());
   process.exit(1);
 }
@@ -99,8 +100,8 @@ function getDuration(filePath) {
 }
 
 function inferResourceId(voiceId) {
-  // 复刻音色默认走 2.0：本账号只开通了 seed-icl-2.0（1.0 会 403 resource not granted），
-  // 且字级时间戳（enable_subtitle）只有 2.0 资源支持。
+  // Cloned voices default to 2.0: this account only has seed-icl-2.0 access (1.0 returns 403 resource not granted),
+  // and word-level timestamps (enable_subtitle) are available only with 2.0 resources.
   if (voiceId.startsWith('S_')) return 'seed-icl-2.0';
   if (voiceId.includes('uranus')) return 'seed-tts-2.0';
   return 'seed-tts-1.0';
@@ -127,8 +128,8 @@ function buildAuthHeaders({ requestId, resourceId }) {
     return headers;
   }
 
-  if (!appId) throw new Error('缺 DOUBAO_TTS_API_KEY 或 DOUBAO_APP_ID（检查 .env）');
-  if (!accessKey) throw new Error('缺 DOUBAO_ACCESS_KEY（检查 .env）');
+  if (!appId) throw new Error('Missing DOUBAO_TTS_API_KEY or DOUBAO_APP_ID (check .env)');
+  if (!accessKey) throw new Error('Missing DOUBAO_ACCESS_KEY (check .env)');
 
   headers['X-Api-App-Id'] = appId;
   headers['X-Api-Access-Key'] = accessKey;
@@ -138,7 +139,7 @@ function buildAuthHeaders({ requestId, resourceId }) {
 async function readV3Audio(res) {
   const text = await res.text();
   const chunks = [];
-  const words = []; // 字级时间戳（enable_subtitle 开启时服务端按句返回 sentence.words）
+  const words = []; // Word-level timestamps (with enable_subtitle, the server returns sentence.words per sentence).
   let finalCode = null;
   let finalMessage = '';
 
@@ -150,7 +151,7 @@ async function readV3Audio(res) {
     try {
       json = JSON.parse(trimmed);
     } catch (e) {
-      throw new Error(`API 响应行不是 JSON：${trimmed.slice(0, 200)}`);
+      throw new Error(`API response line is not JSON: ${trimmed.slice(0, 200)}`);
     }
 
     const code = json.code ?? 0;
@@ -160,7 +161,7 @@ async function readV3Audio(res) {
       break;
     }
     if (code !== 0) {
-      throw new Error(`API 返回错误 code=${code} msg=${json.message || JSON.stringify(json)}`);
+      throw new Error(`API returned an error: code=${code} msg=${json.message || JSON.stringify(json)}`);
     }
     if (json.data) chunks.push(Buffer.from(json.data, 'base64'));
     if (json.sentence && Array.isArray(json.sentence.words)) {
@@ -176,8 +177,8 @@ async function readV3Audio(res) {
   }
 
   if (!chunks.length) {
-    const detail = finalCode ? `结束码 ${finalCode} ${finalMessage}` : text.slice(0, 500);
-    throw new Error(`API 响应无音频数据：${detail}`);
+    const detail = finalCode ? `final code ${finalCode} ${finalMessage}` : text.slice(0, 500);
+    throw new Error(`API response contained no audio data: ${detail}`);
   }
   return { audio: Buffer.concat(chunks), words };
 }
@@ -188,7 +189,7 @@ async function tts({ text, voice, speed, encoding, timestamps }) {
   const resourceId = process.env.DOUBAO_TTS_RESOURCE_ID || inferResourceId(voiceId || '');
   const requestId = randomUUID();
 
-  if (!voiceId) throw new Error('缺 DOUBAO_TTS_VOICE_ID（检查 .env 或用 --voice 传）');
+  if (!voiceId) throw new Error('Missing DOUBAO_TTS_VOICE_ID (check .env or pass --voice)');
 
   const body = {
     user: { uid: 'huashu-design' },
@@ -199,7 +200,7 @@ async function tts({ text, voice, speed, encoding, timestamps }) {
         format: encoding,
         sample_rate: 24000,
         speech_rate: speedToSpeechRate(speed),
-        // 字级时间戳：仅 2.0 资源（seed-tts-2.0 / seed-icl-2.0）支持，中英文 only
+        // Word-level timestamps: supported only by 2.0 resources (seed-tts-2.0 / seed-icl-2.0), for Chinese and English.
         ...(timestamps ? { enable_subtitle: true } : {}),
       },
     },
@@ -228,11 +229,11 @@ async function main() {
     text = fs.readFileSync(args.textFile, 'utf8').trim();
   }
   if (!text) {
-    console.error('错：缺 --text 或 --text-file');
+    console.error('Error: missing --text or --text-file');
     usage();
   }
   if (!args.out) {
-    console.error('错：缺 --out');
+    console.error('Error: missing --out');
     usage();
   }
 
@@ -260,6 +261,6 @@ async function main() {
 }
 
 main().catch((err) => {
-  console.error(`TTS 失败：${err.message}`);
+  console.error(`TTS failed: ${err.message}`);
   process.exit(1);
 });

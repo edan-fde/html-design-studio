@@ -1,40 +1,40 @@
-# Apple Gallery Showcase · 画廊展示墙动画风格
+# Apple Gallery Showcase · Animated Gallery-Wall Style
 
-> 灵感来源：Claude Design 官网 hero 视频 + 苹果产品页「作品墙」式陈列
-> 实战出处：huashu-design 发布 hero v5
-> 适用场景：**产品发布 hero 动画、skill 能力演示、作品集展示**——任何需要把「多件高质量产出」同时展陈并引导观众注意力的场景
-
----
-
-## 触发判断：什么时候用这个风格
-
-**适合**：
-- 有10张以上真实产出要同屏展示（PPT、App、网页、信息图）
-- 观众是专业受众（开发者、设计师、产品经理），对「质感」敏感
-- 希望传递的气质是「克制、展览式、高级、有空间感」
-- 需要焦点和全局同时存在（看细节但不失整体）
-
-**不适合**：
-- 单产品聚焦（用 frontend-design 的产品 hero 模板）
-- 情绪向/故事性强的动画（用时间轴叙事模板）
-- 小屏幕 / 竖屏（倾斜视角在小画面上会糊）
+> Inspiration: the Claude Design website hero video + the gallery-wall presentation on Apple product pages
+> Proven in: huashu-design launch hero v5
+> Best for: **product-launch hero animation, skill-capability demonstrations, and portfolio showcases**—any situation that presents several high-quality outputs at once while guiding the audience's attention
 
 ---
 
-## 核心视觉 Token
+## When to Use This Style
+
+**Good fit:**
+- Ten or more genuine outputs need to appear together: slides, apps, websites, or infographics.
+- The audience is professional—developers, designers, or product managers—and sensitive to finish quality.
+- The intended character is restrained, exhibition-like, sophisticated, and spatial.
+- Detail and overview must coexist: the viewer should inspect one item without losing the whole.
+
+**Poor fit:**
+- A single-product focus; use the product-hero template from `frontend-design`.
+- Emotional or strongly narrative animation; use a timeline narrative template.
+- Small screens or portrait orientation; the oblique perspective becomes muddy at small sizes.
+
+---
+
+## Core Visual Tokens
 
 ```css
 :root {
-  /* 浅色画廊调板 */
-  --bg:         #F5F5F7;   /* 主画布底 — 苹果官网灰 */
-  --bg-warm:    #FAF9F5;   /* 温暖米白变体 */
-  --ink:        #1D1D1F;   /* 主字色 */
+  /* Light gallery palette */
+  --bg:         #F5F5F7;   /* Main canvas — Apple website gray */
+  --bg-warm:    #FAF9F5;   /* Warm off-white alternative */
+  --ink:        #1D1D1F;   /* Primary text */
   --ink-80:     #3A3A3D;
   --ink-60:     #545458;
-  --muted:      #86868B;   /* 次级文字 */
+  --muted:      #86868B;   /* Secondary text */
   --dim:        #C7C7CC;
-  --hairline:   #E5E5EA;   /* 卡片1px边框 */
-  --accent:     #D97757;   /* 赤陶橙 — Claude brand */
+  --hairline:   #E5E5EA;   /* 1px card border */
+  --accent:     #D97757;   /* Terracotta orange — Claude brand */
   --accent-deep:#B85D3D;
 
   --serif-cn: "Noto Serif SC", "Songti SC", Georgia, serif;
@@ -44,55 +44,55 @@
 }
 ```
 
-**关键原则**：
-1. **绝不用纯黑底**。黑底会让作品看起来像电影、不像「可以被采用的工作成果」
-2. **赤陶橙是唯一色相accent**，其他全部是灰阶 + 白
-3. **三字体栈**（serif英+serif中+sans+mono）营造「出版物」而非「互联网产品」的气质
+**Key principles:**
+1. **Never use a pure black background.** Black makes the work feel cinematic rather than like a practical deliverable that could be adopted.
+2. **Terracotta orange is the only chromatic accent**; everything else is grayscale and white.
+3. **A multi-role type stack**—English serif + Chinese serif + sans + mono—creates the character of a publication rather than an internet product.
 
 ---
 
-## 核心布局模式
+## Core Layout Patterns
 
-### 1. 悬浮卡片（整个风格的基本单元）
+### 1. Floating Card: the Style's Basic Unit
 
 ```css
 .gallery-card {
   background: #FFFFFF;
   border-radius: 14px;
-  padding: 6px;                          /* 内边距是「装裱纸」 */
+  padding: 6px;                          /* Inner padding acts as mounting board */
   border: 1px solid var(--hairline);
   box-shadow:
-    0 20px 60px -20px rgba(29, 29, 31, 0.12),   /* 主阴影，软且长 */
-    0 6px 18px -6px rgba(29, 29, 31, 0.06);     /* 第二层近光，制造浮感 */
-  aspect-ratio: 16 / 9;                  /* 统一 slide 比例 */
+    0 20px 60px -20px rgba(29, 29, 31, 0.12),   /* Main shadow: soft and long */
+    0 6px 18px -6px rgba(29, 29, 31, 0.06);     /* Near-light layer creates lift */
+  aspect-ratio: 16 / 9;                  /* Consistent slide ratio */
   overflow: hidden;
 }
 .gallery-card img {
   width: 100%; height: 100%;
   object-fit: cover;
-  border-radius: 9px;                    /* 比卡片圆角略小，视觉嵌套 */
+  border-radius: 9px;                    /* Slightly smaller radius creates visual nesting */
 }
 ```
 
-**反面教材**：不要贴边瓷砖（无padding无border无shadow）——那是信息图密度表达，不是展览。
+**Counterexample:** do not use edge-to-edge tiles without padding, border, or shadow. That language expresses infographic density, not an exhibition.
 
-### 2. 3D倾斜作品墙
+### 2. Oblique 3D Gallery Wall
 
 ```css
 .gallery-viewport {
   position: absolute; inset: 0;
   overflow: hidden;
-  perspective: 2400px;                   /* 深一些的透视，倾斜不夸张 */
+  perspective: 2400px;                   /* Deep perspective keeps tilt controlled */
   perspective-origin: 50% 45%;
 }
 .gallery-canvas {
-  width: 4320px;                         /* 画布 = 2.25× viewport */
-  height: 2520px;                        /* 留出pan空间 */
+  width: 4320px;                         /* Canvas = 2.25× viewport */
+  height: 2520px;                        /* Leave room for panning */
   transform-origin: center center;
   transform: perspective(2400px)
-             rotateX(14deg)              /* 向后倾 */
-             rotateY(-10deg)             /* 向左转 */
-             rotateZ(-2deg);             /* 轻微倾斜，去掉太规整 */
+             rotateX(14deg)              /* Tilt backward */
+             rotateY(-10deg)             /* Turn left */
+             rotateZ(-2deg);             /* Slight roll breaks mechanical regularity */
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   gap: 40px;
@@ -100,13 +100,13 @@
 }
 ```
 
-**参数 sweet spot**：
-- rotateX: 10-15deg（再多就像开酒会 VIP 背景板）
-- rotateY: ±8-12deg（左右对称感）
-- rotateZ: ±2-3deg（「这不是机器摆的」的人味）
-- perspective: 2000-2800px（小于2000会鱼眼，大于3000接近正投影）
+**Parameter sweet spots:**
+- `rotateX`: 10–15 deg; more resembles a VIP event backdrop.
+- `rotateY`: ±8–12 deg; maintains left/right balance.
+- `rotateZ`: ±2–3 deg; introduces a human “this was not placed by a machine” quality.
+- `perspective`: 2000–2800 px; below 2000 becomes fisheye, above 3000 approaches orthographic projection.
 
-### 3. 2×2 四角汇聚（选择场景）
+### 3. 2 × 2 Four-Corner Convergence for Selection Scenes
 
 ```css
 .grid22 {
@@ -117,7 +117,7 @@
 }
 ```
 
-每张卡片从对应角落（tl/tr/bl/br）向中心滑入 + fade in。对应的 `cornerEntry` 向量：
+Each card slides and fades in from its corresponding corner—top-left, top-right, bottom-left, or bottom-right. The corresponding `cornerEntry` vectors:
 
 ```js
 const cornerEntry = {
@@ -130,11 +130,11 @@ const cornerEntry = {
 
 ---
 
-## 五种核心动画模式
+## Five Core Animation Patterns
 
-### 模式 A · 四角汇聚（0.8-1.2s）
+### Pattern A · Four-Corner Convergence (0.8–1.2 s)
 
-4 个元素从视口四角滑入，同时缩放 0.85→1.0，对应 ease-out。适合「展示多方向选择」的开场。
+Four elements slide in from the viewport corners while scaling from 0.85 → 1.0 with ease-out timing. Best for an opening that presents choices from multiple directions.
 
 ```js
 const inP = easeOut(clampLerp(t, start, end));
@@ -142,23 +142,23 @@ card.style.transform = `translate3d(${(1-inP)*ce.dx}px, ${(1-inP)*ce.dy}px, 0) s
 card.style.opacity = inP;
 ```
 
-### 模式 B · 选中放大 + 其他滑出（0.8s）
+### Pattern B · Enlarge Selection + Slide Others Away (0.8 s)
 
-被选中的卡片放大 1.0→1.28，其他卡片 fade out + blur + 向四角漂回：
+The selected card scales from 1.0 → 1.28. Every other card fades, blurs, and drifts back toward its corner:
 
 ```js
-// 被选中
+// Selected card
 card.style.transform = `translate3d(${cellDx*outP}px, ${cellDy*outP}px, 0) scale(${1 + 0.28*easeOut(zoomP)})`;
-// 未选中
+// Unselected cards
 card.style.opacity = 1 - outP;
 card.style.filter = `blur(${outP * 1.5}px)`;
 ```
 
-**关键**：未选中的要 blur，不是纯 fade。blur 模拟景深，视觉上把被选中的「推出来」。
+**Critical:** unselected cards must blur, not merely fade. Blur simulates depth of field and visually pushes the selected card forward.
 
-### 模式 C · Ripple 涟漪展开（1.7s）
+### Pattern C · Ripple Reveal (1.7 s)
 
-从中心向外，按距离 delay，每张卡片依次淡入 + 从 1.25x 缩到 0.94x（「镜头拉远」）：
+Starting at the center and delaying by distance, each card fades in while the whole wall scales from 1.25× to 0.94×, as if the camera were pulling back:
 
 ```js
 const col = i % COLS, row = Math.floor(i / COLS);
@@ -168,48 +168,48 @@ const delay = (dist / maxDist) * 0.8;
 const localT = Math.max(0, (t - rippleStart - delay) / 0.7);
 card.style.opacity = easeOut(Math.min(1, localT));
 
-// 同时整体 scale 1.25→0.94
+// Simultaneously scale the whole wall from 1.25 → 0.94
 const galleryScale = 1.25 - 0.31 * easeOut(rippleProgress);
 ```
 
-### 模式 D · Sinusoidal Pan（持续漂移）
+### Pattern D · Sinusoidal Pan: Continuous Drift
 
-用正弦波 + 线性漂移组合，避免 marquee 那种「有起点有终点」的循环感：
+Combine sine-wave motion with linear drift to avoid the obvious “start and end” loop of a marquee:
 
 ```js
-const panX = Math.sin(panT * 0.12) * 220 - panT * 8;    // 横向左漂
-const panY = Math.cos(panT * 0.09) * 120 - panT * 5;    // 纵向上漂
-const clampedX = Math.max(-900, Math.min(900, panX));   // 防止露边
+const panX = Math.sin(panT * 0.12) * 220 - panT * 8;    // Drift left
+const panY = Math.cos(panT * 0.09) * 120 - panT * 5;    // Drift upward
+const clampedX = Math.max(-900, Math.min(900, panX));   // Prevent exposed edges
 ```
 
-**参数**：
-- 正弦周期 `0.09-0.15 rad/s`（慢，约30-50秒一个摆动）
-- 线性漂移 `5-8 px/s`（比观众眨眼慢）
-- 振幅 `120-220 px`（大到能感觉，小到不会晕）
+**Parameters:**
+- Sine frequency `0.09–0.15 rad/s`: slow, roughly one oscillation every 30–50 seconds.
+- Linear drift `5–8 px/s`: slower than the viewer's blink.
+- Amplitude `120–220 px`: large enough to register, small enough to avoid motion sickness.
 
-### 模式 E · Focus Overlay（焦点切换）
+### Pattern E · Focus Overlay
 
-**关键设计**：focus overlay 是一个**平面元素**（不倾斜），浮在倾斜画布之上。被选中的 slide 从瓦片位置（约400×225）缩放到屏幕中央（960×540），背景画布不倾斜变化但**变暗到 45%**：
+**Key design decision:** the focus overlay is a **flat element**, not tilted, floating above the oblique canvas. The selected slide expands from its tile position at roughly 400 × 225 to 960 × 540 in the center. The background canvas keeps its tilt but **dims to 45%**:
 
 ```js
-// Focus overlay (flat, centered)
+// Focus overlay: flat and centered
 focusOverlay.style.width = (startW + (endW - startW) * focusIntensity) + 'px';
 focusOverlay.style.height = (startH + (endH - startH) * focusIntensity) + 'px';
 focusOverlay.style.opacity = focusIntensity;
 
-// 背景卡片变暗，但依然可见（关键！不要100%遮罩）
+// Dim background cards while keeping them visible—critical: never use a 100% mask
 card.style.opacity = entryOp * (1 - 0.55 * focusIntensity);   // 1 → 0.45
 card.style.filter = `brightness(${1 - 0.3 * focusIntensity})`;
 ```
 
-**清晰度铁律**：
-- Focus overlay 的 `<img>` 必须 `src` 直连原图，**不要复用 gallery 里的压缩缩略**
-- 提前 preload 所有原图到 `new Image()[]` 数组
-- overlay 自身 `width/height` 按帧计算，浏览器每帧 resample 原图
+**Sharpness rules:**
+- The focus overlay's `<img>` must point directly to the original image. **Never reuse the gallery's compressed thumbnail.**
+- Preload every original into a `new Image()[]` array.
+- Calculate the overlay's `width` and `height` frame by frame so the browser resamples the original image each frame.
 
 ---
 
-## 时间轴架构（可复用骨架）
+## Timeline Architecture: Reusable Skeleton
 
 ```js
 const T = {
@@ -227,7 +227,7 @@ const T = {
   s4_walloff: [21.1, 21.8], s4_in: [21.8, 22.7], s4_hold: [23.7, 25.0],
 };
 
-// 核心 easing
+// Core easing
 const easeOut = t => 1 - Math.pow(1 - t, 3);
 const easeInOut = t => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2;
 function lerp(time, start, end, fromV, toV, easing) {
@@ -238,7 +238,7 @@ function lerp(time, start, end, fromV, toV, easing) {
   return fromV + (toV - fromV) * p;
 }
 
-// 单一 render(t) 函数读时间戳、写所有元素
+// One render(t) function reads the timestamp and writes every element
 function render(t) { /* ... */ }
 requestAnimationFrame(function tick(now) {
   const t = ((now - startMs) / 1000) % T.DURATION;
@@ -247,18 +247,18 @@ requestAnimationFrame(function tick(now) {
 });
 ```
 
-**架构精髓**：**所有状态由时间戳 t 推导**，没有状态机、没有 setTimeout。这样：
-- 播放到任意时刻 `window.__setTime(12.3)` 立刻跳转（方便 playwright 逐帧截）
-- 循环天然无缝（t mod DURATION）
-- Debug 时能冻结任意一帧
+**Architectural essence:** **derive every state from timestamp `t`**. Do not use a state machine or `setTimeout`. This provides:
+- Instant seeking with `window.__setTime(12.3)`, convenient for frame-by-frame Playwright captures.
+- Naturally seamless loops through `t mod DURATION`.
+- The ability to freeze any frame while debugging.
 
 ---
 
-## 质感细节（容易被忽略但致命）
+## Finish Details That Are Easy to Miss but Decisive
 
-### 1. SVG noise texture
+### 1. SVG Noise Texture
 
-浅色底最怕「太平」。叠加一层极弱的 fractalNoise：
+The greatest danger on a light background is flatness. Add an extremely subtle `fractalNoise` layer:
 
 ```html
 <style>
@@ -273,9 +273,9 @@ requestAnimationFrame(function tick(now) {
 </style>
 ```
 
-看上去没区别，去掉就知道有了。
+It seems invisible until you remove it; then its contribution becomes obvious.
 
-### 2. 角落品牌标识
+### 2. Corner Brand Label
 
 ```html
 <div class="corner-brand">
@@ -295,44 +295,44 @@ requestAnimationFrame(function tick(now) {
 }
 ```
 
-只在作品墙 scene 显示，淡入淡出。像美术馆展签。
+Show it only during the gallery-wall scene and fade it in and out. It should resemble a museum label.
 
-### 3. 品牌收束 wordmark
+### 3. Closing Brand Wordmark
 
 ```css
 .brand-wordmark {
   font-family: var(--sans);
   font-size: 148px;
   font-weight: 700;
-  letter-spacing: -0.045em;   /* 负字距是关键，让字紧凑成标志 */
+  letter-spacing: -0.045em;   /* Negative tracking is critical: it condenses type into a mark */
 }
 .brand-wordmark .accent {
   color: var(--accent);
-  font-weight: 500;           /* accent字符反而细一点，视觉差 */
+  font-weight: 500;           /* The accent character is intentionally lighter for contrast */
 }
 ```
 
-`letter-spacing: -0.045em` 是苹果产品页大字的标准做法。
+`letter-spacing: -0.045em` is the standard treatment for large type on Apple product pages.
 
 ---
 
-## 常见失败模式
+## Common Failure Modes
 
-| 症状 | 原因 | 解法 |
+| Symptom | Cause | Solution |
 |---|---|---|
-| 看起来像 PPT 模板 | 卡片没有 shadow / hairline | 加上两层 box-shadow + 1px border |
-| 倾斜感廉价 | 只用了 rotateY 没加 rotateZ | 加 ±2-3deg rotateZ 打破工整 |
-| Pan 感觉「卡顿」 | 用了 setTimeout 或 CSS keyframes 循环 | 用 rAF + sin/cos 连续函数 |
-| Focus 时字看不清 | 复用了 gallery 瓦片的低分图 | 独立 overlay + 原图 src 直连 |
-| 背景太空 | 纯色 `#F5F5F7` | 叠加 SVG fractalNoise 0.5 opacity |
-| 字体太"互联网" | 只有 Inter | 加 Serif（中英各一）+ mono 三栈 |
+| Looks like a PowerPoint template | Cards have no shadow or hairline | Add the two-layer `box-shadow` and 1 px border |
+| Tilt feels cheap | Only `rotateY` is present, without `rotateZ` | Add ±2–3 deg `rotateZ` to break the regularity |
+| Pan appears to stutter | Loop uses `setTimeout` or CSS keyframes | Use `requestAnimationFrame` + continuous sine/cosine functions |
+| Type becomes illegible during focus | Reused the gallery tile's low-resolution image | Use a separate overlay pointing directly to the original image |
+| Background feels empty | Flat `#F5F5F7` color | Add SVG `fractalNoise` at 0.5 opacity |
+| Typography feels too “internet” | Uses only Inter | Add serif faces for English and Chinese plus a mono role |
 
 ---
 
-## 引用
+## References
 
-- 完整实现样本：hero-animation-v5.html（作者本地样本，未随仓库分发）
-- 原始灵感：claude.ai/design hero 视频
-- 参考审美：Apple 产品页、Dribbble shot 集合页
+- Complete implementation sample: `hero-animation-v5.html` (author's local sample; not distributed with the repository)
+- Original inspiration: the hero video at `claude.ai/design`
+- Aesthetic references: Apple product pages and Dribbble gallery pages
 
-遇到「多件高质量产出要陈列」的动画需求，直接从此文件 copy 骨架，换内容 + 调 timing 即可。
+When an animation needs to present several high-quality outputs, copy the skeleton from this file directly, replace the content, and adjust the timing.

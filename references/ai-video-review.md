@@ -1,59 +1,59 @@
-# AI看片评审闭环（ai-review-video.py）
+# AI Video Review Feedback Loop (`ai-review-video.py`)
 
-> 终渲MP4喂给视频理解模型（seed-2.0-lite），按固定checklist出结构化评审报告。
-> 定位：**终渲后、交付前**的最后一道质检，替代人肉全片重看。不替代逐帧verify-video.sh。
+> Feed the final MP4 render to a video-understanding model (`seed-2.0-lite`) and produce a structured review report from a fixed checklist.
+> Purpose: the final quality gate **after the final render and before delivery**, replacing a manual rewatch of the entire video. It does not replace frame-by-frame checks with `verify-video.sh`.
 
-## 何时用
+## When to Use It
 
-- 终渲60fps成片出来后、交付/混音前，跑一遍
-- SFX混音版出来后再跑一遍（onset核对只在有音轨时生效）
-- 改完大问题重渲后复检
-- 不要在试渲30fps阶段跑（分辨率/节奏未定，浪费调用）
+- Run it after the final 60 fps video has been rendered and before delivery or mixing.
+- Run it again after the SFX mix is ready (onset verification works only when an audio track is present).
+- Run it again after fixing major issues and rerendering.
+- Do not run it during the 30 fps test-render stage (resolution and pacing are not yet final, so the call would be wasted).
 
-## 怎么用
+## How to Use It
 
 ```bash
-cd 项目目录 && unset ALL_PROXY   # 脚本内已免疫代理，unset是双保险
+cd project-directory && unset ALL_PROXY   # The script already bypasses proxies; unset is an extra safeguard
 uv run ~/.claude/skills/huashu-design/scripts/ai-review-video.py \
-  --video 成片.mp4 \
-  --context 导演稿.md        # 强烈建议带上：模型靠它区分「设计意图」和「bug」
+  --video final-video.mp4 \
+  --context director-script.md        # Strongly recommended: this lets the model distinguish “design intent” from a “bug”
 ```
 
-- 报告落盘：视频同目录 `<视频名>-AI评审.md`（`--output`可改）
-- `--segment-len` 默认60秒一段；`--model` 默认 doubao-seed-2-0-lite-260215
-- 210秒片实测：6次API调用，6-10分钟，tokens约18万in/2万out（lite档，费用分钱级）
+- The report is written beside the video as `<video-name>-AI-review.md` (override with `--output`).
+- `--segment-len` defaults to 60 seconds per segment; `--model` defaults to `doubao-seed-2-0-lite-260215`.
+- Measured on a 210-second video: 6 API calls, 6–10 minutes, approximately 180,000 input tokens and 20,000 output tokens (lite tier; cost measured in cents).
 
-## 调用链路（三层混合，不是纯模型）
+## Processing Pipeline (Three-Layer Hybrid, Not a Pure Model Pass)
 
-1. **ffmpeg客观检测**（确定性，不会漏）：
-   - `silencedetect` → 音效onset时间表（模型**听不到**视频音轨，2026-07-17实测）
-   - `freezedetect` → ≥3秒完全静止段清单
-2. **模型分段看片**：60s/段压缩后送审（1280宽/15fps/crf28，扁平动画约0.5MB/分钟），
-   每段prompt含checklist+导演稿+该段的onset/静止段数据，时间点换算成原片时间
-3. **模型全片低清pass**：960宽/10fps全片单独送审，专查跨段叙事连贯/hero贯穿/整体节奏
-4. 文本汇总call按①-⑧合并；分段原始记录+客观检测数据全部保留在报告附录
+1. **Objective `ffmpeg` detection** (deterministic and comprehensive):
+   - `silencedetect` → SFX-onset timeline (the model **cannot hear** the video's audio track, as verified on 2026-07-17).
+   - `freezedetect` → list of completely static intervals lasting at least 3 seconds.
+2. **Segment-by-segment model review**: compress and submit the video in 60-second segments (1280 px wide / 15 fps / CRF 28; flat animation is approximately 0.5 MB per minute).
+   Each segment prompt includes the checklist, director's script, and onset/freeze data for that segment; timestamps are converted back to the original video's timeline.
+3. **Low-resolution full-video model pass**: submit the entire video separately at 960 px wide / 10 fps, specifically to inspect cross-segment narrative continuity, hero-element continuity, and overall pacing.
+4. A text-aggregation call consolidates the findings under items ①–⑧; all raw segment notes and objective detection data remain in the report appendix.
 
-## checklist与严重度
+## Checklist and Severity
 
-①黑帧/渲染残缺 ②文字裁切/错字 ③元素重叠遮挡 ④叙事连贯（过渡三分类：硬切/淡入淡出/morph）
-⑤hero贯穿性 ⑥节奏死段（客观清单+模型判断刻意hold还是真死段）⑦音效打点（onset+画面事件核对）
-⑧构图失衡/空白
+① Black frames / incomplete renders ② Cropped text / typos ③ Overlapping or obscured elements ④ Narrative continuity (three transition classes: hard cut / fade in or out / morph)
+⑤ Hero-element continuity ⑥ Dead spots in the pacing (objective list + model judgment: intentional hold or truly dead interval) ⑦ Sound-effect sync points (cross-check audio onset against visual event)
+⑧ Unbalanced composition / empty areas
 
-⚠️致命=交付前必修 | ⚡重要=观感明显受损 | 💡建议=锦上添花
+⚠️ Critical = must fix before delivery | ⚡ Important = clearly harms the viewing experience | 💡 Suggestion = optional polish
 
-## 局限（用报告前必读）
+## Limitations (Read Before Using the Report)
 
-- **模型听不到声音**：⑦是「音轨onset时刻画面有没有事件」的单向核对，
-  判断不了音效选得对不对、音量对不对、BGM情绪对不对
-- **看不到帧级细节**：1-2帧的闪烁、细微抖动、精确色值偏差、亚像素对齐抓不到，
-  这些仍靠 verify-video.sh 截帧人工看
-- **过渡类型判断偏严**：压缩到15fps后，快速交叉淡出可能被报成「硬切」，
-  分段与全片pass矛盾时汇总会标「存疑」——存疑项自己抽帧确认再改
-- **「刻意hold vs 死段」是模型意见**：b-roll垫口播的长定格常被放行，成片独立观看时要自己再判
-- 调用失败（网络/key/额度）会如实写进报告头，绝不编造评审结果；失败段的时间范围会标出
+- **The model cannot hear audio**: item ⑦ checks only whether a visual event occurs at each audio-track onset.
+  It cannot judge whether the chosen sound effect is appropriate, whether its volume is right, or whether the BGM's mood fits.
+- **It cannot see frame-level detail**: it will miss one- or two-frame flashes, subtle jitter, exact color-value deviations, and subpixel alignment errors.
+  Continue to inspect extracted frames manually with `verify-video.sh` for those issues.
+- **Transition classification is overly strict**: after compression to 15 fps, a fast crossfade may be reported as a “hard cut.”
+  When the segment and full-video passes conflict, the summary marks the finding as “uncertain.” Extract the relevant frames and confirm it yourself before changing anything.
+- **“Intentional hold vs. dead spot” is the model's opinion**: a long still used as B-roll under narration will often be accepted, but you must judge it again when the final video is intended to stand on its own.
+- A failed call (network, key, or quota) is recorded honestly at the top of the report; the script never fabricates review results. The affected time range is explicitly marked.
 
-## 实测基准
+## Measured Baseline
 
-首跑对象：B00-前三分钟主线-SFX.mp4（210s）。模型自主发现幕间过渡问题和hero断点方向正确
-但把fade误报硬切；纯模型抓死段只中3/14，接入freezedetect后全覆盖。结论：客观检测层是
-这个闭环的下限保证，模型负责语义判断。
+First test video: `B00-前三分钟主线-SFX.mp4` (original filename; “B00—first three minutes, main thread—SFX”; 210 seconds). The model correctly identified the direction of inter-scene transition problems and hero-element discontinuities,
+but misclassified fades as hard cuts. Pure model review found only 3 of 14 dead intervals; adding `freezedetect` achieved complete coverage. Conclusion: the objective detection layer
+provides the minimum quality guarantee for this loop, while the model supplies semantic judgment.

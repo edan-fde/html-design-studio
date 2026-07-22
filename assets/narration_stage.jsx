@@ -1,36 +1,40 @@
 /**
- * narration_stage.jsx · 解说驱动 Stage
+ * narration_stage.jsx · Narration-driven Stage
  *
  * ╔══════════════════════════════════════════════════════════════════╗
- * ║  🛑 用这套工具之前必读：references/voiceover-pipeline.md         ║
+ * ║  🛑 Required reading before use: references/voiceover-pipeline.md ║
  * ║                                                                  ║
- * ║  铁律 #1: 整片是一个连续的运动叙事，不是一组独立场景             ║
+ * ║  Rule #1: The film is one continuous motion narrative, not        ║
+ * ║           a collection of independent scenes.                     ║
  * ║          You are not making 7 slides. You are directing 1 movie. ║
  * ║                                                                  ║
- * ║  铁律 #2: 选定 hero element 跨 scene 持续存在，不要每段一个新布局║
+ * ║  Rule #2: Keep one hero element alive across scenes; do not        ║
+ * ║           introduce a new layout for every scene.                  ║
  * ║                                                                  ║
- * ║  铁律 #3: scene 之间禁止硬切（opacity 1→0/0→1）                  ║
- * ║          要 morph，不要 cut                                      ║
+ * ║  Rule #3: Never hard-cut between scenes (opacity 1→0 / 0→1).      ║
+ * ║           Morph; do not cut.                                      ║
  * ║                                                                  ║
- * ║  失败模式 #1（本 skill v1 实战踩坑）：                           ║
- * ║          每个 Scene 各自独立 layout + cue 用 fade-up + scene 切换║
- * ║          整页 opacity 切换 = 带配音的 PowerPoint = 质感归零       ║
+ * ║  Failure mode #1 (learned in production with skill v1):           ║
+ * ║           independent layout per Scene + fade-up cues + scene     ║
+ * ║           switching. Full-page opacity swaps create a narrated    ║
+ * ║           PowerPoint and destroy the production value.            ║
  * ║                                                                  ║
- * ║  正确做法：把 hero 直接放在 <NarrationStage> 子级（不进 Scene）  ║
- * ║          用 useNarration() 在 hero 里读 time/scene/cue 状态      ║
- * ║          hero 自己根据当前时间决定形态 → 跨 scene 连续运动       ║
+ * ║  Correct approach: put the hero directly under <NarrationStage>,  ║
+ * ║           outside Scene. Read time/scene/cue state in the hero     ║
+ * ║           with useNarration(), and let it derive its form from     ║
+ * ║           time so motion remains continuous across scenes.        ║
  * ╚══════════════════════════════════════════════════════════════════╝
  *
- * 用法（inline 进 HTML 的 <script type="text/babel">）：
+ * Usage (inline in an HTML <script type="text/babel">):
  *   const { NarrationStage, Scene, Cue, useNarration } = NarrationStageLib;
  *
  *   const App = () => (
  *     <NarrationStage timeline={TIMELINE} audioSrc="voiceover.mp3"
  *                     width={1920} height={1080}>
  *       <Scene id="intro">
- *         <h1>什么是 token</h1>
+ *         <h1>What is a token?</h1>
  *         <Cue id="question">
- *           {(triggered) => triggered && <p>↑ 这是问题</p>}
+ *           {(triggered) => triggered && <p>↑ This is the question</p>}
  *         </Cue>
  *       </Scene>
  *       <Scene id="token-2">
@@ -43,16 +47,16 @@
  *     </NarrationStage>
  *   );
  *
- * 时间源（自动二选一）：
- *   - 录视频模式（window.__recording === true）：走 window.__time（外部 driver 推帧）
- *   - 实播模式：走 <audio> 的 currentTime（用户点播放时和音频严格同步）
+ * Time source (selected automatically):
+ *   - Recording mode (window.__recording === true): use window.__time (frames driven externally)
+ *   - Live playback: use <audio>.currentTime (strictly synchronized when the user presses Play)
  *
- * 与 render-video.js 兼容：
- *   - tick 第一帧设 window.__ready = true
- *   - 录视频时检测 window.__recording 强制不播 audio、用 window.__time
- *   - 暴露 window.__totalDuration 给 driver 算总帧数
+ * render-video.js compatibility:
+ *   - Set window.__ready = true on the first tick
+ *   - In recording mode, detect window.__recording, suppress audio, and use window.__time
+ *   - Expose window.__totalDuration so the driver can calculate total frames
  *
- * 依赖：React 18 + ReactDOM 18 + Babel standalone（同 animations.jsx）
+ * Dependencies: React 18 + ReactDOM 18 + Babel standalone (same as animations.jsx)
  */
 
 const NarrationStageLib = (() => {
@@ -65,15 +69,15 @@ const NarrationStageLib = (() => {
   });
 
   /**
-   * 主组件：吃 timeline + audio，提供 context
+   * Main component: consumes timeline + audio and provides context
    *
    * Props:
-   *   timeline       timeline.json 对象（必需）
-   *   audioSrc       voiceover.mp3 路径（必需）
-   *   width/height   Stage 尺寸，默认 1920x1080
-   *   background     默认 '#0e0e0e'
-   *   controls       是否显示底部播放条，默认 true
-   *   children       动画内容（用 <Scene>/<Cue> 组织）
+   *   timeline       timeline.json object (required)
+   *   audioSrc       path to voiceover.mp3 (required)
+   *   width/height   Stage dimensions, default 1920x1080
+   *   background     default '#0e0e0e'
+   *   controls       show the bottom playback bar, default true
+   *   children       animation content organized with <Scene>/<Cue>
    */
   function NarrationStage({
     timeline,
@@ -89,25 +93,25 @@ const NarrationStageLib = (() => {
     const [playing, setPlaying] = React.useState(false);
     const recording = typeof window !== 'undefined' && window.__recording === true;
 
-    // 暴露给 render-video.js
+    // Expose state to render-video.js.
     React.useEffect(() => {
       if (typeof window === 'undefined') return;
       window.__totalDuration = timeline.totalDuration;
       window.__ready = true;
     }, [timeline.totalDuration]);
 
-    // 时间 tick
+    // Time tick.
     React.useEffect(() => {
       let raf;
       if (recording) {
-        // Seek-render（render-video-seek.js 注入 window.__seekRender）：冻结自驱时钟，
-        // 由外部 window.__seek(t) 逐帧推进。每帧都是确定性 seek，不起 rAF。
+        // Seek rendering (window.__seekRender injected by render-video-seek.js): freeze the self-driven clock
+        // and let external window.__seek(t) advance frame by frame. Every frame is a deterministic seek; no rAF.
         if (typeof window !== 'undefined' && window.__seekRender) {
           window.__seek = (t) => setTime(Math.min(t, timeline.totalDuration));
           return;
         }
-        // 录视频模式：rAF wall-clock 自驱动从 0 开始
-        // 兼容 render-video.js（它依赖动画自然推进 + window.__seek 复位）
+        // Recording mode: self-drive from zero with wall-clock rAF.
+        // Compatible with render-video.js, which relies on natural animation progress + window.__seek reset.
         let startedAt = null;
         const tick = (now) => {
           if (startedAt === null) startedAt = now;
@@ -115,7 +119,7 @@ const NarrationStageLib = (() => {
           raf = requestAnimationFrame(tick);
         };
         raf = requestAnimationFrame(tick);
-        // 暴露 __seek 给 render-video.js 在 ready 后调 __seek(0) 复位
+        // Expose __seek so render-video.js can call __seek(0) after ready and reset the clock.
         if (typeof window !== 'undefined') {
           window.__seek = (t) => {
             startedAt = performance.now() - t * 1000;
@@ -123,7 +127,7 @@ const NarrationStageLib = (() => {
           };
         }
       } else {
-        // 实播模式：跟随 audio.currentTime
+        // Live playback: follow audio.currentTime.
         const tick = () => {
           if (audioRef.current && !audioRef.current.paused) {
             setTime(audioRef.current.currentTime);
@@ -135,10 +139,10 @@ const NarrationStageLib = (() => {
       return () => cancelAnimationFrame(raf);
     }, [recording, timeline.totalDuration]);
 
-    // 当前 scene
+    // Current scene.
     const currentScene = React.useMemo(() => {
       if (!timeline.scenes) return null;
-      // 找到 start <= time < end 的段。最后一段保留到 end
+      // Find the scene where start <= time < end. Keep the final scene through its end.
       for (let i = 0; i < timeline.scenes.length; i++) {
         const s = timeline.scenes[i];
         const next = timeline.scenes[i + 1];
@@ -149,7 +153,7 @@ const NarrationStageLib = (() => {
 
     const sceneTime = currentScene ? Math.max(0, time - currentScene.start) : 0;
 
-    // 找 cue 状态（按 absoluteTime 比较，跨 scene 也能查）
+    // Resolve cue state by absoluteTime, including cues in other scenes.
     const allCues = React.useMemo(() => {
       const map = {};
       for (const s of timeline.scenes || []) {
@@ -169,7 +173,7 @@ const NarrationStageLib = (() => {
       [allCues, time],
     );
 
-    /** 触发后多少秒 0→1，>1 后保持 1。用于 cue 后做渐入动画 */
+    /** Ramp from 0→1 for the specified seconds after triggering, then stay at 1. Used for post-cue reveals. */
     const cueProgress = React.useCallback(
       (cueId, ramp = 0.5) => {
         const c = allCues[cueId];
@@ -184,7 +188,7 @@ const NarrationStageLib = (() => {
 
     const ctx = { time, scene: currentScene, sceneTime, isCueTriggered, cueProgress, timeline };
 
-    // play/pause/seek 控制
+    // Play/pause/seek controls.
     const handlePlayPause = () => {
       if (!audioRef.current) return;
       if (audioRef.current.paused) {
@@ -215,7 +219,7 @@ const NarrationStageLib = (() => {
             background,
             overflow: 'hidden',
             color: '#fff',
-            fontFamily: '-apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Noto Sans SC", sans-serif',
           }}
         >
           {children}
@@ -287,12 +291,12 @@ const NarrationStageLib = (() => {
   }
 
   /**
-   * Scene 包裹器：只在指定 scene id 激活时渲染 children
+   * Scene wrapper: render children only while the specified scene id is active
    *
    * Props:
-   *   id        scene id（对应 timeline.scenes[].id）
-   *   children  渲染内容；可以是 ReactNode 或 (sceneTime, sceneInfo) => ReactNode
-   *   keepMounted 默认 false。设 true 则一直挂载只切换 visibility（动画连贯需要时用）
+   *   id          scene id (corresponds to timeline.scenes[].id)
+   *   children    content; either a ReactNode or (sceneTime, sceneInfo) => ReactNode
+   *   keepMounted default false. Set true to keep mounted and toggle visibility (useful for animation continuity)
    */
   function Scene({ id, children, keepMounted = false }) {
     const { scene, sceneTime } = React.useContext(NarrationContext);
@@ -315,12 +319,12 @@ const NarrationStageLib = (() => {
   }
 
   /**
-   * Cue 包裹器：监听 cue 触发状态
+   * Cue wrapper: observe a cue's trigger state
    *
    * Props:
-   *   id        cue id（对应 timeline.scenes[].cues[].id）
-   *   ramp      cue 触发后 progress 0→1 的 ramp 时长（秒），默认 0.5
-   *   children  必须是函数：(triggered: bool, progress: 0-1) => ReactNode
+   *   id        cue id (corresponds to timeline.scenes[].cues[].id)
+   *   ramp      seconds for progress to ramp from 0→1 after the cue, default 0.5
+   *   children  must be a function: (triggered: bool, progress: 0-1) => ReactNode
    */
   function Cue({ id, ramp = 0.5, children }) {
     const { isCueTriggered, cueProgress } = React.useContext(NarrationContext);
@@ -329,99 +333,139 @@ const NarrationStageLib = (() => {
     return children(triggered, progress);
   }
 
-  /** Hook：在自定义组件里直接拿 narration 状态 */
+  /** Hook: access narration state directly inside a custom component. */
   function useNarration() {
     return React.useContext(NarrationContext);
   }
 
   /**
-   * splitChunkToLines · 把一段文字按标点切成 ≤maxLen 字的短行
+   * splitChunkToLines · Wrap text into subtitle lines no wider than maxLen visual units
    *
-   * 用于字幕显示——B 站标准是单行 ≤12 字便于阅读。本函数：
-   * 1. 先按强标点（。！？\n）切句，绝不跨句号截断
-   * 2. 每句 ≤ maxLen 直接用，否则按弱标点（，、；：）切片合并
-   * 3. 中英混合：英文/数字按 0.5 字算视觉宽度
-   * 4. 兜底硬切（罕见：单个标点段超 maxLen）
+   * Language-aware behavior:
+   * 1. Break sentences at strong punctuation in English and CJK text (.!?。！？ and newlines).
+   * 2. Wrap English at word boundaries and CJK text at character boundaries.
+   * 3. Count Latin letters/digits at roughly half a CJK em, preserving sensible mixed-language widths.
+   * 4. Split inside a token only as a last resort (for example, an unusually long URL).
    *
-   * @param text   原文
-   * @param maxLen 单行最大视觉长度，默认 13（≈12 字 + 一个标点）
-   * @returns 切好的字幕行数组
+   * @param text   source text
+   * @param maxLen maximum visual width per line, default 13 (about 26 Latin characters or 13 CJK glyphs)
+   * @returns wrapped subtitle lines
    */
   function visualLen(s) {
     let n = 0;
-    for (const ch of s) n += /[a-zA-Z0-9 .,'":;\-]/.test(ch) ? 0.5 : 1;
+    for (const ch of s) {
+      if (/\s/u.test(ch)) n += 0.25;
+      else if (/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(ch)) n += 1;
+      else if (/[\p{L}\p{N}]/u.test(ch)) n += 0.5;
+      else n += 0.45;
+    }
     return n;
   }
+
+  function textTokens(text) {
+    return text.match(/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]|[\p{L}\p{N}]+(?:['’._/@:+-][\p{L}\p{N}]+)*|\s+|[^\s]/gu) || [];
+  }
+
+  function hardWrapToken(token, maxLen) {
+    const parts = [];
+    let current = '';
+    for (const ch of token) {
+      if (current && visualLen(current + ch) > maxLen) {
+        parts.push(current);
+        current = ch;
+      } else {
+        current += ch;
+      }
+    }
+    if (current) parts.push(current);
+    return parts;
+  }
+
   function splitChunkToLines(text, maxLen = 13) {
     const lines = [];
-    const sentences = [];
-    let buf = '';
-    for (const ch of text) {
-      buf += ch;
-      if ('。！？\n'.includes(ch)) { if (buf.trim()) sentences.push(buf.trim()); buf = ''; }
-    }
-    if (buf.trim()) sentences.push(buf.trim());
-    for (const sent of sentences) {
-      if (visualLen(sent) <= maxLen) { lines.push(sent); continue; }
-      const parts = [];
-      let pbuf = '';
-      for (const ch of sent) {
-        pbuf += ch;
-        if ('，、；：'.includes(ch)) { parts.push(pbuf); pbuf = ''; }
+    let line = '';
+
+    const flush = () => {
+      const clean = line.trim();
+      if (clean) lines.push(clean);
+      line = '';
+    };
+
+    for (const token of textTokens(String(text || ''))) {
+      if (/\n/u.test(token)) {
+        flush();
+        continue;
       }
-      if (pbuf) parts.push(pbuf);
-      let merged = '';
-      for (const p of parts) {
-        if (visualLen(merged) + visualLen(p) <= maxLen) merged += p;
-        else { if (merged) lines.push(merged); merged = p; }
-      }
-      if (merged) {
-        if (visualLen(merged) <= maxLen) lines.push(merged);
-        else {
-          let hbuf = '';
-          for (const ch of merged) { hbuf += ch; if (visualLen(hbuf) >= maxLen) { lines.push(hbuf); hbuf = ''; } }
-          if (hbuf) lines.push(hbuf);
+
+      const isSpace = /^\s+$/u.test(token);
+      const attachesBackward = /^[,.;:!?%)\]}。！？；：、]/u.test(token);
+      const candidate = line + token;
+      if (!isSpace && !attachesBackward && line.trim() && visualLen(candidate) > maxLen) flush();
+
+      if (!isSpace && visualLen(token) > maxLen) {
+        for (const part of hardWrapToken(token, maxLen)) {
+          if (line.trim() && visualLen(line + part) > maxLen) flush();
+          line += part;
+          if (visualLen(line) >= maxLen) flush();
         }
+      } else if (!(isSpace && !line)) {
+        line += token;
       }
+
+      if (/[.!?。！？]\s*$/u.test(token)) flush();
     }
-    return lines.filter(l => l.trim());
+    flush();
+    return lines;
   }
 
   /**
-   * Subtitles · B 站风格字幕组件（白光晕深墨字，无背景，按 chunks 时间显示）
+   * Subtitles · Clean halo subtitle component (dark ink with a pale halo, no background, timed by chunks)
    *
-   * 自动从当前 scene.chunks 取活动 chunk，按 splitChunkToLines 切成短行，
-   * 按字数比例分配 chunk 时间窗给每行显示。
+   * Reads the active chunk from the current scene.chunks, wraps it with splitChunkToLines,
+   * and allocates the chunk's time window to each line in proportion to visual length.
    *
-   * 必需：timeline.scenes[].chunks[]（narrate-pipeline.mjs 已默认输出）
+   * Required: timeline.scenes[].chunks[] (emitted by narrate-pipeline.mjs by default)
    *
-   * Props（可覆盖默认样式）：
-   *   bottom    距底部像素，默认 90（不贴边）
-   *   fontSize  字号，默认 32
-   *   color     字色，默认深墨 #1a1a1a（适合浅纸白底）
-   *   haloColor 光晕色，默认 rgba(245,241,232,0.9)（适合 #f5f1e8 底）
-   *   maxLen    单行最大视觉长度，默认 13
+   * Props (override the default style):
+   *   bottom    pixels from the bottom, default 90 (keeps text away from the edge)
+   *   fontSize  font size, default 32
+   *   color     text color, default dark ink #1a1a1a (for pale paper backgrounds)
+   *   haloColor halo color, default rgba(245,241,232,0.9) (for #f5f1e8 backgrounds)
+   *   maxLen    maximum visual width per line, default 13
    *
-   * 深底场景：把 color 改成 '#fff'，haloColor 改成 'rgba(0,0,0,0.85)' 即可。
+   * For dark scenes, set color to '#fff' and haloColor to 'rgba(0,0,0,0.85)'.
    *
-   * 卡拉OK模式（字级高亮，需 timeline chunks 里带 words——narrate-pipeline.mjs 默认输出）：
-   *   karaoke       true 开启，默认 false。整行显示，读到哪个字哪个字变色
-   *   karaokeColor  已读字的颜色，默认品牌橙 '#e8590c'
-   *   chunk 没有 words 数据时自动回落到普通 chunk 模式，调用方不用做判断。
-   *   注意：words 是 TN 后文本（"2025"→"二零二五"），卡拉OK行直接由 words 拼出，
-   *   保证高亮与发音严格对齐（与 chunk.text 原文可能有差异）。
+   * Karaoke mode (word-level highlighting; requires words in timeline chunks, emitted by narrate-pipeline.mjs by default):
+   *   karaoke       true enables it, default false. Show a full line and recolor each spoken token
+   *   karaokeColor  color of spoken tokens, default brand orange '#e8590c'
+   *   If a chunk has no words data, fall back automatically to ordinary chunk mode.
+   *   Note: words contain text-normalized output (for example, "2025" may become "twenty twenty-five").
+   *   Karaoke lines use those tokens directly so highlighting remains aligned with speech; they may differ from chunk.text.
    */
+  function shouldInsertSpace(previous, next) {
+    if (!previous || !next || /\s$/u.test(previous) || /^\s/u.test(next)) return false;
+    if (/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(previous + next)) return false;
+    if (/^[,.;:!?%)\]}。！？；：、]/u.test(next)) return false;
+    if (/[(\[{]$/u.test(previous)) return false;
+    const previousIsWordToken = /[\p{L}\p{N}][,.;:!?%)\]}"'’]?$/u.test(previous);
+    const nextIsWordToken = /^["'‘“]?[\p{L}\p{N}]/u.test(next);
+    return previousIsWordToken && nextIsWordToken;
+  }
+
   function splitWordsToLines(words, maxLen = 13) {
-    // 把字级时间戳 token 贪心打包成 ≤maxLen 的行；强标点（。！？）后强制换行，绝不跨句号
+    // Greedily pack timestamped tokens into lines ≤maxLen; preserve English word boundaries and break after strong English/CJK punctuation.
     const lines = [];
     let cur = [];
     let curLen = 0;
     for (const w of words) {
-      const wLen = visualLen(w.text);
+      const prev = cur[cur.length - 1];
+      const separator = prev && shouldInsertSpace(prev.text, w.text) ? ' ' : '';
+      const wLen = visualLen(separator + w.text);
       if (cur.length > 0 && curLen + wLen > maxLen) { lines.push(cur); cur = []; curLen = 0; }
       cur.push(w);
-      curLen += wLen;
-      if (/[。！？]\s*$/.test(w.text)) { lines.push(cur); cur = []; curLen = 0; }
+      const actualPrev = cur.length > 1 ? cur[cur.length - 2] : null;
+      curLen += visualLen((actualPrev && shouldInsertSpace(actualPrev.text, w.text) ? ' ' : '') + w.text);
+      if (/[.!?。！？]\s*$/u.test(w.text)) { lines.push(cur); cur = []; curLen = 0; }
     }
     if (cur.length > 0) lines.push(cur);
     return lines;
@@ -433,7 +477,7 @@ const NarrationStageLib = (() => {
     const active = scene.chunks.find(c => time >= c.absoluteStart && time < c.absoluteEnd);
     if (!active) return null;
 
-    // —— 卡拉OK模式：整行显示 + 逐字高亮（读到即变色，无 CSS transition，seek 渲染确定性）——
+    // —— Karaoke mode: show a full line and highlight tokens as spoken (no CSS transition, deterministic seek rendering). ——
     if (karaoke && active.words && active.words.length > 0) {
       const wordLines = splitWordsToLines(active.words, maxLen);
       let activeWLine = wordLines[0];
@@ -442,13 +486,13 @@ const NarrationStageLib = (() => {
         else break;
       }
       const lineStart = activeWLine[0].absoluteStart;
-      const lineProg = Math.max(0, Math.min(1, (time - (lineStart - 0.15)) / 0.15)); // 行提前 0.15s 淡入
+      const lineProg = Math.max(0, Math.min(1, (time - (lineStart - 0.15)) / 0.15)); // Fade the line in 0.15s early.
       return React.createElement('div', {
         style: { position: 'absolute', left: 0, right: 0, bottom, display: 'flex', justifyContent: 'center', pointerEvents: 'none', zIndex: 50 },
       }, React.createElement('div', {
         key: lineStart,
         style: {
-          fontFamily: '"PingFang SC", "Noto Sans SC", -apple-system, sans-serif',
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Noto Sans SC", sans-serif',
           fontSize, fontWeight: 600,
           letterSpacing: '0.04em', lineHeight: 1.2, textAlign: 'center',
           textShadow: `0 0 6px ${haloColor}, 0 0 12px ${haloColor}, 0 1px 2px rgba(255,255,255,0.5)`,
@@ -457,10 +501,10 @@ const NarrationStageLib = (() => {
       }, activeWLine.map((w, i) => React.createElement('span', {
         key: i,
         style: { color: time >= w.absoluteStart ? karaokeColor : color },
-      }, w.text))));
+      }, `${i > 0 && shouldInsertSpace(activeWLine[i - 1].text, w.text) ? ' ' : ''}${w.text}`))));
     }
 
-    // —— 普通 chunk 模式（原有行为，不变）——
+    // —— Ordinary chunk mode. ——
     const lines = splitChunkToLines(active.text, maxLen);
     if (lines.length === 0) return null;
     const totalLen = lines.reduce((s, l) => s + visualLen(l), 0);
@@ -479,7 +523,7 @@ const NarrationStageLib = (() => {
     }, React.createElement('div', {
       key: lineStart,
       style: {
-        fontFamily: '"PingFang SC", "Noto Sans SC", -apple-system, sans-serif',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Noto Sans SC", sans-serif',
         fontSize, fontWeight: 600, color,
         letterSpacing: '0.04em', lineHeight: 1.2, textAlign: 'center',
         textShadow: `0 0 6px ${haloColor}, 0 0 12px ${haloColor}, 0 1px 2px rgba(255,255,255,0.5)`,
@@ -489,25 +533,25 @@ const NarrationStageLib = (() => {
   }
 
   /**
-   * useSceneFade · scene 内辅助元素的软淡入淡出 helper
+   * useSceneFade · Soft fade helper for supporting elements within a scene
    *
-   * 铁律第二条要求 scene 之间禁止硬切——但 scene 内辅助元素（数据卡、引用块）
-   * 一旦 cue 触发后默认会一直亮到 scene 结束。如果不淡出，离开本段进入下段时
-   * 这些元素会突兀地存在或瞬间消失。本 hook 提供 [入场淡入 → hold → 出场淡出] 的统一软切换。
+   * Rule #2 forbids hard cuts between scenes, but supporting elements within a scene (data cards, pull quotes)
+   * remain visible until the scene ends after their cue triggers. Without a fade-out they persist awkwardly or
+   * disappear abruptly at the next scene. This hook provides a consistent [fade in → hold → fade out] transition.
    *
-   * 用法（把 op 乘进辅助元素的 opacity）：
-   *   const op = useSceneFade('md-side', 0.6, 0.8);  // 进 0.6s, 出 0.8s
+   * Usage (multiply op into the supporting element's opacity):
+   *   const op = useSceneFade('md-side', 0.6, 0.8);  // 0.6s in, 0.8s out
    *   <Cue id="agents-md">{(t, p) => (
    *     <div style={{ opacity: op * p }}>...</div>
    *   )}</Cue>
    *
-   * 这样数据卡片在 md-side 段开始 0.6s 内淡入，在段结束前 0.8s 开始淡出，
-   * 与下一段的辅助元素淡入形成 overlap，画面不出现硬切。
+   * The data card now fades in during the first 0.6s of md-side and begins fading out 0.8s before the scene ends.
+   * It overlaps the next scene's supporting-element fade-in, eliminating a hard cut.
    *
    * @param sceneId  scene id
-   * @param fadeIn   入场淡入秒数（默认 0.5）
-   * @param fadeOut  出场淡出秒数（默认 0.5）
-   * @returns 0-1 之间的不透明度倍率
+   * @param fadeIn   entry fade duration in seconds (default 0.5)
+   * @param fadeOut  exit fade duration in seconds (default 0.5)
+   * @returns opacity multiplier between 0 and 1
    */
   function useSceneFade(sceneId, fadeIn = 0.5, fadeOut = 0.5) {
     const { time, timeline } = React.useContext(NarrationContext);

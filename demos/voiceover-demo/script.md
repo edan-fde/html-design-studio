@@ -1,17 +1,17 @@
 ---
-title: 什么是 token
+title: What Is a Token?
 gap: 0.4
 ---
 
 ## intro
-你有没有想过，[[cue:question]]当我们和 AI 对话的时候，AI 到底是怎么理解我们的话的呢。
+Have you ever wondered, [[cue:question]]when we talk to an AI, how does it make sense of what we say?
 
 ## token-1
-答案是它根本不理解汉字，[[cue:reveal]]它只认识 token。
+It does not read language the way we do. [[cue:reveal]]It reads tokens.
 
 ## token-2
-你可以把 token 理解成 AI 的最小信息单位。
-比如「人工智能」这四个字，[[cue:split]]在 AI 眼里可能是两个 token：人工，智能。
+A token is one of the smallest units of information an AI processes.
+For example, the phrase "artificial intelligence" [[cue:split]]can be handled as separate pieces: artificial, intelligence.
 
 ## ending
-所以下次看到「百万 token 上下文」这种说法，[[cue:context]]你就知道，它说的是 AI 一次能记住多少个这样的小块。
+So the next time you hear "a one-million-token context window," [[cue:context]]you will know it describes how many pieces like these the AI can keep in view at once.

@@ -1,50 +1,50 @@
-# HyperFrames 渲染后端 · 选型边界与操作手册
+# HyperFrames Rendering Backend · Decision Guide and Operating Manual
 
-> 2026-07-17 实测验证通过后引入（工具链/中文字体/代理环境/迁移/3D 五项全过，关键数据已内嵌本文）。
-> HyperFrames 是 HeyGen 开源的 HTML→视频框架（Apache 2.0）：纯 HTML + 暂停的 GSAP timeline，headless 浏览器逐帧 seek 确定性渲染。
+> Introduced on 2026-07-17 after hands-on validation of the toolchain, CJK fonts, agent environment, migration path, and 3D support. The key findings are recorded here.
+> HyperFrames is HeyGen's open-source HTML-to-video framework (Apache 2.0): pure HTML plus a paused GSAP timeline, rendered deterministically by seeking frame by frame in a headless browser.
 
-## 选型边界（先看这张表再开工）
+## Choosing a backend (read this table before starting)
 
-| 场景 | 用哪条渲染路线 |
+| Scene | Which rendering route to use |
 |---|---|
-| 新动画项目（默认） | **HyperFrames**。审计套件白送、3D/GSAP/Lottie/shader 全解锁 |
-| 需要 3D / 粒子 / 物理惯性 / shader 转场 | HyperFrames（自研 Stage 做不到） |
-| 老 Stage demo 要复用/改版 | 顺手迁移（适配器配方见下，20-30 分钟/个）；只重渲不改就仍用 render-video-seek.js |
-| 弱 runtime（无 npm / 无法装依赖 / 单文件交付给用户双击打开） | 自研 Stage（assets/animations.jsx），老流程不变 |
-| 交互演示（用户要在浏览器里玩，不导出视频） | 自研 Stage 或普通 HTML，HyperFrames 是渲染管线不是交互框架 |
-| 带解说长视频（Step 9.5，narration_stage 驱动） | **自研 narration 管线**（voiceover-pipeline.md + render-narration.sh），暂不走 HyperFrames——双时间源/字幕/TTS timeline 深度耦合自研 Stage；与「动画默认 HyperFrames」两行同时命中时按本行裁决 |
-| 批量参数化视频（千人千面/模板换字） | Remotion（见规划方向5，独立于本 skill 主流程） |
+| New animation project (default) | **HyperFrames**. Free audit suite, 3D/GSAP/Lottie/shader fully unlocked |
+| Requires 3D, particles, physical inertia, or shader transitions | HyperFrames; the custom Stage does not support these |
+| Existing Stage demo must be reused or modified | Migrate it using the adapter recipe below (20–30 minutes per demo). If it only needs re-rendering, leave it unchanged and keep using `render-video-seek.js` |
+| Constrained runtime (no npm, dependencies cannot be installed, or delivery must be a single file the user can double-click) | Custom Stage (`assets/animations.jsx`); keep the existing workflow |
+| Interactive browser demo with no video export | Custom Stage or ordinary HTML. HyperFrames is a rendering pipeline, not an interaction framework |
+| Long narrated video (Step 9.5, driven by `narration_stage`) | **Custom narration pipeline** (`voiceover-pipeline.md` + `render-narration.sh`), not HyperFrames for now. Its dual time sources, subtitles, and TTS timeline are tightly coupled to the custom Stage. If this rule conflicts with “use HyperFrames by default for animation,” this row takes precedence |
+| Batch parameterized videos (personalized templates at scale, including face or text substitution) | Remotion (see planning direction 5, independent of this skill's main workflow) |
 
-**设计语言永远是甲方**：叙事结构、easing 体系、SFX/BGM 双轨制照旧全部生效（animation-best-practices.md / audio-design-rules.md），HyperFrames 只是实现和渲染工具。GSAP 实现配方见 `references/gsap-recipes.md`。
+**The design language remains the source of truth**: the narrative structure, easing system, and dual-track SFX/BGM system still apply (`animation-best-practices.md` / `audio-design-rules.md`). HyperFrames is only the implementation and rendering layer. See `references/gsap-recipes.md` for GSAP implementation recipes.
 
-## 项目脚手架
+## Project scaffolding
 
 ```bash
-npx -y hyperframes init 项目名 --example blank   # 非交互必须带 --example
-cd 项目名 && npm install
+npx -y hyperframes init <project-name> --example blank   # --example is required in non-interactive mode
+cd <project-name> && npm install
 ```
 
-生成 index.html / hyperframes.json / meta.json / package.json（pin 了 CLI 版本）+ 项目级 CLAUDE.md。init 会把 19 个 hyperframes skill 装到 `~/.claude/skills/`（本机已装）。合成写法契约读 hyperframes-core skill 的 SKILL.md（init 装到各 runtime 的 skill 目录，Claude Code 默认 `~/.claude/skills/`；无 skill 机制的 runtime 直接读 `npx hyperframes docs` 本地文档替代），本地文档 `npx hyperframes docs <topic>`（data-attributes / gsap / rendering / troubleshooting）。
+This generates `index.html`, `hyperframes.json`, `meta.json`, `package.json` (with the CLI version pinned), and a project-level `CLAUDE.md`. `init` installs 19 HyperFrames skills into `~/.claude/skills/` (already installed on this machine). For the composition authoring contract, read the `SKILL.md` from the `hyperframes-core` skill. `init` installs skills into each runtime's skill directory; Claude Code defaults to `~/.claude/skills/`. In a runtime without a skill mechanism, use the local documentation instead: `npx hyperframes docs <topic>` (`data-attributes`, `gsap`, `rendering`, or `troubleshooting`).
 
-**版本策略**：项目 package.json 会 pin 精确版本（当前实测过的是 0.7.61）。它迭代极快（300+ releases），升级先 `npx hyperframes@latest upgrade --project . --check` 看 delta，跑一遍回归 demo 再动。
+**Version policy**: The project's `package.json` pins an exact version (0.7.61 at the time of validation). HyperFrames changes rapidly, with more than 300 releases. Before upgrading, inspect the changes with `npx hyperframes@latest upgrade --project . --check`; then rerun the checks and regression-test the demo before proceeding.
 
-## 合成契约速查（完整版读 hyperframes-core）
+## Composition contract at a glance (read `hyperframes-core` for the full version)
 
-- 根容器：`data-composition-id` + `data-start` + `data-duration` + `data-width/height`
-- 每个计时元素：`class="clip"` + `data-start` + `data-duration` + `data-track-index`
-- timeline 必须 paused 并注册：`window.__timelines["合成id"] = gsap.timeline({paused:true})`
-- 视频素材用 `muted`，音轨单独 `<audio>` 元素
-- **只允许确定性逻辑**：禁 `Date.now()` / `Math.random()` / 运行时网络 fetch；随机用种子函数
-- 字体：Google Fonts 会被编译器自动抓取并注入确定性 @font-face（缓存 `~/.cache/hyperframes/fonts/`）；纯系统字体（PingFang SC 等）加一行 `@font-face { font-family:"PingFang SC"; src: local("PingFang SC"); }` 过 lint
-- Three.js 走 `hf-seek` 事件适配器（`~/.claude/skills/hyperframes-animation/adapters/three.md`），根容器必须显式 `data-duration`
+- Root container: `data-composition-id` + `data-start` + `data-duration` + `data-width/height`
+- Each timing element: `class="clip"` + `data-start` + `data-duration` + `data-track-index`
+- The timeline must be paused and registered: `window.__timelines["composition-id"] = gsap.timeline({ paused: true })`
+- Use `muted` for video material, separate audio track `<audio>` element
+- **Only deterministic logic is allowed**: do not use `Date.now()`, `Math.random()`, or runtime network requests; use a seeded random function
+- Fonts: the compiler downloads Google Fonts and injects deterministic `@font-face` rules (cached in `~/.cache/hyperframes/fonts/`). For system-only fonts such as PingFang SC, satisfy lint with `@font-face { font-family:"PingFang SC"; src: local("PingFang SC"); }`
+- For Three.js, use the `hf-seek` adapter documented by the installed `hyperframes-animation` skill; if that skill is unavailable in the current runtime, read the equivalent local HyperFrames documentation. The root container must declare `data-duration` explicitly
 
-## 老 demo 迁移 · 适配器配方（实测 20-30 分钟/个）
+## Migrating an old demo · Adapter recipe (validated at 20–30 minutes per demo)
 
-自研 Stage/纯 render(t) 动画不用重写，四步：
+A custom Stage animation built around a pure `render(t)` function does not need to be rewritten. Follow four steps:
 
-1. **包容器**：外套 `#root` 带合成 data 属性；整个 `.stage` 作为唯一 clip 最省事（`class="stage clip"` + data-start/duration/track-index）；`.stage` 从 fixed 居中改 absolute inset:0，html/body 定死 1920×1080
-2. **删自驱**：rAF tick 循环、fitStage/resize 监听、replay 按钮、`__ready/__setTime/__seek` 协议全删（渲染器不需要）
-3. **挂代理 tween**（核心 12 行）：
+1. **Wrap the composition**: add composition data attributes to `#root`. The simplest setup is to make the entire `.stage` the only clip (`class="stage clip"` plus `data-start`, `data-duration`, and `data-track-index`). Change `.stage` from a centered fixed element to `position: absolute; inset: 0`, and lock `html`/`body` to 1920×1080
+2. **Remove self-driven playback**: delete the rAF tick loop, `fitStage`/resize observers, replay button, and the `__ready`/`__setTime`/`__seek` protocol; the renderer does not need them
+3. **Attach a proxy tween** (12 core lines):
    ```js
    const proxy = { t: 0 };
    const tl = gsap.timeline({ paused: true });
@@ -52,31 +52,31 @@ cd 项目名 && npm install
      onUpdate: () => render(proxy.t) }, 0);
    window.__timelines = window.__timelines || {};
    window.__timelines["main"] = tl;
-   render(0);   // 必须：timeline 停在 t=0 时 onUpdate 不触发，不补这句首帧可能未初始化
+   render(0);   // Required: onUpdate does not fire while the timeline is parked at t=0, so initialize frame zero explicitly.
    ```
-4. **扫 transition**：全文搜 `transition:` 声明。CSS transition + class 切换走墙钟，逐帧 seek 下不确定，必须改成 render(t) 里对 t 的纯函数（lerp）
+4. **Audit transitions**: search the entire project for `transition:`. CSS transitions triggered by class changes run on wall-clock time and are nondeterministic under frame seeking. Replace them with a pure function of `t`—for example, a `lerp` inside `render(t)`
 
-## 校验与渲染
+## Verification and rendering
 
 ```bash
-npm run check                        # lint+runtime+layout+motion+contrast 五门审计
-npx hyperframes check --no-contrast  # 暗色电影风专用（见下）
-npx -y hyperframes@<pin版本> render --fps 60   # 终渲；默认 30fps
+npm run check                        # five-part audit: lint, runtime, layout, motion, and contrast
+npx hyperframes check --no-contrast  # For dark cinematic work (see below)
+npx -y hyperframes@<pinned-version> render --fps 60   # final rendering; default 30fps
 ```
 
-- **check 必须 0 error 才渲染**（contrast 门除外）。lint 能拦 letterSpacing 抖动、字体缺失、非确定性等一整类「无报警视觉 bug」
-- **contrast 门取舍**：它按 WCAG 4.5:1 检查，和暗色电影风的低对比水印/装饰文字（16-40% 透明度）根本冲突，且无逐元素豁免。暗色 cinematic 产出统一 `--no-contrast`，其余四门仍必须 0 error。亮底信息型产出不要跳，contrast 报错通常是真问题
-- **两级渲染**：先默认 30fps 快速出片，肉眼+截帧检查通过后再 `--fps 60` 终渲。60fps 600 帧 1080p 实测约 20 秒
-- 渲染产物侧校验（audio stream / 黑帧 / 响度 / 时长）用 `scripts/verify-video.sh`（见 verification.md）
+- **`check` must report zero errors before rendering** (except when intentionally disabling the contrast gate). Lint catches whole classes of otherwise silent visual failures, including `letterSpacing` jitter, missing fonts, and nondeterminism.
+- **Contrast-gate trade-off**: the gate enforces WCAG 4.5:1, which inherently conflicts with low-contrast watermarks and decorative text at 16–40% opacity in dark cinematic work. Use `--no-contrast` consistently for that output, but keep the other four checks at zero errors. Do not disable contrast for bright, information-dense work; contrast errors there are usually real defects.
+- **Two-stage rendering**: render at the default 30fps for quick review, then render the final at `--fps 60` after visual and frame-capture inspection. In testing, 600 frames at 1080p/60fps took about 20 seconds.
+- Use `scripts/verify-video.sh` to validate the rendered deliverable's audio stream, black frames, loudness, and duration; see `verification.md`.
 
-## 透明通道（overlay花字/贴片直接叠剪辑轨）
+## Alpha channel (motion graphics and overlays for an editing timeline)
 
-`npx hyperframes render --format mov` 输出 ProRes 4444（yuva444p12le，带alpha，2026-07-17实测叠色底连软阴影都正确半透）；`--format webm` 同样带透明、体积小；`--format png-sequence` 出RGBA帧序列给AE/达芬奇。合成侧要点：html/body背景设 `transparent`、不铺底色。花字/角标/lower-third这类overlay素材从此直接进剪辑轨，不用抠像。注意MOV体积大（ProRes无损级，4秒15MB量级），交付剪辑用；网络传输用webm。
+`npx hyperframes render --format mov` outputs ProRes 4444 (`yuva444p12le`, with alpha). As verified on 2026-07-17, multicolor elements and soft shadows retain correct translucency. `--format webm` also supports transparency at a much smaller size, while `--format png-sequence` produces RGBA frame sequences for After Effects or DaVinci Resolve. On the composition side, set the `html` and `body` backgrounds to `transparent` and do not add a background color. Motion-graphics text, corner bugs, and lower thirds can then be placed directly on an editing timeline without keying. MOV files are large (ProRes lossless territory: about 15 MB for four seconds) and intended for editors; WebM is preferable for network transfer.
 
-## 音频
+## Audio
 
-HyperFrames 合成里 `<audio>` 元素可直接进时间轴（BGM/解说随片渲染）。当前音频流程不变：SFX/BGM 双轨制照 audio-design-rules.md，用 add-music.sh / mix-voiceover.sh 后期混流也可以。哪条路更好在实战中定，先不强制。SFX打点用 `scripts/sfx-cues.sh <视频> <cue表.tsv> <输出>`（cue表=秒数/sfx路径/音量dB三列，B00实战沉淀，改表重跑10秒出片）。
+HyperFrames compositions can include `<audio>` elements directly on the timeline, so BGM and narration render with the video. The existing audio workflow remains valid: produce SFX and BGM as separate tracks according to `audio-design-rules.md`, or post-mix with `add-music.sh` / `mix-voiceover.sh`. Choose between the two based on production experience; neither is mandatory yet. Manage SFX with `scripts/sfx-cues.sh <video> <cue-table.tsv> <output>`. The cue table contains three columns—time in seconds, SFX path, and volume in dB. This pattern was established in B00; edit the table and rerun it to produce a new mix in about ten seconds.
 
-## pitfalls 增量（相对自研管线）
+## Additional pitfalls compared with the custom pipeline
 
-自研管线 pitfalls（animation-pitfalls.md §7/10/12/13 录制协议类、§6 字体时序、§15/17 网络类）在 HyperFrames 后端上**不适用**：录制协议由框架内部处理，字体编译期抓取，CDN 实测代理下可通。新增的坑共四条，已录入 animation-pitfalls.md §18-21：CSS transition 非确定性、代理 tween 首帧、contrast 门冲突、fromTo immediateRender 幻影。
+Several custom-pipeline pitfalls do **not apply** to HyperFrames: the recording-protocol issues in `animation-pitfalls.md` §7/10/12/13, font timing in §6, and network issues in §15/17. HyperFrames handles the recording protocol internally, captures fonts during compilation, and has been verified through the CDN proxy. Four new pitfalls are documented in `animation-pitfalls.md` §18–21: nondeterministic CSS transitions, the proxy tween's first frame, contrast-gate conflicts, and `fromTo` `immediateRender` ghosts.

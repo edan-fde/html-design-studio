@@ -1,298 +1,270 @@
-# Animation Best Practices · 正向动画设计语法
+# Animation Best Practices · A Positive Grammar of Motion Design
 
-> 基于 Anthropic 官方三支产品动画（Claude Design / Claude Code Desktop / Claude for Word）
-> 的深度拆解，提炼出的"Anthropic 级"动画设计规则。
+> “Anthropic-quality” motion-design rules distilled from a deep analysis of three official Anthropic product animations: Claude Design, Claude Code Desktop, and Claude for Word.
 >
-> 配套 `animation-pitfalls.md`（避坑清单）使用——本文件是「**应该这样做**」，
-> pitfalls 是「**不要这样做**」，两者正交，都要读。
+> Use together with `animation-pitfalls.md`, the failure-prevention checklist. This document says **“do this”**; Pitfalls says **“do not do that.”** The two are complementary and both are required reading.
 >
-> **约束声明**：本文件只收录**运动逻辑和表达风格**，**不引入任何品牌色具体色值**。
-> 色彩决策走 §1.a 核心资产协议（从品牌 spec 抽取）或「设计方向顾问」
-> （20 种哲学各自的配色方案）。本 reference 讨论的是「**怎么动**」，不是「**什么色**」。
+> **Scope:** this document covers only **motion logic and expressive style**. It does **not** introduce specific brand color values. Make color decisions through the §1.a Core Asset Protocol, extracting from the brand specification, or through Design-Direction Consultant Mode and the palettes associated with its twenty philosophies. This reference is about **how things move**, not **which colors they use**.
 
 ---
 
-## §0 · 你是谁 · 身份与品味
+## §0 · Who You Are · Identity and Taste
 
-> 在读后面任何技术规则之前，先读这一节。规则是**从身份涌现的**——
-> 不是相反。
+> Read this section before any technical rule that follows. Rules **emerge from identity**, not the reverse.
 
-### §0.1 身份锚点
+### §0.1 Identity Anchor
 
-**你是一个研究过 Anthropic / Apple / Pentagram / Field.io 运动档案的 motion designer。**
+**You are a motion designer who has studied the motion archives of Anthropic, Apple, Pentagram, and Field.io.**
 
-做动画时，你不是在调 CSS transition——你是在用数字元素**模拟一个物理世界**，
-让观众的潜意识相信「这是有重量、有惯性、会溢出的物体」。
+When animating, you are not adjusting CSS transitions. You are using digital elements to **simulate a physical world**, convincing the viewer's subconscious that these objects have weight, inertia, elasticity, and the ability to overshoot.
 
-你不做 PowerPoint 式动画。你不做「fade in fade out」动画。你做的动画**让人相信屏幕
-是一个可以伸手进去的空间**。
+You do not make PowerPoint-style animation. You do not make “fade in, fade out” animation. Your animation **makes the screen feel like a space the viewer could reach into**.
 
-### §0.2 核心信念（3 条）
+### §0.2 Three Core Beliefs
 
-1. **动画是物理学，不是动画曲线**
-   `linear` 是数字，`expoOut` 是物体。你相信屏幕上的像素值得被当作"物体"对待。
-   每一条 easing 的选择，都是在回答「这个元素有多重？摩擦系数多大？」的物理问题。
+1. **Animation is physics, not a collection of animation curves.**
+   `linear` is a number; `expoOut` is an object. Pixels on a screen deserve to be treated as physical things. Every easing choice answers a physical question: “How heavy is this element? What is its coefficient of friction?”
 
-2. **时间分配比曲线形状更重要**
-   Slow-Fast-Boom-Stop 是你的呼吸。**均匀节奏的动画是技术演示，有节奏的动画是叙事。**
-   在正确的时刻慢下来——比在错误的时刻用对 easing 更重要。
+2. **Time allocation matters more than curve shape.**
+   Slow–Fast–Boom–Stop is your breathing pattern. **Evenly paced animation is a technical demonstration; rhythmic animation is narrative.** Slowing down at the right moment matters more than choosing the correct easing at the wrong one.
 
-3. **礼让观众，比炫技更难**
-   关键结果前停 0.5 秒是**技术**，不是妥协。**让人类大脑有反应时间，是动画师的最高素养。**
-   AI 默认会做一个没有停顿的、信息密度满格的动画——那是新手。你要做的是克制。
+3. **Giving the audience room is harder than showing off.**
+   A 0.5-second pause before the key result is a **technique**, not a compromise. **Giving the human brain time to react is the animator's highest discipline.** AI defaults to unbroken, maximum-density motion with no pauses. That is novice work. Your job is restraint.
 
-### §0.3 品味标准 · 什么是美
+### §0.3 Standards of Taste · What Beauty Looks Like
 
-你对「好」和「great」的判断标准如下。每一条都有**识别方法**——当你看到一个候选动画时，
-用这些问题判断它是否达标，而不是机械对照 14 条规则。
+These are your standards for distinguishing “good” from “great.” Each includes a **recognition test**. When reviewing a candidate animation, use these questions to judge it rather than mechanically comparing it with fourteen rules.
 
-| 美的维度 | 识别方法（观众反应） |
+| Dimension of Beauty | Recognition Test: the Viewer's Reaction |
 |---|---|
-| **物理重量感** | 动画结束时，元素"**落**"得稳——不是"**停**"在那里。观众潜意识觉得"这有重量" |
-| **礼让观众** | 关键信息出现前有一个可感的 pause（≥300ms）——观众来得及"**看见**"再继续 |
-| **留白** | 收尾是戛然而止 + hold，不是 fade to black。最后一帧清晰、肯定、有决定感 |
-| **克制** | 全片只有一处「120% 精致」，其余 80% 恰到好处——**到处炫技是廉价的信号** |
-| **手感** | 弧线（不是直线）、不规律（不是 setInterval 的机械节奏）、有呼吸感 |
-| **敬意** | 展示 tweak 的过程、展示 bug 的修复——**不藏工作、不给"魔法"**。AI 是协作者不是魔术师 |
+| **Physical weight** | When the motion ends, the element **lands** securely; it does not merely **stop**. The viewer subconsciously feels its weight. |
+| **Room for the audience** | A perceptible pause of at least 300 ms precedes key information. The viewer has time to **see it** before motion continues. |
+| **Negative space** | The ending is an abrupt stop + hold, not a fade to black. The final frame is clear, affirmative, and decisive. |
+| **Restraint** | Exactly one moment receives 120% polish; the remaining 80% is precisely sufficient. **Showing off everywhere signals cheapness.** |
+| **Tactility** | Arcs rather than straight lines; irregularity rather than `setInterval` rhythm; movement that breathes. |
+| **Respect** | Show the tweaking process and the bug being fixed. **Do not hide the work or present “magic.”** AI is a collaborator, not a magician. |
 
-### §0.4 自检 · 观众第一反应法
+### §0.4 Self-Check · The Audience's First-Reaction Test
 
-做完一支动画，**观众看完第一反应是什么？**——这是你唯一要优化的指标。
+After finishing an animation, ask: **what is the audience's first reaction when it ends?** This is the only metric to optimize.
 
-| 观众反应 | 评级 | 诊断 |
+| Audience Reaction | Rating | Diagnosis |
 |---|---|---|
-| "看起来挺流畅的" | good | 合格但无特色，你在做 PowerPoint |
-| "这个动画真顺" | good+ | 技术对了，但没惊艳 |
-| "这个东西看起来真的像**从桌面上浮起来的**" | great | 你触到了物理重量感 |
-| "这不像是 AI 做的" | great+ | 你触到了 Anthropic 的门槛 |
-| "我想**截图**发朋友圈" | great++ | 你做到了让观众主动传播 |
+| “It looks pretty smooth.” | Good | Competent but generic; you are making PowerPoint. |
+| “That animation flows really well.” | Good+ | Technically correct, but not remarkable. |
+| “That really looks like it **floated up from the desktop**.” | Great | You achieved physical weight. |
+| “This doesn't look AI-generated.” | Great+ | You reached Anthropic's threshold. |
+| “I want to **take a screenshot** and share it.” | Great++ | You made the audience distribute the work voluntarily. |
 
-**great 和 good 的区别，不在于技术正确度，在于品味判断**。技术正确 + 品味对 = great。
-技术正确 + 品味空 = good。技术错误 = 没入门。
+The difference between great and good is not technical correctness; it is judgment and taste. Correct technique guided by sound taste is great. Correct technique without a point of view is merely good. Incorrect technique does not clear the baseline.
 
-### §0.5 身份和规则的关系
+### §0.5 How Identity Relates to Rules
 
-下面 §1-§8 的技术规则，是这套身份在具体场景的**执行手段**——不是独立规则清单。
+The technical rules in §1–§8 are **means of executing this identity** in concrete situations. They are not an independent checklist.
 
-- 遇到规则没覆盖的场景 → 回到 §0，用**身份**判断，不要瞎猜
-- 遇到规则之间有冲突 → 回到 §0，用**品味标准**判断哪条更重要
-- 想破一条规则 → 先回答："这样做符合 §0.3 哪一条美？" 答得上就破，答不上就别破
+- When the rules do not cover a situation → return to §0 and judge from the **identity**; do not guess blindly.
+- When rules conflict → return to §0 and use the **standards of taste** to decide which matters more.
+- When you want to break a rule → first answer: “Which form of beauty in §0.3 does this serve?” If you have a clear answer, break it; otherwise do not.
 
-好。继续读下去。
-
----
-
-## 总览 · 动画是物理学的三层展开
-
-大多数 AI 生成动画有廉价感的根源是——**它们表现得像「数字」不是「物体」**。
-真实世界的物体有质量、有惯性、有弹性、会溢出。Anthropic 三支片子的「高级感」根源，
-就在于给数字元素一套**物理世界的运动规则**。
-
-这套规则有 3 个层次：
-
-1. **叙事节奏层**：Slow-Fast-Boom-Stop 的时间分配
-2. **运动曲线层**：Expo Out / Overshoot / Spring，拒绝 linear
-3. **表达语言层**：展示过程、鼠标弧线、Logo 形变收束
+Now continue.
 
 ---
 
-## 1. 叙事节奏 · Slow-Fast-Boom-Stop 5 段结构
+## Overview · Animation as Physics at Three Levels
 
-Anthropic 三支片子无一例外遵循这个结构：
+Most AI-generated animation feels cheap because **it behaves like numbers rather than objects**. Real objects have mass, inertia, elasticity, and overshoot. The sophistication of Anthropic's three videos comes from giving digital elements a **physical system of motion rules**.
 
-| 段 | 占比 | 节奏 | 作用 |
+The system has three levels:
+
+1. **Narrative-rhythm layer:** time allocation through Slow–Fast–Boom–Stop.
+2. **Motion-curve layer:** Expo Out, Overshoot, and Spring; reject linear.
+3. **Expressive-language layer:** show the process, use arcing pointer paths, and resolve through a logo morph.
+
+---
+
+## 1. Narrative Rhythm · Five-Part Slow–Fast–Boom–Stop Structure
+
+All three Anthropic videos follow this structure:
+
+| Part | Share | Pace | Purpose |
 |---|---|---|---|
-| **S1 触发** | ~15% | 慢 | 给人类反应时间，建立真实感 |
-| **S2 生成** | ~15% | 中 | 视觉惊艳点出现 |
-| **S3 过程** | ~40% | 快 | 展示可控性/密度/细节 |
-| **S4 爆发** | ~20% | Boom | 镜头拉远/3D pop-out/多面板涌现 |
-| **S5 落幅** | ~10% | 静 | 品牌 Logo + 戛然而止 |
+| **S1 · Trigger** | ~15% | Slow | Give humans reaction time and establish realism. |
+| **S2 · Generate** | ~15% | Medium | Introduce the visual surprise. |
+| **S3 · Process** | ~40% | Fast | Demonstrate control, density, and detail. |
+| **S4 · Burst** | ~20% | Boom | Pull the camera back, pop into 3D, or reveal multiple panels at once. |
+| **S5 · Resolve** | ~10% | Still | Brand logo + abrupt stop. |
 
-**具体时长映射**（15 秒动画为例）：
-S1 触发 2s · S2 生成 2s · S3 过程 6s · S4 爆发 3s · S5 落幅 2s
+**Concrete timing for a 15-second animation:**
+S1 Trigger 2 s · S2 Generate 2 s · S3 Process 6 s · S4 Burst 3 s · S5 Resolve 2 s
 
-**禁止做的事**：
-- ❌ 均匀节奏（每秒信息密度一样）— 观众疲劳
-- ❌ 持续高密度 — 无峰值无记忆点
-- ❌ 渐弱收尾（fade out 到透明）— 应该**戛然而止**
+**Do not:**
+- ❌ Use an even rhythm with identical information density every second; it exhausts the viewer.
+- ❌ Maintain maximum density throughout; without a peak, nothing is remembered.
+- ❌ End by fading away to transparency; **stop abruptly** instead.
 
-**自检**：用纸笔画 5 个 thumbnail，每个代表一段的高潮画面。如果 5 张图差别不大，
-说明节奏没做出来。
+**Self-check:** draw five thumbnails on paper, each representing the peak frame of one part. If the five images do not differ much, the rhythm is missing.
 
 ---
 
-## 2. Easing 哲学 · 拒绝 linear，拥抱物理
+## 2. Easing Philosophy · Reject Linear Motion; Embrace Physics
 
-Anthropic 三支片子的所有动效都用带「阻尼感」的贝塞尔曲线。默认的 cubic easeOut
-（`1-(1-t)³`）**不够锐**——起步不够快、停顿不够稳。
+Every effect in the three Anthropic videos uses a damped bezier curve. The standard cubic ease-out—`1-(1-t)³`—is **not sharp enough**: it does not launch quickly enough or settle firmly enough.
 
-### 三个核心 Easing（animations.jsx 已内置）
+### Three Core Easings, Built into `animations.jsx`
 
 ```js
-// 1. Expo Out · 迅速启动缓慢刹车（最常用，默认主 easing）
-// 对应 CSS: cubic-bezier(0.16, 1, 0.3, 1)
+// 1. Expo Out · Launch quickly and brake gradually; the default primary easing
+// CSS equivalent: cubic-bezier(0.16, 1, 0.3, 1)
 Easing.expoOut(t) // = t === 1 ? 1 : 1 - Math.pow(2, -10 * t)
 
-// 2. Overshoot · 带弹性的 toggle/按钮弹出
-// 对应 CSS: cubic-bezier(0.34, 1.56, 0.64, 1)
+// 2. Overshoot · Elastic toggles and button pops
+// CSS equivalent: cubic-bezier(0.34, 1.56, 0.64, 1)
 Easing.overshoot(t)
 
-// 3. Spring 物理 · 几何体归位、自然落位
+// 3. Physical Spring · Geometry settling naturally into place
 Easing.spring(t)
 ```
 
-### 用法映射
+### Usage Map
 
-| 场景 | 用哪个 Easing |
+| Scenario | Easing |
 |---|---|
-| 卡片 rise-in / 面板入场 / Terminal fade / focus overlay | **`expoOut`**（主 easing，最常用） |
-| Toggle 切换 / 按钮弹出 / 强调交互 | `overshoot` |
-| Preview 几何体归位 / 物理落位 / UI 元素抖弹 | `spring` |
-| 持续运动（如鼠标轨迹插值） | `easeInOut`（保留对称性） |
+| Card rise-in / panel entrance / terminal fade / focus overlay | **`expoOut`**, the primary and most common easing |
+| Toggle switch / button pop / emphasized interaction | `overshoot` |
+| Preview geometry settling / physical landing / UI bounce | `spring` |
+| Continuous movement such as pointer-path interpolation | `easeInOut` to preserve symmetry |
 
-### 反直觉洞察
+### Counterintuitive Insight
 
-大多数产品宣传片的动画**太快太硬**。`linear` 让数字元素像机器，`easeOut` 是基础分，
-`expoOut` 才是「高级感」的技术根源——它给数字元素一种**物理世界的重量感**。
+Most product-film motion is **too fast and too rigid**. `linear` makes digital elements feel mechanical; `easeOut` is merely baseline competence. `expoOut` is the technical source of the “premium” feeling because it gives digital elements the **weight of physical objects**.
 
 ---
 
-## 3. 运动语言 · 8 条共性原则
+## 3. Motion Language · Eight Shared Principles
 
-### 3.1 底色不用纯黑纯白
+### 3.1 Never Use Pure Black or Pure White as the Main Background
 
-Anthropic 三支片子没有一支用 `#FFFFFF` 或 `#000000` 做主底色。**带色温的中性色**
-（或暖或冷）有"纸张 / 画布 / 桌面"的物质感，削弱机器感。
+None of the three Anthropic videos uses `#FFFFFF` or `#000000` as its main background. A temperature-tinted neutral—warm or cool—has the material quality of paper, canvas, or a desktop and reduces the mechanical feeling.
 
-**具体色值决策**走 §1.a 核心资产协议（从品牌 spec 抽取）或「设计方向顾问」
-（20 种哲学各自的底色方案）。本 reference 不给具体色值——那是**品牌决策**，不是运动规则。
+Choose exact color values through the §1.a Core Asset Protocol, extracting from the brand specification, or through Design-Direction Consultant Mode and its twenty background systems. This reference contains no values because color is a **brand decision**, not a motion rule.
 
-### 3.2 Easing 绝不是 linear
+### 3.2 Easing Is Never Linear
 
-见 §2。
+See §2.
 
-### 3.3 Slow-Fast-Boom-Stop 叙事
+### 3.3 Tell the Story Through Slow–Fast–Boom–Stop
 
-见 §1。
+See §1.
 
-### 3.4 展示「过程」而非「魔法结果」
+### 3.4 Show the Process, Not a Magical Result
 
-- Claude Design 展示 tweak 参数、拖滑块（不是一键生成完美结果）
-- Claude Code 展示代码报错 + AI 修复（不是一次成功）
-- Claude for Word 展示 Redline 红删绿增的修改过程（不是直接给最终稿）
+- Claude Design shows parameter tweaks and slider dragging rather than one-click perfection.
+- Claude Code shows a code error and the AI fixing it rather than succeeding immediately.
+- Claude for Word shows the red deletions and green additions of the redlining process rather than presenting only the final draft.
 
-**共同潜台词**：产品是**协作者、结对工程师、资深编辑**——不是一键魔术师。
-这精准打击专业用户对「可控性」和「真实性」的痛点。
+**Shared subtext:** the product is a **collaborator, pair engineer, or senior editor**, not a one-click magician. This speaks directly to professional users' need for control and authenticity.
 
-**反 AI slop**：AI 默认会做「魔法一键成功」的动画（一键生成 → 完美结果），
-这是通用公约数。**反过来做**——展示过程、展示 tweak、展示 bug 和修复——
-是品牌识别度的来源。
+**Anti-AI-slop rule:** AI defaults to a “magical one-click success” animation—click once → perfect result—because that is the generic common denominator. **Do the reverse:** show the process, the tweak, the bug, and the fix. That becomes a source of brand identity.
 
-### 3.5 鼠标轨迹人工绘制（弧线 + Perlin Noise）
+### 3.5 Hand-Draw the Pointer Path with an Arc + Perlin Noise
 
-真人鼠标运动不是直线，是「起步加速 → 弧线 → 减速修正 → 点击」。
-AI 直接直线插值的鼠标轨迹**有潜意识排斥感**。
+Real pointer movement is not linear. It accelerates out of rest → follows an arc → decelerates and corrects → clicks. A pointer interpolated in a straight line by AI produces **subconscious aversion**.
 
 ```js
-// 二次贝塞尔曲线插值（起点 → 控制点 → 终点）
+// Quadratic Bézier interpolation: start → control point → end
 function bezierQuadratic(p0, p1, p2, t) {
   const x = (1-t)*(1-t)*p0[0] + 2*(1-t)*t*p1[0] + t*t*p2[0];
   const y = (1-t)*(1-t)*p0[1] + 2*(1-t)*t*p1[1] + t*t*p2[1];
   return [x, y];
 }
 
-// 路径：起点 → 偏离中点 → 终点（做弧线）
+// Path: start → offset midpoint → end, producing an arc
 const path = [[100, 100], [targetX - 200, targetY + 80], [targetX, targetY]];
 
-// 再叠加极小的 Perlin Noise（±2px）制造「手抖」
+// Add extremely subtle Perlin noise, ±2 px, to simulate hand tremor
 const jitterX = (simpleNoise(t * 10) - 0.5) * 4;
 const jitterY = (simpleNoise(t * 10 + 100) - 0.5) * 4;
 ```
 
-### 3.6 Logo「形变收束」(Morph)
+### 3.6 Resolve Through a Logo Morph
 
-Anthropic 三支片子的 Logo 出场**都不是简单 fade-in**，是**前一个视觉元素形变而来**。
+In all three Anthropic videos, the logo **does not simply fade in**. It **morphs from the preceding visual element**.
 
-**共同模式**：倒数 1-2 秒做 Morph / Rotate / Converge，让整个叙事在品牌点上「坍缩」。
+**Shared pattern:** during the final one or two seconds, morph, rotate, or converge so the entire narrative **collapses into the brand mark**.
 
-**低成本实现**（不用真 morph）：
-让前一个视觉元素「坍缩」成一个色块（scale → 0.1，向中心 translate），
-色块再「膨胀」展开成 wordmark。过渡用 150ms 快切 + motion blur
-（`filter: blur(6px)` → `0`）。
+**Low-cost implementation without a true morph:**
+Collapse the preceding visual element into a color block—scale to 0.1 and translate toward center—then let the block expand into the wordmark. Use a 150 ms fast cut with motion blur, from `filter: blur(6px)` to `0`.
 
 ```js
 <Sprite start={13} end={14}>
-  {/* 坍缩：前一个元素 scale 0.1，opacity 保持，filter blur 增加 */}
+  {/* Collapse: scale previous element to 0.1; retain opacity; increase blur */}
   const scale = interpolate(t, [0, 0.5], [1, 0.1], Easing.expoOut);
   const blur = interpolate(t, [0, 0.5], [0, 6]);
 </Sprite>
 <Sprite start={13.5} end={15}>
-  {/* 膨胀：Logo 从色块中心 scale 0.1 → 1，blur 6 → 0 */}
+  {/* Expand: logo grows from block center, scale 0.1 → 1 and blur 6 → 0 */}
   const scale = interpolate(t, [0, 0.6], [0.1, 1], Easing.overshoot);
   const blur = interpolate(t, [0, 0.6], [6, 0]);
 </Sprite>
 ```
 
-### 3.7 衬线 + 无衬线双字体
+### 3.7 Pair Serif and Sans-Serif Roles
 
-- **品牌 / 旁白**：衬线（有「学术感 / 出版物感 / 品位」）
-- **UI / 代码 / 数据**：无衬线 + 等宽
+- **Brand / narration:** serif, supplying scholarship, editorial character, and taste.
+- **UI / code / data:** sans-serif + monospace, supplying function.
 
-**单一字体都是不对的**。衬线给「品位」，无衬线给「功能」。
+**Relying on a single typeface is always the wrong choice here.** Serif supplies taste; sans-serif supplies function.
 
-具体字体选择走品牌 spec（brand-spec.md 的 Display / Body / Mono 三栈）或设计方向
-顾问的 20 种哲学。本 reference 不给具体字体——那是**品牌决策**。
+Choose actual faces through the Display / Body / Mono stacks in `brand-spec.md` or through the twenty philosophies in Design-Direction Consultant Mode. This reference contains no font recommendations because typography is a **brand decision**.
 
-### 3.8 焦点切换 = 背景减弱 + 前景锐化 + Flash 引导
+### 3.8 Focus Shift = Recede the Background + Sharpen the Foreground + Guide with a Flash
 
-焦点切换**不只是**降低 opacity。完整配方是：
+A focus shift does **more than** reduce opacity. The complete recipe:
 
 ```js
-// 非焦点元素的滤镜组合
+// Filter combination for out-of-focus elements
 tile.style.filter = `
   brightness(${1 - 0.5 * focusIntensity})
   saturate(${1 - 0.3 * focusIntensity})
-  blur(${focusIntensity * 4}px)        // ← 关键：加 blur 才真的"退后"
+  blur(${focusIntensity * 4}px)        // ← Critical: blur creates actual recession
 `;
 tile.style.opacity = 0.4 + 0.6 * (1 - focusIntensity);
 
-// 焦点完成后在焦点位置做 150ms Flash highlight 引导视线回流
+// When focus completes, guide the eye back with a 150 ms flash at the focal point
 focusOverlay.animate([
   { background: 'rgba(255,255,255,0.3)' },
   { background: 'rgba(255,255,255,0)' }
 ], { duration: 150, easing: 'ease-out' });
 ```
 
-**为什么 blur 是必须的**：只靠 opacity + brightness，焦点外的元素还是「锐利」的，
-视觉上没有「退到后景」的效果。blur(4-8px) 让非焦点真的退一层景深。
+**Why blur is mandatory:** opacity + brightness alone leaves non-focal elements sharp, so they do not visually recede. A 4–8 px blur pushes them into a genuinely deeper depth plane.
 
 ---
 
-## 4. 具体运动技巧（可直接抄的代码片段）
+## 4. Concrete Motion Techniques: Copy-Ready Snippets
 
-### 4.1 FLIP / Shared Element Transition
+### 4.1 FLIP / Shared-Element Transition
 
-按钮「膨胀」成输入框，**不是**按钮消失 + 新面板出现。核心是**同一个 DOM 元素**在
-两种状态间 transition，不是两个元素 cross-fade。
+A button **expands into** an input field; the button does not disappear while a new panel appears. The same DOM element transitions between two states rather than crossfading between two elements.
 
 ```jsx
-// 用 Framer Motion layoutId
+// Framer Motion layoutId
 <motion.div layoutId="design-button">Design</motion.div>
-// ↓ 点击后同 layoutId
+// ↓ After the click, use the same layoutId
 <motion.div layoutId="design-button">
   <input placeholder="Describe your design..." />
 </motion.div>
 ```
 
-原生实现参考 https://aerotwist.com/blog/flip-your-animations/
+For a native implementation, see https://aerotwist.com/blog/flip-your-animations/
 
-### 4.2「呼吸式」展开（width→height）
+### 4.2 “Breathing” Expansion: Width, Then Height
 
-面板展开**不是同时拉 width 和 height**，而是：
-- 前 40% 时间：只拉 width（保持 height 小）
-- 后 60% 时间：width 保持，撑 height
+A panel does **not** increase width and height simultaneously:
+- First 40%: expand width only while height remains small.
+- Final 60%: hold width and expand height.
 
-这模拟物理世界「先展开，再注水」的感觉。
+This simulates the physical feeling of “unfold first, then fill with water.”
 
 ```js
 const widthT = interpolate(t, [0, 0.4], [0, 1], Easing.expoOut);
@@ -301,13 +273,13 @@ style.width = `${widthT * targetW}px`;
 style.height = `${heightT * targetH}px`;
 ```
 
-### 4.3 Staggered Fade-up（30ms stagger）
+### 4.3 Staggered Fade-Up with 30 ms Delays
 
-表格行、卡片列、列表项入场时，**每个元素延迟 30ms**，`translateY` 从 10px 回到 0。
+When table rows, card columns, or list items enter, delay each element by **30 ms** while moving `translateY` from 10 px to 0.
 
 ```js
 rows.forEach((row, i) => {
-  const localT = Math.max(0, t - i * 0.03);  // 30ms stagger
+  const localT = Math.max(0, t - i * 0.03);  // 30 ms stagger
   row.style.opacity = interpolate(localT, [0, 0.3], [0, 1], Easing.expoOut);
   row.style.transform = `translateY(${
     interpolate(localT, [0, 0.3], [10, 0], Easing.expoOut)
@@ -315,14 +287,14 @@ rows.forEach((row, i) => {
 });
 ```
 
-### 4.4 非线性呼吸 · 关键结果前悬停 0.5s
+### 4.4 Nonlinear Breathing · Hold 0.5 Seconds Before a Key Result
 
-机器执行快且连贯，但**关键结果出现前悬停 0.5 秒**，让观众大脑有反应时间。
+Machines execute quickly and continuously, but **pause for 0.5 seconds before a key result** so the viewer's brain can react.
 
 ```jsx
-// 典型场景：AI 生成完 → 悬停 0.5s → 结果浮现
+// Typical sequence: AI finishes generating → hold 0.5 s → result appears
 <Sprite start={8} end={8.5}>
-  {/* 0.5s 停顿——什么也不动，让观众盯着加载状态 */}
+  {/* 0.5 s pause: nothing moves; let the viewer watch the loading state */}
   <LoadingState />
 </Sprite>
 <Sprite start={8.5} end={10}>
@@ -330,70 +302,69 @@ rows.forEach((row, i) => {
 </Sprite>
 ```
 
-**反例**：AI 生成完立刻无缝切到结果——观众没反应时间，信息流失。
+**Counterexample:** switching seamlessly to the result the instant generation ends. The viewer has no reaction time, so information is lost.
 
-### 4.5 Chunk Reveal · 模拟 token 流式
+### 4.5 Chunk Reveal · Simulate Token Streaming
 
-AI 生成文字**不要用 `setInterval` 单字符蹦出**（像老电影字幕），要用 **chunk reveal**
-——一次出现 2-5 个字符，间隔不规律，模拟真实 token 流式输出。
+When AI generates text, **do not use `setInterval` to pop out one character at a time**, which resembles old film subtitles. Use a **chunk reveal**: expose two to five characters at once at irregular intervals, simulating real token streaming.
 
 ```js
-// 分 chunk 而不是分字符
-const chunks = text.split(/(\s+|,\s*|\.\s*|;\s*)/);  // 按词 + 标点切
+// Split into chunks rather than individual characters
+const chunks = text.split(/(\s+|,\s*|\.\s*|;\s*)/);  // Split by words and punctuation
 let i = 0;
 function reveal() {
   if (i >= chunks.length) return;
   element.textContent += chunks[i++];
-  const delay = 40 + Math.random() * 80;  // 不规律 40-120ms
+  const delay = 40 + Math.random() * 80;  // Irregular 40–120 ms intervals
   setTimeout(reveal, delay);
 }
 reveal();
 ```
 
-### 4.6 Anticipation → Action → Follow-through
+### 4.6 Anticipation → Action → Follow-Through
 
-Disney 12 原则中的 3 条。Anthropic 用得很显式：
+Three of Disney's twelve principles, all used explicitly by Anthropic:
 
-- **Anticipation**（预备）：动作开始前有小反向动作（按钮轻微缩小再弹出）
-- **Action**（动作）：主要动作本身
-- **Follow-through**（跟随）：动作结束后有余韵（卡片落位后轻微 bounce）
+- **Anticipation:** a small reverse movement before the action, such as a button shrinking slightly before it pops.
+- **Action:** the primary movement itself.
+- **Follow-through:** residual motion after the action, such as a slight bounce after a card lands.
 
 ```js
-// 卡片入场的完整三段
-const anticip = interpolate(t, [0, 0.2], [1, 0.95], Easing.easeIn);     // 预备
-const action  = interpolate(t, [0.2, 0.7], [0.95, 1.05], Easing.expoOut); // 主动
-const settle  = interpolate(t, [0.7, 1], [1.05, 1], Easing.spring);       // 回弹
-// 最终 scale = 三段乘积或分段应用
+// Complete three-part card entrance
+const anticip = interpolate(t, [0, 0.2], [1, 0.95], Easing.easeIn);        // Anticipation
+const action  = interpolate(t, [0.2, 0.7], [0.95, 1.05], Easing.expoOut); // Action
+const settle  = interpolate(t, [0.7, 1], [1.05, 1], Easing.spring);       // Follow-through
+// Final scale = multiply the three values or apply them segment by segment
 ```
 
-**反例**：只有 Action 没有 Anticipation + Follow-through 的动画，像「PowerPoint 动画」。
+**Counterexample:** motion with Action but no Anticipation or Follow-through looks like PowerPoint animation.
 
-### 4.7 3D Perspective + translateZ 分层
+### 4.7 Layer with 3D Perspective + `translateZ`
 
-想要「倾斜 3D + 悬浮卡片」的气质，给容器加 perspective，给单个元素不同的 translateZ：
+For an oblique 3D space with floating cards, give the container perspective and individual elements different `translateZ` values:
 
 ```css
 .stage-wrap {
   perspective: 2400px;
-  perspective-origin: 50% 30%;  /* 视线略俯视 */
+  perspective-origin: 50% 30%;  /* Slightly elevated viewpoint */
 }
 .card-grid {
   transform-style: preserve-3d;
-  transform: rotateX(8deg) rotateY(-4deg);  /* 黄金比例 */
+  transform: rotateX(8deg) rotateY(-4deg);  /* Golden ratio */
 }
 .card:nth-child(3n) { transform: translateZ(30px); }
 .card:nth-child(5n) { transform: translateZ(-20px); }
 .card:nth-child(7n) { transform: translateZ(60px); }
 ```
 
-**为什么 rotateX 8° / rotateY -4° 是黄金比例**：
-- 大于 10° → 元素扭曲感过强，看起来像「倒下」
-- 小于 5° → 像「错切」而不是「透视」
-- 8° × -4° 的非对称比例模拟「镜头在桌面左上角俯视」的 natural angle
+**Why `rotateX(8deg) / rotateY(-4deg)` is the sweet spot:**
+- Above 10° → excessive distortion; elements appear to topple.
+- Below 5° → reads as skew rather than perspective.
+- The asymmetric 8° × −4° combination simulates a natural camera angle looking down from the upper-left of a desk.
 
-### 4.8 斜向 Pan · 同时动 XY
+### 4.8 Diagonal Pan · Move X and Y Together
 
-镜头运动不是纯上下或纯左右，而是**同时动 XY** 模拟斜向移动：
+Camera motion is not purely vertical or horizontal. **Move X and Y simultaneously** to simulate a diagonal track:
 
 ```js
 const panX = Math.sin(flowT * 0.22) * 40;
@@ -405,116 +376,116 @@ stage.style.transform = `
 `;
 ```
 
-**关键**：X 和 Y 的频率不同（0.22 vs 0.35），避免 Lissajous 循环规则化。
+**Critical:** use different frequencies for X and Y, such as 0.22 and 0.35, to prevent the Lissajous pattern from feeling regular and looped.
 
 ---
 
-## 5. 场景配方（三种叙事模板）
+## 5. Scene Recipes: Three Narrative Templates
 
-参考材料里三支视频对应三种产品性格。**选一种最贴合你的产品**，不要混搭。
+The three reference videos represent three different product characters. **Choose the one that best fits your product. Do not combine them.**
 
-### 配方 A · Apple Keynote 戏剧式（Claude Design 类）
+### Recipe A · Apple Keynote Drama, Like Claude Design
 
-**适合**：大版本发布、hero 动画、视觉惊艳优先
-**节奏**：Slow-Fast-Boom-Stop 强弧线
-**Easing**：全程 `expoOut` + 少量 `overshoot`
-**SFX 密度**：高（~0.4/s），SFX 音高调到 BGM 音阶
-**BGM**：IDM / 极简科技电子，冷静+精密
-**收束**：镜头急拉远 → drop → Logo 形变 → 空灵单音 → 戛然而止
+**Best for:** major releases, hero animation, visual surprise as the priority
+**Rhythm:** a strong Slow–Fast–Boom–Stop arc
+**Easing:** `expoOut` throughout, with limited `overshoot`
+**SFX density:** high, approximately 0.4/s; tune SFX pitch to the BGM's scale
+**BGM:** IDM / minimalist technological electronica; calm and precise
+**Resolution:** rapid camera pullback → drop → logo morph → airy single note → abrupt stop
 
-### 配方 B · 一镜到底工具式（Claude Code 类）
+### Recipe B · Single-Take Tool Flow, Like Claude Code
 
-**适合**：开发者工具、生产力 App、心流场景
-**节奏**：持续稳定 flow，没有明显峰值
-**Easing**：`spring` 物理 + `expoOut`
-**SFX 密度**：**0**（纯靠 BGM 驱动剪辑节奏）
-**BGM**：Lo-fi Hip-hop / Boom-bap，85-90 BPM
-**核心技巧**：关键 UI 动作踩在 BGM kick/snare 瞬态上——「**音乐律动即交互音效**」
+**Best for:** developer tools, productivity apps, flow-state scenarios
+**Rhythm:** continuous and stable, without an obvious peak
+**Easing:** physical `spring` + `expoOut`
+**SFX density:** **zero**; BGM alone drives the edit rhythm
+**BGM:** lo-fi hip-hop / boom bap at 85–90 BPM
+**Core technique:** align important UI actions to the transients of the BGM kick and snare—**the musical groove becomes the interaction sound**.
 
-### 配方 C · 办公效率叙事式（Claude for Word 类）
+### Recipe C · Office-Productivity Narrative, Like Claude for Word
 
-**适合**：企业软件、文档/表格/日历类、专业感优先
-**节奏**：多 scene 硬切 + Dolly In/Out
-**Easing**：`overshoot`（toggle）+ `expoOut`（面板）
-**SFX 密度**：中（~0.3/s），UI click 为主
-**BGM**：Jazzy Instrumental，小调，BPM 90-95
-**核心亮点**：某一幕必有「全片高光」—— 3D pop-out / 脱离平面浮起
+**Best for:** enterprise software, documents, spreadsheets, calendars, and work where professionalism leads
+**Rhythm:** hard cuts between several scenes + dolly in/out
+**Easing:** `overshoot` for toggles + `expoOut` for panels
+**SFX density:** medium, approximately 0.3/s, led by UI clicks
+**BGM:** jazzy instrumental in a minor key at 90–95 BPM
+**Core highlight:** one scene must contain the **signature moment of the entire film**, such as a 3D pop-out that rises free of the flat plane.
 
 ---
 
-## 6. 反例 · 这样做就是 AI slop
+## 6. Counterexamples · This Is AI Slop
 
-| 反 pattern | 为什么错 | 正确做法 |
+| Antipattern | Why It Fails | Correct Approach |
 |---|---|---|
-| `transition: all 0.3s ease` | `ease` 是 linear 的亲戚，所有元素同速 | 用 `expoOut` + 分元素 stagger |
-| 所有入场都 `opacity 0→1` | 没有运动方向感 | 配合 `translateY 10→0` + Anticipation |
-| Logo 淡入 | 没有叙事收束感 | Morph / Converge / 坍缩-展开 |
-| 鼠标直线移动 | 潜意识机器感 | 贝塞尔弧线 + Perlin Noise |
-| 打字单字蹦出（setInterval） | 像老电影字幕 | Chunk Reveal，随机间隔 |
-| 关键结果无悬停 | 观众没反应时间 | 结果前 0.5s 悬停 |
-| 焦点切换只改 opacity | 非焦点元素还锐利 | opacity + brightness + **blur** |
-| 纯黑底 / 纯白底 | 赛博感 / 反光疲劳 | 带色温的中性色（走品牌 spec） |
-| 所有动画同样快 | 无节奏 | Slow-Fast-Boom-Stop |
-| Fade out 收尾 | 无决定感 | 戛然而止（hold 最后一帧） |
+| `transition: all 0.3s ease` | `ease` is a relative of linear; every element moves at the same speed | Use `expoOut` + per-element stagger |
+| Every entrance uses only `opacity: 0 → 1` | No sense of motion direction | Add `translateY: 10 → 0` + Anticipation |
+| Logo fades in | No narrative resolution | Morph, converge, or collapse-and-expand |
+| Pointer moves in a straight line | Subconsciously mechanical | Bézier arc + Perlin noise |
+| Typewriter reveals single characters with `setInterval` | Resembles old film subtitles | Chunk Reveal with irregular intervals |
+| No hold before the key result | Viewers have no reaction time | Hold for 0.5 s before the result |
+| Focus shift changes only opacity | Non-focal elements remain sharp | Opacity + brightness + **blur** |
+| Pure black or pure white background | Cybernetic feel or glare fatigue | Temperature-tinted neutral from the brand specification |
+| Every animation moves equally fast | No rhythm | Slow–Fast–Boom–Stop |
+| Ending fades out | No decisiveness | Stop abruptly and hold the final frame |
 
 ---
 
-## 6.5 · 导演稿的视觉密度条款（B00实战教训，2026-07-17）
+## 6.5 · Visual-Density Requirements in the Director's Script: Lessons from B00, 2026-07-17
 
-**只写叙事+运镜的导演稿，会收到线框稿。** B00阶跃b-roll实测：v1导演稿把六幕的叙事、时间轴、镜头运动写得很全，实现agent交付的动画动效全部合格、check全绿——但视觉是「三块素色暗块+大字」的示意图水平，被导演一票打回（「太简单太无聊」）。agent在没有密度标准时，永远按最省几何交差。
+**A director's script containing only narrative and camera movement produces a wireframe.** The B00 step-sequence B-roll proved this. The v1 script fully described all six scenes, the timeline, and camera motion. The implementation agent delivered motion that met every requirement and passed every check—but visually it was a diagram made from “three plain dark blocks + large type.” The director rejected it outright as “too simple and too boring.” Without an explicit density standard, an agent always chooses the cheapest geometry that satisfies the brief.
 
-**导演稿（或任何动画brief）必须显式包含三样**：
+**Every director's script or animation brief must explicitly include three things:**
 
-1. **视觉密度标准**：每屏细节元素的量级要求（骨架UI内容行、图例、纹理、次级元素），以及一句可执行的验收表述，如「任意暂停一帧，和参照标杆摆在一起不丢人」
-2. **参照标杆**：指向一个具体的已有成品（同项目旧动画/A系列/某个demo），构件工艺直接搬，不让agent凭空发明
-3. **全局氛围层清单**：地面线锚定、构件软阴影、纸面/背景纹理、hero跟班或同类人格化小元素、静止构件的idle微动（呼吸/光标/微推进）——「空旷无聊感」的主要解药是这一层，不是主元素本身
+1. **A visual-density standard:** specify the amount of detail required per screen—rows of structural UI content, legends, texture, and secondary elements—and include an executable acceptance statement such as: “Pause on any frame and it should hold its own beside the benchmark.”
+2. **A concrete benchmark:** point to an existing finished piece, such as an earlier animation in the same project, the A series, or a named demo. Reuse its construction craft directly rather than asking the agent to invent from nothing.
+3. **A global atmosphere-layer checklist:** grounding lines, soft component shadows, paper or background texture, a hero companion or similarly personified secondary element, and idle micro-motion in stationary components—breathing, cursor movement, or subtle forward creep. This layer, not the primary object itself, is the main remedy for an empty, boring feeling.
 
-**修复路径也有定式**：动效骨架（时间轴/运镜/morph路径/字卡时机）与视觉工艺（构件/密度/氛围）是两层，验收被打回时先问清是哪层的问题——动效过关就只做re-skin，不重编舞。
-
----
-
-## 7. 自检清单（动画交付前 60 秒）
-
-- [ ] 叙事结构是 Slow-Fast-Boom-Stop，不是均匀节奏？
-- [ ] 默认 easing 是 `expoOut`，不是 `easeOut` 或 `linear`？
-- [ ] Toggle / 按钮弹出用了 `overshoot`？
-- [ ] 卡片 / 列表入场有 30ms stagger？
-- [ ] 关键结果前有 0.5s 悬停？
-- [ ] 打字用 Chunk Reveal，不是 setInterval 单字？
-- [ ] 焦点切换加了 blur（不只是 opacity）？
-- [ ] Logo 是形变收束（Morph），不是淡入？
-- [ ] 底色不是纯黑 / 纯白（带色温）？
-- [ ] 文字有衬线 + 无衬线层次？
-- [ ] 收尾是戛然而止，不是渐弱？
-- [ ] （有鼠标的话）鼠标轨迹是弧线，不是直线？
-- [ ] SFX 密度符合产品性格（见配方 A/B/C）？
-- [ ] BGM 和 SFX 有 6-8dB 响度差？（见 `audio-design-rules.md`）
+**The repair process is also standardized:** the motion skeleton—timeline, camera movement, morph paths, and title-card timing—and the visual craft—components, density, and atmosphere—are separate layers. When a review rejects the result, first determine which layer failed. If motion already passes, reskin it without rechoreographing.
 
 ---
 
-## 8. 与其他 reference 的关系
+## 7. Sixty-Second Pre-Delivery Checklist
 
-| reference | 定位 | 关系 |
+- [ ] Does the narrative use Slow–Fast–Boom–Stop rather than even pacing?
+- [ ] Is the default easing `expoOut`, not `easeOut` or `linear`?
+- [ ] Do toggles and button pops use `overshoot`?
+- [ ] Do card and list entrances have a 30 ms stagger?
+- [ ] Is there a 0.5-second hold before the key result?
+- [ ] Does typing use Chunk Reveal rather than single-character `setInterval`?
+- [ ] Does each focus shift add blur rather than only opacity?
+- [ ] Does the logo resolve through a morph instead of fading in?
+- [ ] Is the background temperature-tinted rather than pure black or pure white?
+- [ ] Does the typography establish serif and sans-serif roles?
+- [ ] Does the ending stop abruptly rather than fading away?
+- [ ] If a pointer appears, does it follow an arc rather than a straight line?
+- [ ] Does SFX density fit the product character, per recipes A/B/C?
+- [ ] Is there a 6–8 dB loudness difference between BGM and SFX? See `audio-design-rules.md`.
+
+---
+
+## 8. Relationship to Other References
+
+| Reference | Purpose | Relationship |
 |---|---|---|
-| `animation-pitfalls.md` | 技术避坑（16 条） | 「**不要这样做**」· 本文件的反面 |
-| `animations.md` | Stage/Sprite 引擎用法 | 动画**怎么写**的基础 |
-| `audio-design-rules.md` | 双轨制音频规则 | 动画**配音频**的规则 |
-| `sfx-library.md` | 37 个 SFX 清单 | 音效**素材库** |
-| `apple-gallery-showcase.md` | Apple 画廊展示风格 | 一种特定运动风格的专题 |
-| **本文件** | 正向运动设计语法 | 「**应该这样做**」 |
+| `animation-pitfalls.md` | Technical failure prevention, 16 rules | **“Do not do this”**; the inverse of this document |
+| `animations.md` | Stage / Sprite engine usage | The foundation of **how to implement** animation |
+| `audio-design-rules.md` | Two-layer audio rules | How to **add audio** to animation |
+| `sfx-library.md` | Catalog of 37 SFX | The sound-effect **asset library** |
+| `apple-gallery-showcase.md` | Apple gallery-display style | A focused guide to one particular motion style |
+| **This document** | Positive motion-design grammar | **“Do this”** |
 
-**调用顺序**：
-1. 先看 SKILL.md 工作流程 Step 3 的form推导五问（决定叙事角色和视觉温度）
-2. 选定方向后读本文件确定**运动语言**（配方 A/B/C）
-3. 写代码时参考 `animations.md` 和 `animation-pitfalls.md`
-4. 导出视频时走 `audio-design-rules.md` + `sfx-library.md`
+**Reading order:**
+1. Begin with the five form-derivation questions in Step 3 of the `SKILL.md` workflow; they determine narrative role and visual temperature.
+2. After selecting a direction, read this document to choose the **motion language**, including recipe A, B, or C.
+3. While coding, consult `animations.md` and `animation-pitfalls.md`.
+4. During video export, follow `audio-design-rules.md` + `sfx-library.md`.
 
 ---
 
-## 附录 · 本文件素材来源
+## Appendix · Sources for This Document
 
-- Anthropic 官方动画拆解：花叔项目目录的 `参考动画/BEST-PRACTICES.md`
-- Anthropic 音频拆解：同目录 `AUDIO-BEST-PRACTICES.md`
-- 3 支参考视频：`ref-{1,2,3}.mp4` + 对应 `gemini-ref-*.md` / `audio-ref-*.md`
-- **严格过滤**：本 reference 不收录任何具体品牌色值、字体名、产品名。
-  色彩/字体决策走 §1.a 核心资产协议或 20 种设计哲学。
+- Analysis of official Anthropic animations: `参考动画/BEST-PRACTICES.md` (`reference-animation/BEST-PRACTICES.md`; the code-formatted path preserves the original folder name) in Huashu's project directory.
+- Anthropic audio analysis: `AUDIO-BEST-PRACTICES.md` in the same directory.
+- Three reference videos: `ref-{1,2,3}.mp4` with the corresponding `gemini-ref-*.md` and `audio-ref-*.md` files.
+- **Strict filtering:** this reference contains no specific brand color values, font names, or product names.
+  Make color and typography decisions through the §1.a Core Asset Protocol or the twenty design philosophies.
